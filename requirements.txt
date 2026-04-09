@@ -1,0 +1,18 @@
+# TMX v2 — Dépendances Python
+# Installation : pip install -r requirements.txt
+
+# API et HTTP
+requests>=2.31.0
+
+# Variables d'environnement
+python-dotenv>=1.0.0
+
+# Données marché (VIX + bootstrap historique si nécessaire)
+yfinance>=0.2.36
+
+# Calculs numériques (z-scores, moyennes mobiles)
+numpy>=1.26.0
+pandas>=2.1.0
+
+# À venir — Phase 1 items suivants
+# (notifications Gmail, simulateur, GitHub Actions)
