@@ -10,15 +10,26 @@ Références PRD :
   - Section 7.3  : Ajustement de taille selon z-score 60j
   - Section 9    : Métriques et tags de basketing
 
-Source de données : yfinance (temporaire — remplacé par Questrade API dès activation)
+Source de données : Questrade API (temps réel) avec fallback yfinance automatique
+Rotation token   : Le refresh token Questrade est mis à jour automatiquement
+                   dans GitHub Secrets via GH_PAT à chaque exécution.
+
+Secrets GitHub requis :
+  QUESTRADE_REFRESH_TOKEN : token Questrade (renouvelé automatiquement)
+  GH_PAT                  : Personal Access Token GitHub (scope: repo)
+
 Usage             : python scanner.py
                     python scanner.py --mode live   (pendant heures de marché)
                     python scanner.py --mode daily  (fin de journée)
 """
 
 import json
+import os
 import argparse
 import warnings
+import urllib.request
+import urllib.error
+import base64
 from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -63,15 +74,204 @@ Z60_SEUIL_CONFIRMATION = -1.5   # z60 ≤ -1.5 = signal "confirmé"
 # Nombre de jours à télécharger (marge pour avoir 60 jours de bourse)
 JOURS_HISTORIQUE = 100
 
+# ── Questrade API — Authentification et rotation du token ──────────────────────
+
+# Mapping ticker TSX → symbole Questrade (sans .TO)
+QUESTRADE_SYMBOLS = {
+    "XIU.TO": "XIU", "XFN.TO": "XFN", "XEG.TO": "XEG",
+    "XUT.TO": "XUT", "XIT.TO": "XIT", "XRE.TO": "XRE",
+    "XMA.TO": "XMA", "XIN.TO": "XIN", "XHC.TO": "XHC",
+    "XST.TO": "XST", "XGD.TO": "XGD", "ZAG.TO": "ZAG",
+}
+
+
+def _questrade_auth(refresh_token: str) -> dict | None:
+    """
+    Échange le refresh token contre un access token Questrade.
+    Retourne { access_token, api_server, new_refresh_token } ou None si échec.
+    """
+    url = f"https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token={refresh_token}"
+    try:
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+        return {
+            "access_token":     data["access_token"],
+            "api_server":       data["api_server"].rstrip("/"),
+            "new_refresh_token": data["refresh_token"],
+        }
+    except Exception as e:
+        print(f"   ⚠️  Questrade auth échouée : {e}")
+        return None
+
+
+def _github_update_secret(repo: str, secret_name: str, secret_value: str, gh_pat: str) -> bool:
+    """
+    Met à jour un secret GitHub via l'API REST.
+    Nécessite GH_PAT avec scope repo.
+    """
+    try:
+        # 1. Récupérer la clé publique du repo pour chiffrer le secret
+        url_key = f"https://api.github.com/repos/{repo}/actions/secrets/public-key"
+        headers = {
+            "Authorization": f"token {gh_pat}",
+            "Accept": "application/vnd.github+json",
+        }
+        req = urllib.request.Request(url_key, headers=headers)
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            key_data = json.loads(resp.read())
+
+        key_id    = key_data["key_id"]
+        pub_key_b64 = key_data["key"]
+
+        # 2. Chiffrer avec libsodium (PyNaCl)
+        try:
+            from nacl import encoding, public as nacl_public
+            pub_key_bytes = base64.b64decode(pub_key_b64)
+            sealed_box    = nacl_public.SealedBox(nacl_public.PublicKey(pub_key_bytes))
+            encrypted     = sealed_box.encrypt(secret_value.encode("utf-8"))
+            encrypted_b64 = base64.b64encode(encrypted).decode("utf-8")
+        except ImportError:
+            # PyNaCl non disponible — chiffrement impossible
+            print("   ⚠️  PyNaCl non installé — rotation token skippée.")
+            return False
+
+        # 3. Mettre à jour le secret
+        url_secret = f"https://api.github.com/repos/{repo}/actions/secrets/{secret_name}"
+        payload = json.dumps({
+            "encrypted_value": encrypted_b64,
+            "key_id": key_id,
+        }).encode("utf-8")
+        req2 = urllib.request.Request(
+            url_secret, data=payload, headers=headers, method="PUT"
+        )
+        with urllib.request.urlopen(req2, timeout=10) as resp2:
+            return resp2.status in (201, 204)
+
+    except Exception as e:
+        print(f"   ⚠️  Mise à jour GitHub Secret échouée : {e}")
+        return False
+
+
+def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.DataFrame | None:
+    """
+    Récupère les prix de clôture historiques quotidiens via Questrade.
+    Retourne un DataFrame compatible avec le reste du scanner.
+    """
+    try:
+        access_token = auth["access_token"]
+        api_server   = auth["api_server"]
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type":  "application/json",
+        }
+
+        fin   = date.today()
+        debut = fin - timedelta(days=jours)
+
+        # Résoudre les symboles → IDs Questrade
+        symbol_ids = {}
+        for ticker in tickers:
+            sym = QUESTRADE_SYMBOLS.get(ticker, ticker.replace(".TO", ""))
+            url = f"{api_server}/v1/symbols/search?prefix={sym}&exchange=TSX"
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+            symbols = data.get("symbols", [])
+            if symbols:
+                symbol_ids[ticker] = symbols[0]["symbolId"]
+
+        if not symbol_ids:
+            return None
+
+        # Télécharger les candles quotidiens pour chaque FNB
+        all_closes = {}
+        for ticker, sym_id in symbol_ids.items():
+            url = (
+                f"{api_server}/v1/markets/candles/{sym_id}"
+                f"?startTime={debut.isoformat()}T00:00:00-05:00"
+                f"&endTime={fin.isoformat()}T23:59:59-05:00"
+                f"&interval=OneDay"
+            )
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read())
+
+            candles = data.get("candles", [])
+            if candles:
+                closes = {
+                    pd.Timestamp(c["start"][:10]): c["close"]
+                    for c in candles if c.get("close")
+                }
+                all_closes[ticker] = closes
+
+        if not all_closes:
+            return None
+
+        # Construire le DataFrame multi-niveaux (compatible telecharger_historique)
+        dfs = {}
+        for ticker, closes_dict in all_closes.items():
+            s = pd.Series(closes_dict, name="Close")
+            s.index = pd.DatetimeIndex(s.index)
+            dfs[ticker] = pd.DataFrame({"Close": s})
+
+        combined = pd.concat(dfs, axis=1)
+        combined.columns = pd.MultiIndex.from_tuples(
+            [(ticker, "Close") for ticker in dfs.keys()]
+        )
+        combined = combined.dropna(how="all")
+        return combined
+
+    except Exception as e:
+        print(f"   ⚠️  Questrade données échouées : {e}")
+        return None
+
 # ── Téléchargement des données ─────────────────────────────────────────────────
 
 def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) -> pd.DataFrame:
     """
-    Télécharge les données quotidiennes OHLCV pour tous les FNBs.
-    Retourne un DataFrame multi-colonnes indexé par date.
+    Télécharge les données quotidiennes pour tous les FNBs.
+    Priorité : Questrade API (temps réel) → fallback yfinance automatique.
+
+    Questrade :
+      - Authentification via QUESTRADE_REFRESH_TOKEN (GitHub Secret)
+      - Nouveau refresh token sauvegardé automatiquement via GH_PAT
+    yfinance (fallback) :
+      - Données de clôture J-1, gratuit, aucune clé requise
     """
-    print(f"\n📥 Téléchargement des données ({jours} jours) via yfinance...")
-    fin = date.today()
+    refresh_token = os.environ.get("QUESTRADE_REFRESH_TOKEN", "")
+    gh_pat        = os.environ.get("GH_PAT", "")
+    repo          = os.environ.get("GITHUB_REPOSITORY", "")
+
+    # ── Tentative Questrade ───────────────────────────────────────────────────
+    if refresh_token:
+        print(f"\n📥 Téléchargement des données ({jours} jours) via Questrade API...")
+        auth = _questrade_auth(refresh_token)
+
+        if auth:
+            # Rotation automatique du token
+            new_token = auth["new_refresh_token"]
+            if gh_pat and repo and new_token != refresh_token:
+                ok = _github_update_secret(repo, "QUESTRADE_REFRESH_TOKEN", new_token, gh_pat)
+                if ok:
+                    print("   🔄 Refresh token Questrade renouvelé automatiquement.")
+                else:
+                    print("   ⚠️  Rotation token échouée — token actuel encore valide.")
+
+            # Téléchargement des données
+            data = _questrade_get_closes(auth, tickers, jours)
+            if data is not None and len(data) >= WINDOW_COURT:
+                print(f"   ✅ {len(data)} jours récupérés via Questrade (temps réel)")
+                return data
+            else:
+                print("   ⚠️  Données Questrade insuffisantes — bascule sur yfinance.")
+        else:
+            print("   ⚠️  Authentification Questrade échouée — bascule sur yfinance.")
+    else:
+        print(f"\n📥 Téléchargement des données ({jours} jours) via yfinance...")
+
+    # ── Fallback yfinance ─────────────────────────────────────────────────────
+    fin   = date.today()
     debut = fin - timedelta(days=jours)
 
     data = yf.download(
@@ -83,12 +283,9 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
         auto_adjust=True,
         progress=False,
     )
-
-    # Nettoyer les lignes sans données (weekends, fériés)
     data = data.dropna(how="all")
-
     n_jours = len(data)
-    print(f"   ✅ {n_jours} jours de bourse récupérés ({debut} → {fin})")
+    print(f"   ✅ {n_jours} jours de bourse récupérés via yfinance ({debut} → {fin})")
 
     if n_jours < WINDOW_MOYEN:
         print(f"   ⚠️  {n_jours} jours < {WINDOW_MOYEN} requis pour z-score 60j — résultats partiels")
