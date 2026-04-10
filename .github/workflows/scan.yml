@@ -1,12 +1,12 @@
 name: TMX v2 — Scanner z-scores
 
 on:
-  schedule:
+ # schedule:
     # Toutes les 5 minutes, lundi-vendredi, 13h25-21h05 UTC
     # = 9h25-17h05 HE (heures de marché TSX avec marge)
-    - cron: "25,30,35,40,45,50,55 13 * * 1-5"
-    - cron: "*/5 14-20 * * 1-5"
-    - cron: "0,5 21 * * 1-5"
+ #   - cron: "25,30,35,40,45,50,55 13 * * 1-5"
+   # - cron: "*/5 14-20 * * 1-5"
+#    - cron: "0,5 21 * * 1-5"
 
   # Déclenchement manuel depuis l'onglet Actions (pour tester)
   workflow_dispatch:
