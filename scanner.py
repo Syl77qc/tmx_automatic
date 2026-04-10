@@ -151,7 +151,7 @@ def calculer_zscore(rendements: pd.Series, fenetre: int) -> float | None:
     Calcule le z-score du rendement le plus récent.
     PRD section 4.1 :
       z = (rendement_aujourd'hui − moyenne_N_jours) / écart_type_N_jours
-    
+
     Note : le rendement du jour courant est exclu du calcul de la moyenne
     et de l'écart-type (on utilise les N jours précédents).
     """
@@ -255,7 +255,7 @@ def determiner_filtre_D(data: pd.DataFrame) -> dict:
     """
     Filtre D : XIU est-il stable/positif ou en baisse?
     PRD section 5, Maillon 3, Filtre D.
-    
+
     - XIU ≥ 0%   : correction sectorielle isolée → seuil +0.5 é.-t. + taille ÷ 1.5
     - XIU < -0.5%: mouvement systémique → règles normales
     - Entre       : zone grise → log seulement
@@ -289,7 +289,7 @@ def compter_cluster(signaux: list[dict]) -> dict:
     """
     Compte les FNBs en signal simultané.
     PRD section 5, Maillon 3, Filtre A.
-    
+
     - 1-3 FNBs  : agir normalement
     - 4-6 FNBs  : taille ÷ 2 + seuil 2.5 é.-t.
     - 7+ FNBs   : bloquer toute nouvelle position
@@ -312,7 +312,7 @@ def compter_cluster(signaux: list[dict]) -> dict:
 # ── Vérification jour BdC ──────────────────────────────────────────────────────
 
 # PRD section 4.7 et Annexe A — Calendrier 2026
-DATES_BDC_RPM    = {"2026-01-28", "2026-04-29", "2026-07-15", "2026-10-28"}
+DATES_BDC_RPM      = {"2026-01-28", "2026-04-29", "2026-07-15", "2026-10-28"}
 DATES_BDC_SANS_RPM = {"2026-03-18", "2026-06-10", "2026-09-02", "2026-12-09"}
 
 def verifier_jour_bdc() -> dict:
@@ -362,10 +362,10 @@ def calculer_multiplicateur_taille(
 
     Base selon profil :
       Rapide : 100% | Moyen : 75% | Lent : 50%
-    
+
     Multiplicateur selon profondeur du signal :
       2.0 é.-t. : 1.0x | 2.5 é.-t. : 1.5x | 3.0 é.-t. : 2.0x
-    
+
     Ajustements cumulatifs selon filtres.
     """
     cfg = UNIVERSE[ticker]
@@ -475,9 +475,6 @@ def analyser_fnb(
     # Ajustement seuil Filtre D
     if filtre_D.get("ajustement") == "seuil+0.5_taille÷1.5":
         seuil_effectif += 0.5
-
-    # Ajustement seuil cluster 4-6
-    # (sera appliqué après le comptage global — marqué ici pour log)
 
     signal_actif = z20 is not None and z20 <= -seuil_effectif
 
@@ -610,7 +607,6 @@ def afficher_console(rapport: dict):
             z60_str = f"{s['z60']:+.2f}" if s["z60"] is not None else "  N/A"
             sma_str = "✓" if s.get("dessus_sma50") else ("✗" if s.get("dessus_sma50") is False else "?")
 
-            # Calculer taille indicative (sans cluster appliqué ici pour affichage)
             taille_info = calculer_multiplicateur_taille(
                 s["ticker"],
                 s["z20"],
@@ -709,6 +705,13 @@ def main():
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(rapport, f, ensure_ascii=False, indent=2, default=str)
     print(f"  📄 Rapport sauvegardé : {output_path.resolve()}")
+
+    # ── 9. Notifications courriel + SMS ──────────────────────────────────────
+    # Déclenché uniquement si des signaux qualifiés sont présents.
+    # notifier.py gère les cas de blocage (cluster 7+, secrets manquants).
+    print("\n📬 Envoi des notifications...")
+    from notifier import envoyer_notifications
+    envoyer_notifications(rapport)
     print()
 
 
