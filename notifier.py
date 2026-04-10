@@ -89,7 +89,7 @@ def _calculer_taille(
 
 # ── Construction du courriel HTML ─────────────────────────────────────────────
 
-def _construire_courriel_html(rapport: dict) -> str:
+def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> str:
     """Génère le corps HTML formaté du courriel d'alerte TMX v2."""
 
     now     = rapport["scan_at"][:19].replace("T", " ")
@@ -211,6 +211,9 @@ def _construire_courriel_html(rapport: dict) -> str:
         ajustement : {rapport['filtre_D']['ajustement']}
       </div>
 
+      <!-- Blocs contexte news (un par signal, injectés par news_agent.py) -->
+      {"".join((blocs_news or {}).values()) if blocs_news else ""}
+
       <!-- Pied de page -->
       <p style="font-size:11px;color:#999;margin-top:20px;
                 border-top:1px solid #eee;padding-top:10px;">
@@ -255,14 +258,11 @@ def _construire_sms(rapport: dict) -> str:
 def envoyer_notifications(rapport: dict) -> bool:
     """
     Envoie courriel HTML + SMS si des signaux qualifiés sont présents.
+    Appelle news_agent.py pour enrichir chaque signal avec le contexte actualité.
 
     Conditions de blocage (PRD section 5) :
       - Aucun signal détecté
       - Cluster 7+ FNBs (action = "bloquer")
-
-    Destinataires (depuis GitHub Secrets) :
-      - NOTIF_EMAIL_1 et NOTIF_EMAIL_2  : courriel HTML complet
-      - NOTIF_SMS_ROGERS et NOTIF_SMS_TELUS : SMS texte court
 
     Retourne True si au moins un envoi a réussi.
     """
@@ -276,7 +276,32 @@ def envoyer_notifications(rapport: dict) -> bool:
         print("   ⛔ Notifications bloquées — cluster 7+ FNBs (PRD filtre A).")
         return False
 
-    # Lecture des secrets depuis les variables d'environnement
+    # ── Appel à l'agent news pour chaque signal ───────────────────────────────
+    blocs_news_html = {}   # { ticker: bloc_html }
+    blocs_news_sms  = {}   # { ticker: bloc_sms  }
+
+    try:
+        from news_agent import obtenir_contexte_news
+
+        for signal in rapport.get("signaux", []):
+            ticker = signal["ticker"]
+            z20    = signal["z20"]
+
+            if z20 is None:
+                continue
+
+            bloc_html, bloc_sms = obtenir_contexte_news(ticker, z20, rapport)
+            if bloc_html:
+                blocs_news_html[ticker] = bloc_html
+            if bloc_sms:
+                blocs_news_sms[ticker] = bloc_sms
+
+    except ImportError:
+        print("   ⚠️  news_agent.py introuvable — notifications sans contexte news.")
+    except Exception as e:
+        print(f"   ⚠️  Erreur agent news : {e} — notifications sans contexte news.")
+
+    # ── Lecture des secrets ───────────────────────────────────────────────────
     gmail_user     = os.environ.get("GMAIL_USER", "")
     gmail_password = os.environ.get("GMAIL_APP_PASSWORD", "")
     email_1        = os.environ.get("NOTIF_EMAIL_1", "")
@@ -288,9 +313,14 @@ def envoyer_notifications(rapport: dict) -> bool:
         print("   ❌ GMAIL_USER ou GMAIL_APP_PASSWORD manquant dans les secrets.")
         return False
 
-    # Construction des messages
-    html_body = _construire_courriel_html(rapport)
+    # ── Construction des messages ─────────────────────────────────────────────
+    html_body = _construire_courriel_html(rapport, blocs_news_html)
     sms_body  = _construire_sms(rapport)
+
+    # Enrichir le SMS avec les verdicts news si disponibles
+    if blocs_news_sms:
+        verdicts = " | ".join(blocs_news_sms.values())
+        sms_body = (sms_body + " | " + verdicts)[:160]
 
     now_str = datetime.now(EASTERN).strftime("%Y-%m-%d %H:%M")
     sujet_courriel = (
@@ -298,7 +328,7 @@ def envoyer_notifications(rapport: dict) -> bool:
     )
     sujet_sms = f"TMX v2 — {rapport['n_signaux']} signal(s)"
 
-    # Liste des destinataires avec leur type
+    # ── Liste des destinataires ───────────────────────────────────────────────
     destinataires = []
     if email_1:
         destinataires.append({"adresse": email_1, "type": "courriel"})
@@ -313,7 +343,7 @@ def envoyer_notifications(rapport: dict) -> bool:
         print("   ❌ Aucun destinataire configuré dans les secrets.")
         return False
 
-    # Envoi
+    # ── Envoi ─────────────────────────────────────────────────────────────────
     succes = False
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
