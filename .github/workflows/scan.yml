@@ -38,21 +38,25 @@ jobs:
         with:
           python-version: "3.12"
           cache: "pip"
+          cache-dependency-path: "requirements.txt"
 
-      # 3. Installer les dépendances
+      # 3. Installer les dépendances (yfinance, pandas, numpy, PyNaCl)
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       # 4. Lancer le scanner en mode live
       - name: Run scanner
         env:
-          GMAIL_USER:         ${{ secrets.GMAIL_USER }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          NOTIF_EMAIL_1:      ${{ secrets.NOTIF_EMAIL_1 }}
-          NOTIF_EMAIL_2:      ${{ secrets.NOTIF_EMAIL_2 }}
-          NOTIF_SMS_ROGERS:   ${{ secrets.NOTIF_SMS_ROGERS }}
-          NOTIF_SMS_TELUS:    ${{ secrets.NOTIF_SMS_TELUS }}
-          GROQ_API_KEY:       ${{ secrets.GROQ_API_KEY }}
+          GMAIL_USER:                ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD:        ${{ secrets.GMAIL_APP_PASSWORD }}
+          NOTIF_EMAIL_1:             ${{ secrets.NOTIF_EMAIL_1 }}
+          NOTIF_EMAIL_2:             ${{ secrets.NOTIF_EMAIL_2 }}
+          NOTIF_SMS_ROGERS:          ${{ secrets.NOTIF_SMS_ROGERS }}
+          NOTIF_SMS_TELUS:           ${{ secrets.NOTIF_SMS_TELUS }}
+          GROQ_API_KEY:              ${{ secrets.GROQ_API_KEY }}
+          QUESTRADE_REFRESH_TOKEN:   ${{ secrets.QUESTRADE_REFRESH_TOKEN }}
+          GH_PAT:                    ${{ secrets.GH_PAT }}
+          GITHUB_REPOSITORY:         ${{ github.repository }}
         run: |
           MODE=${{ github.event.inputs.mode || 'live' }}
           python scanner.py --mode $MODE --output scan_results.json
