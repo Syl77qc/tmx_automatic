@@ -243,6 +243,11 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
     gh_pat        = os.environ.get("GH_PAT", "")
     repo          = os.environ.get("GITHUB_REPOSITORY", "")
 
+    # Diagnostic — confirme si les secrets sont reçus (valeurs masquées)
+    print(f"   🔑 QUESTRADE_REFRESH_TOKEN : {'✅ présent' if refresh_token else '❌ ABSENT'}")
+    print(f"   🔑 GH_PAT                  : {'✅ présent' if gh_pat else '❌ ABSENT'}")
+    print(f"   🔑 GITHUB_REPOSITORY       : {repo or '❌ ABSENT'}")
+
     # ── Tentative Questrade ───────────────────────────────────────────────────
     if refresh_token:
         print(f"\n📥 Téléchargement des données ({jours} jours) via Questrade API...")
