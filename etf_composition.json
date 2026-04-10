@@ -1,0 +1,378 @@
+{
+  "_meta": {
+    "source": "rapport_titres_lourds.html (données 2016-2025) + iShares Canada",
+    "derniere_maj": "2026-04-09",
+    "note": "Poids approximatifs — mettre à jour mensuellement via iShares Canada"
+  },
+
+  "XFN.TO": {
+    "nom": "iShares S&P/TSX Capped Financials",
+    "secteur": "Financières canadiennes",
+    "classification_historique": {
+      "sectoriel_pct": 70,
+      "fondamental_pct": 2,
+      "systemique_pct": 28,
+      "verdict": "FAVORABLE",
+      "note": "70% des baisses sont sectorielles — bon terrain pour TMX v2"
+    },
+    "holdings": [
+      {"ticker": "RY.TO",  "nom": "Royal Bank",  "poids_pct": 22},
+      {"ticker": "TD.TO",  "nom": "TD Bank",     "poids_pct": 18},
+      {"ticker": "BNS.TO", "nom": "Scotiabank",  "poids_pct": 11},
+      {"ticker": "BMO.TO", "nom": "BMO",         "poids_pct": 11},
+      {"ticker": "CM.TO",  "nom": "CIBC",        "poids_pct": 10}
+    ],
+    "declencheur_principal": "Royal Bank (51× sur 87 événements)",
+    "mots_cles_rss": [
+      "XFN.TO ETF financials",
+      "Canadian banks earnings results",
+      "Royal Bank TD Scotiabank BMO CIBC",
+      "Bank of Canada interest rate",
+      "Canadian mortgage credit loss provisions"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Grandes banques : résultats trimestriels en février, mai, août, novembre",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XIT.TO": {
+    "nom": "iShares S&P/TSX Capped Info Tech",
+    "secteur": "Technologies canadiennes",
+    "classification_historique": {
+      "sectoriel_pct": 0,
+      "fondamental_pct": 87,
+      "systemique_pct": 13,
+      "verdict": "PRUDENCE",
+      "note": "⚠️ 87% des baisses sont fondamentales — vérifier impérativement les nouvelles Shopify avant d'agir"
+    },
+    "holdings": [
+      {"ticker": "SHOP.TO", "nom": "Shopify",              "poids_pct": 55},
+      {"ticker": "CSU.TO",  "nom": "Constellation Softw.", "poids_pct": 14},
+      {"ticker": "CGI.TO",  "nom": "CGI Group",            "poids_pct": 8}
+    ],
+    "declencheur_principal": "Shopify (80× sur 85 événements — 94% du temps)",
+    "mots_cles_rss": [
+      "XIT.TO ETF technology",
+      "Shopify SHOP earnings results",
+      "Shopify quarterly revenue guidance",
+      "Constellation Software CSU results",
+      "Canadian tech stocks"
+    ],
+    "risque_fondamental": "ÉLEVÉ",
+    "dates_resultats": {
+      "note": "Shopify publie en février, mai, août, novembre — risque majeur ces jours-là",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XEG.TO": {
+    "nom": "iShares S&P/TSX Capped Energy",
+    "secteur": "Énergie canadienne",
+    "classification_historique": {
+      "sectoriel_pct": 82,
+      "fondamental_pct": 0,
+      "systemique_pct": 18,
+      "verdict": "FAVORABLE",
+      "note": "82% des baisses sont sectorielles (prix du pétrole) — meilleur FNB pour TMX v2"
+    },
+    "holdings": [
+      {"ticker": "CNQ.TO", "nom": "Canadian Natural", "poids_pct": 23},
+      {"ticker": "SU.TO",  "nom": "Suncor",           "poids_pct": 20},
+      {"ticker": "CVE.TO", "nom": "Cenovus",          "poids_pct": 16},
+      {"ticker": "IMO.TO", "nom": "Imperial Oil",     "poids_pct": 8}
+    ],
+    "declencheur_principal": "Canadian Natural (45× sur 68 événements — 66% du temps)",
+    "mots_cles_rss": [
+      "XEG.TO ETF energy",
+      "WTI crude oil price",
+      "OPEC production decision",
+      "Canadian oil sands Suncor CNQ Cenovus",
+      "crude oil demand supply outlook"
+    ],
+    "risque_fondamental": "TRÈS FAIBLE",
+    "dates_resultats": {
+      "note": "CNQ, Suncor, Cenovus publient en février, mai, juillet-août, novembre",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XGD.TO": {
+    "nom": "iShares S&P/TSX Global Gold",
+    "secteur": "Mines d'or",
+    "classification_historique": {
+      "sectoriel_pct": 72,
+      "fondamental_pct": 7,
+      "systemique_pct": 21,
+      "verdict": "FAVORABLE",
+      "note": "72% des baisses sont sectorielles (prix de l'or) — bon terrain pour TMX v2"
+    },
+    "holdings": [
+      {"ticker": "AEM.TO", "nom": "Agnico Eagle",    "poids_pct": 25},
+      {"ticker": "ABX.TO", "nom": "Barrick Gold",    "poids_pct": 22},
+      {"ticker": "FNV.TO", "nom": "Franco-Nevada",   "poids_pct": 15},
+      {"ticker": "WPM.TO", "nom": "Wheaton Precious","poids_pct": 13}
+    ],
+    "declencheur_principal": "Agnico Eagle (45× sur 61 événements — 74% du temps)",
+    "mots_cles_rss": [
+      "XGD.TO gold ETF",
+      "gold price spot",
+      "Federal Reserve interest rates gold",
+      "Agnico Eagle Barrick gold mining results",
+      "inflation hedge gold demand"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Agnico Eagle, Barrick publient en février, avril-mai, juillet-août, octobre-novembre",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XIU.TO": {
+    "nom": "iShares S&P/TSX 60",
+    "secteur": "Marché large canadien",
+    "classification_historique": {
+      "sectoriel_pct": 65,
+      "fondamental_pct": 10,
+      "systemique_pct": 25,
+      "verdict": "FAVORABLE",
+      "note": "Proxy du marché — utilisé aussi comme Filtre D dans le scanner"
+    },
+    "holdings": [
+      {"ticker": "RY.TO",  "nom": "Royal Bank",  "poids_pct": 9},
+      {"ticker": "TD.TO",  "nom": "TD Bank",     "poids_pct": 7},
+      {"ticker": "SHOP.TO","nom": "Shopify",     "poids_pct": 6},
+      {"ticker": "ENB.TO", "nom": "Enbridge",    "poids_pct": 5},
+      {"ticker": "CNR.TO", "nom": "CN Rail",     "poids_pct": 5}
+    ],
+    "declencheur_principal": "Financières (RY + TD représentent ~16%)",
+    "mots_cles_rss": [
+      "XIU.TO TSX 60 ETF",
+      "S&P TSX 60 market",
+      "Canadian stock market today",
+      "TSX index drop decline",
+      "Bank of Canada rate decision"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Diversifié — pas de titre individuel dominant",
+      "mois_risque": []
+    }
+  },
+
+  "XUT.TO": {
+    "nom": "iShares S&P/TSX Capped Utilities",
+    "secteur": "Services publics canadiens",
+    "classification_historique": {
+      "sectoriel_pct": 68,
+      "fondamental_pct": 5,
+      "systemique_pct": 27,
+      "verdict": "FAVORABLE",
+      "note": "Très sensible aux taux BdC — appliquer seuil +0.5 les jours RPM"
+    },
+    "holdings": [
+      {"ticker": "FTS.TO", "nom": "Fortis",         "poids_pct": 26},
+      {"ticker": "EMA.TO", "nom": "Emera",          "poids_pct": 18},
+      {"ticker": "H.TO",   "nom": "Hydro One",      "poids_pct": 17},
+      {"ticker": "AQN.TO", "nom": "Algonquin Power","poids_pct": 10},
+      {"ticker": "CPX.TO", "nom": "Capital Power",  "poids_pct": 7}
+    ],
+    "declencheur_principal": "Fortis (titre le plus lourd à 26%)",
+    "mots_cles_rss": [
+      "XUT.TO utilities ETF",
+      "Canadian utilities Fortis Emera",
+      "Bank of Canada rate hike utilities",
+      "interest rate sensitive utilities",
+      "Hydro One Ontario electricity"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Fortis, Emera publient en février, mai, août, novembre",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XRE.TO": {
+    "nom": "iShares S&P/TSX Capped REIT",
+    "secteur": "FPI canadiens",
+    "classification_historique": {
+      "sectoriel_pct": 65,
+      "fondamental_pct": 8,
+      "systemique_pct": 27,
+      "verdict": "FAVORABLE",
+      "note": "Très sensible aux taux BdC — appliquer seuil +0.5 les jours RPM"
+    },
+    "holdings": [
+      {"ticker": "RioCan.TO",  "nom": "RioCan REIT",     "poids_pct": 14},
+      {"ticker": "CAR-UN.TO",  "nom": "Canadian Apt REIT","poids_pct": 13},
+      {"ticker": "CPR.TO",     "nom": "CT REIT",          "poids_pct": 10},
+      {"ticker": "SRU-UN.TO",  "nom": "SmartCentres",     "poids_pct": 9},
+      {"ticker": "GRT-UN.TO",  "nom": "Granite REIT",     "poids_pct": 8}
+    ],
+    "declencheur_principal": "Mouvement global des taux d'intérêt",
+    "mots_cles_rss": [
+      "XRE.TO REIT ETF Canada",
+      "Canadian real estate investment trust",
+      "Bank of Canada mortgage rates REIT",
+      "commercial real estate Canada",
+      "interest rate REIT impact"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "FPIs publient trimestriellement — diversifié, risque individuel faible",
+      "mois_risque": []
+    }
+  },
+
+  "XMA.TO": {
+    "nom": "iShares S&P/TSX Capped Materials",
+    "secteur": "Matériaux canadiens",
+    "classification_historique": {
+      "sectoriel_pct": 70,
+      "fondamental_pct": 8,
+      "systemique_pct": 22,
+      "verdict": "FAVORABLE",
+      "note": "Corrélé aux prix des métaux (or, cuivre) et aux producteurs diversifiés"
+    },
+    "holdings": [
+      {"ticker": "NTR.TO", "nom": "Nutrien",         "poids_pct": 18},
+      {"ticker": "AEM.TO", "nom": "Agnico Eagle",    "poids_pct": 15},
+      {"ticker": "ABX.TO", "nom": "Barrick Gold",    "poids_pct": 14},
+      {"ticker": "WPM.TO", "nom": "Wheaton Precious","poids_pct": 10},
+      {"ticker": "FM.TO",  "nom": "First Quantum",   "poids_pct": 7}
+    ],
+    "declencheur_principal": "Nutrien (potasse) + Agnico Eagle (or)",
+    "mots_cles_rss": [
+      "XMA.TO materials ETF Canada",
+      "gold silver copper prices today",
+      "Nutrien potash fertilizer prices",
+      "Canadian mining stocks",
+      "base metals commodity prices"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Nutrien, mines d'or publient en février, mai, août, novembre",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XIN.TO": {
+    "nom": "iShares MSCI EAFE",
+    "secteur": "International (Europe, Asie, Pacifique)",
+    "classification_historique": {
+      "sectoriel_pct": 60,
+      "fondamental_pct": 5,
+      "systemique_pct": 35,
+      "verdict": "NEUTRE",
+      "note": "⚠️ FNB international — décalage de fuseau horaire peut créer des faux z-scores. Primes/décotes NAV possibles (Hilliard & Zhang 2015)"
+    },
+    "holdings": [
+      {"ticker": "diversifié", "nom": "Actions Europe/Japon/Australie", "poids_pct": 100}
+    ],
+    "declencheur_principal": "Marché européen et japonais — décalage horaire TSX",
+    "mots_cles_rss": [
+      "XIN.TO international ETF EAFE",
+      "European stock market today",
+      "Japan Nikkei market",
+      "MSCI EAFE performance",
+      "global markets Europe Asia"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Diversifié international — pas de titre dominant",
+      "mois_risque": []
+    }
+  },
+
+  "XHC.TO": {
+    "nom": "iShares S&P/TSX Capped Health Care",
+    "secteur": "Santé canadienne",
+    "classification_historique": {
+      "sectoriel_pct": 55,
+      "fondamental_pct": 20,
+      "systemique_pct": 25,
+      "verdict": "NEUTRE",
+      "note": "Secteur étroit au Canada — quelques titres peuvent dominer"
+    },
+    "holdings": [
+      {"ticker": "NVO.TO",  "nom": "Novo Nordisk (coté CA)", "poids_pct": 15},
+      {"ticker": "WELL.TO", "nom": "WELL Health",             "poids_pct": 12},
+      {"ticker": "DOC.TO",  "nom": "Medexus Pharma",          "poids_pct": 10}
+    ],
+    "declencheur_principal": "Secteur très concentré — surveiller nouvelles réglementaires",
+    "mots_cles_rss": [
+      "XHC.TO healthcare ETF Canada",
+      "Canadian healthcare stocks",
+      "pharmaceutical biotech Canada",
+      "Health Canada drug approval",
+      "WELL Health medical clinic"
+    ],
+    "risque_fondamental": "MOYEN",
+    "dates_resultats": {
+      "note": "Publications trimestrielles dispersées — vérifier les principales positions",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "XST.TO": {
+    "nom": "iShares S&P/TSX Capped Consumer Staples",
+    "secteur": "Biens de consommation de base",
+    "classification_historique": {
+      "sectoriel_pct": 65,
+      "fondamental_pct": 10,
+      "systemique_pct": 25,
+      "verdict": "FAVORABLE",
+      "note": "Secteur défensif — baisses souvent liées à rotation sectorielle macro"
+    },
+    "holdings": [
+      {"ticker": "L.TO",   "nom": "Loblaw",          "poids_pct": 28},
+      {"ticker": "MRU.TO", "nom": "Metro",            "poids_pct": 22},
+      {"ticker": "ATD.TO", "nom": "Alimentation Couche-Tard", "poids_pct": 20},
+      {"ticker": "EMP-A.TO","nom":"Empire Company",  "poids_pct": 12},
+      {"ticker": "SAP.TO", "nom": "Saputo",          "poids_pct": 8}
+    ],
+    "declencheur_principal": "Loblaw (28%) + Couche-Tard (20%)",
+    "mots_cles_rss": [
+      "XST.TO consumer staples ETF Canada",
+      "Loblaw Metro grocery Canada",
+      "Couche-Tard convenience store results",
+      "Canadian consumer spending inflation",
+      "grocery food prices Canada"
+    ],
+    "risque_fondamental": "FAIBLE",
+    "dates_resultats": {
+      "note": "Loblaw, Metro, Couche-Tard publient trimestriellement",
+      "mois_risque": [2, 5, 8, 11]
+    }
+  },
+
+  "ZAG.TO": {
+    "nom": "BMO Aggregate Bond",
+    "secteur": "Obligations canadiennes agrégées",
+    "classification_historique": {
+      "sectoriel_pct": 70,
+      "fondamental_pct": 0,
+      "systemique_pct": 30,
+      "verdict": "FAVORABLE",
+      "note": "⚠️ FNB obligataire — baisses causées par hausse des taux, pas par entreprises. Appliquer seuil +0.5 les jours RPM BdC"
+    },
+    "holdings": [
+      {"ticker": "obligations_gouvernementales", "nom": "Gouvernement Canada + provinces", "poids_pct": 65},
+      {"ticker": "obligations_corporatives",     "nom": "Obligations corporatives investment grade", "poids_pct": 35}
+    ],
+    "declencheur_principal": "Décisions BdC et Fed — taux directeurs",
+    "mots_cles_rss": [
+      "ZAG.TO bond ETF Canada",
+      "Bank of Canada interest rate decision",
+      "Canadian bond market yield",
+      "Government of Canada bond",
+      "Federal Reserve rate impact Canada"
+    ],
+    "risque_fondamental": "NUL",
+    "dates_resultats": {
+      "note": "Pas de publications d'entreprises — uniquement sensible aux annonces BdC et Fed",
+      "mois_risque": []
+    }
+  }
+}
