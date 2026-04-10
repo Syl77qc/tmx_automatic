@@ -89,15 +89,21 @@ def _questrade_auth(refresh_token: str) -> dict | None:
     """
     Échange le refresh token contre un access token Questrade.
     Retourne { access_token, api_server, new_refresh_token } ou None si échec.
+    Utilise POST comme requis par l'API Questrade.
     """
-    url = f"https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token={refresh_token}"
+    url = "https://login.questrade.com/oauth2/token"
+    payload = urllib.parse.urlencode({
+        "grant_type":    "refresh_token",
+        "refresh_token": refresh_token,
+    }).encode("utf-8")
     try:
-        req = urllib.request.Request(url)
+        req = urllib.request.Request(url, data=payload, method="POST")
+        req.add_header("Content-Type", "application/x-www-form-urlencoded")
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read())
         return {
-            "access_token":     data["access_token"],
-            "api_server":       data["api_server"].rstrip("/"),
+            "access_token":      data["access_token"],
+            "api_server":        data["api_server"].rstrip("/"),
             "new_refresh_token": data["refresh_token"],
         }
     except Exception as e:
