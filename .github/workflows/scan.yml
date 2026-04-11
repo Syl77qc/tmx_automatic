@@ -1,14 +1,11 @@
 name: TMX v2 — Scanner z-scores
-
 on:
- # schedule:
+  schedule:
     # Toutes les 5 minutes, lundi-vendredi, 13h25-21h05 UTC
     # = 9h25-17h05 HE (heures de marché TSX avec marge)
- #   - cron: "25,30,35,40,45,50,55 13 * * 1-5"
-   # - cron: "*/5 14-20 * * 1-5"
-#    - cron: "0,5 21 * * 1-5"
-
-  # Déclenchement manuel depuis l'onglet Actions (pour tester)
+    - cron: "25,30,35,40,45,50,55 13 * * 1-5"
+    - cron: "*/5 14-20 * * 1-5"
+    - cron: "0,5 21 * * 1-5"
   workflow_dispatch:
     inputs:
       mode:
@@ -22,17 +19,18 @@ on:
 
 jobs:
   scanner:
-    name: Scan z-scores + Notifications
+    name: Scan z-scores + Notifications + Dashboard
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    permissions:
+      contents: write
 
     steps:
-
-      # 1. Récupérer le code du repo
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
 
-      # 2. Installer Python 3.12
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -40,28 +38,38 @@ jobs:
           cache: "pip"
           cache-dependency-path: "requirements.txt"
 
-      # 3. Installer les dépendances (yfinance, pandas, numpy, PyNaCl)
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # 4. Lancer le scanner en mode live
       - name: Run scanner
         env:
-          GMAIL_USER:                ${{ secrets.GMAIL_USER }}
-          GMAIL_APP_PASSWORD:        ${{ secrets.GMAIL_APP_PASSWORD }}
-          NOTIF_EMAIL_1:             ${{ secrets.NOTIF_EMAIL_1 }}
-          NOTIF_EMAIL_2:             ${{ secrets.NOTIF_EMAIL_2 }}
-          NOTIF_SMS_ROGERS:          ${{ secrets.NOTIF_SMS_ROGERS }}
-          NOTIF_SMS_TELUS:           ${{ secrets.NOTIF_SMS_TELUS }}
-          GROQ_API_KEY:              ${{ secrets.GROQ_API_KEY }}
-          QUESTRADE_REFRESH_TOKEN:   ${{ secrets.QUESTRADE_REFRESH_TOKEN }}
-          GH_PAT:                    ${{ secrets.GH_PAT }}
-          GITHUB_REPOSITORY:         ${{ github.repository }}
+          GMAIL_USER:               ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD:       ${{ secrets.GMAIL_APP_PASSWORD }}
+          NOTIF_EMAIL_1:            ${{ secrets.NOTIF_EMAIL_1 }}
+          NOTIF_EMAIL_2:            ${{ secrets.NOTIF_EMAIL_2 }}
+          NOTIF_SMS_ROGERS:         ${{ secrets.NOTIF_SMS_ROGERS }}
+          NOTIF_SMS_TELUS:          ${{ secrets.NOTIF_SMS_TELUS }}
+          GROQ_API_KEY:             ${{ secrets.GROQ_API_KEY }}
+          QUESTRADE_REFRESH_TOKEN:  ${{ secrets.QUESTRADE_REFRESH_TOKEN }}
+          GH_PAT:                   ${{ secrets.GH_PAT }}
+          GITHUB_REPOSITORY:        ${{ github.repository }}
         run: |
           MODE=${{ github.event.inputs.mode || 'live' }}
           python scanner.py --mode $MODE --output scan_results.json
 
-      # 5. Conserver le rapport JSON comme artefact (7 jours)
+      - name: Generate dashboard
+        run: python generate_dashboard.py
+
+      - name: Commit and push dashboard
+        run: |
+          git config user.name  "FNBLab Bot"
+          git config user.email "bot@fnblab.github.io"
+          git add index.html scan_results.json
+          git diff --staged --quiet || git commit -m "Dashboard auto-update $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
       - name: Upload scan results
         if: always()
         uses: actions/upload-artifact@v4
