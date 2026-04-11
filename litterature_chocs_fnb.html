@@ -238,7 +238,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
 </div>
 
 <!-- Résultats TMX v2 -->
-<div class="section-title">Vos résultats TMX v2 — 978 événements (2016–2025)</div>
+<div class="section-title">Les résultats — 978 événements (2016–2025) où il y a eu une baisse d'au moins 2 écart-type</div>
 <table class="results-table">
   <thead>
     <tr>
@@ -351,7 +351,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       à court terme. Les baisses non-fondamentales (chocs de sentiment, pression de vente,
       arbitrage ETF) se renversent rapidement. Cependant, les chocs fondamentaux
       (nouvelles sur un titre lourd) ne se renversent pas. C'est exactement la distinction
-      que TMX v2 cherche à capter avec son filtre de titres lourds.
+      que notre sysème cherche à capter avec son filtre de titres lourds.
     </div>
     <div class="ref-small">Da & Shive (2018, EUFM) · Ben-David, Franzoni & Moussawi (2018, JF)</div>
   </div>
@@ -373,7 +373,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       de la finance empirique : après une mauvaise annonce de résultats, les prix
       <strong>continuent de baisser pendant 30 à 60 jours</strong> (pas de rebond).
       C'est l'opposé du mean reversion. Bernard & Thomas (1989) et Chan et al. (1996)
-      documentent ce phénomène sur des décennies de données. Pour TMX v2 :
+      documentent ce phénomène sur des décennies de données. Pour notre système :
       si XIT baisse parce que Shopify a raté ses résultats, le PEAD prédit une
       <em>continuation</em> de la baisse, pas un rebond — acheter serait une erreur.
     </div>
@@ -442,14 +442,14 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
     </div>
     <div class="gain-bar-wrap">
       <div class="gain-bar gb-rose" style="width:74px"></div>
-      <span class="gain-num">Horizon TMX v2 = 8–25 jours ✓</span>
+      <span class="gain-num">Horizon  = 8–25 jours ✓</span>
     </div>
     <div class="card-desc">
       La littérature sur momentum vs reversal montre un pattern cohérent :
       <strong>retournement à très court terme</strong> (1–4 semaines = bruit, microstructure),
       <strong>momentum à moyen terme</strong> (2–12 mois = tendances fondamentales persistantes),
       <strong>retournement à long terme</strong> (3–5 ans = surréaction).
-      L'horizon de 8–25 jours de TMX v2 est parfaitement positionné dans la zone
+      L'horizon de 8–25 jours du système est parfaitement positionné dans la zone
       de reversal court terme — là où la littérature confirme l'effet.
       Attention : cet effet est plus fort pour les chocs systémiques que fondamentaux.
     </div>
@@ -495,7 +495,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       de la valeur intrinsèque d'une compagnie.
     </div>
     <div class="p-item">
-      <div class="p-title">La distinction clé pour TMX v2</div>
+      <div class="p-title">La distinction clé pourle système </div>
       Choc sectoriel (XFN, XEG, XGD à 70–82%) = les banques ou les pétrolières baissent
       toutes ensemble → probablement temporaire → mean reversion attendu ✓<br>
       Choc fondamental (XIT à 87%) = Shopify a eu une vraie mauvaise nouvelle →
@@ -510,7 +510,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       au début d'une tendance baissière de 2 mois, pas une aubaine.
     </div>
     <div class="p-item">
-      <div class="p-title">La limite de la méthode TMX v2</div>
+      <div class="p-title">La limite de la méthode </div>
       Le z-score mesure l'ampleur statistique de la baisse mais pas son origine.
       C'est reconnu dans le PRD (section 13). La solution n'est pas d'abandonner
       le z-score — c'est d'ajouter un signal contextuel (filtre publications
