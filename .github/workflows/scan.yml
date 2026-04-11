@@ -64,7 +64,7 @@ jobs:
         run: |
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
-          git add index.html scan_results.json positions.json trades_log.json || true
+          git add index.html resultats.html scan_results.json positions.json trades_log.json || true
           git diff --staged --quiet || git commit -m "Dashboard auto-update $(date -u '+%Y-%m-%d %H:%M') UTC"
           git push
         env:
