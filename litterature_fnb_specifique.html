@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Littérature scientifique — FNBs · TMX v2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 13px; line-height: 1.6;
+    background: #ffffff; color: #1a1a1a;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #e0ddd6; }
+  }
+  h1 { font-size: 18px; font-weight: 500; margin: 0 0 2px; }
+  .sub { font-size: 12px; color: #888; margin-bottom: 18px; }
+
+  .intro-box {
+    margin-bottom: 20px; padding: 14px 16px;
+    background: #f0f9ff; border-radius: 8px;
+    border-left: 3px solid #0369a1;
+    font-size: 12px; color: #0c4a6e; line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .intro-box { background: #082f49; color: #bae6fd; border-color: #0369a1; }
+  }
+
+  .section-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    color: #888; margin: 22px 0 10px; text-transform: uppercase;
+  }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+  @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+  .card {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 14px;
+    background: #f8f8f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card { background: #222; border-color: #333; }
+  }
+  .card.blue   { border-left: 3px solid #185FA5; }
+  .card.teal   { border-left: 3px solid #0F6E56; }
+  .card.amber  { border-left: 3px solid #854F0B; }
+  .card.purple { border-left: 3px solid #534AB7; }
+  .card.coral  { border-left: 3px solid #993C1D; }
+  .card.slate  { border-left: 3px solid #334155; }
+  .card.rose   { border-left: 3px solid #9F1239; }
+  .card.green  { border-left: 3px solid #3B6D11; }
+
+  .combo-label { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .combo-authors { font-size: 11px; color: #888; margin-bottom: 6px; }
+
+  .combo-indicators { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+  .ind-pill { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .ip-blue   { background: #EFF6FF; color: #1E3A5F; }
+  .ip-teal   { background: #E1F5EE; color: #085041; }
+  .ip-amber  { background: #FAEEDA; color: #633806; }
+  .ip-gray   { background: #F1EFE8; color: #444441; }
+  .ip-purple { background: #EEEDFE; color: #3C3489; }
+  .ip-coral  { background: #FFF0ED; color: #7F2009; }
+  .ip-green  { background: #F0FDF4; color: #14532D; }
+  @media (prefers-color-scheme: dark) {
+    .ip-blue   { background: #1E3A5F; color: #93C5FD; }
+    .ip-teal   { background: #04342C; color: #5DCAA5; }
+    .ip-amber  { background: #412402; color: #EF9F27; }
+    .ip-gray   { background: #2C2C2A; color: #B4B2A9; }
+    .ip-purple { background: #26215C; color: #AFA9EC; }
+    .ip-coral  { background: #450A0A; color: #FCA5A5; }
+    .ip-green  { background: #052e16; color: #86EFAC; }
+  }
+
+  .gain-bar-wrap { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
+  .gain-bar { height: 7px; border-radius: 4px; }
+  .gb-blue   { background: #185FA5; }
+  .gb-teal   { background: #0F6E56; }
+  .gb-amber  { background: #854F0B; }
+  .gb-purple { background: #534AB7; }
+  .gb-coral  { background: #993C1D; }
+  .gb-slate  { background: #334155; }
+  .gb-rose   { background: #9F1239; }
+  .gb-green  { background: #3B6D11; }
+  .gain-num { font-size: 11px; color: #888; white-space: nowrap; }
+  @media (prefers-color-scheme: dark) { .gain-num { color: #666; } }
+
+  .card-desc { font-size: 12px; color: #555; line-height: 1.55; margin-top: 6px; }
+  @media (prefers-color-scheme: dark) { .card-desc { color: #999; } }
+  .ref-small { font-size: 10px; color: #bbb; font-style: italic; margin-top: 6px; }
+  @media (prefers-color-scheme: dark) { .ref-small { color: #666; } }
+
+  .highlight { color: #185FA5; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { .highlight { color: #93C5FD; } }
+
+  /* Tableau de correspondance */
+  .map-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  .map-table th {
+    text-align: left; padding: 6px 10px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+    color: #888; text-transform: uppercase;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  @media (prefers-color-scheme: dark) { .map-table th { border-color: #333; } }
+  .map-table td { padding: 7px 10px; border-bottom: 1px solid #f0ede6; vertical-align: top; font-size: 12px; }
+  @media (prefers-color-scheme: dark) { .map-table td { border-color: #2a2a28; } }
+  .map-table tr:last-child td { border-bottom: none; }
+  .td-concept { font-weight: 600; color: #334155; }
+  @media (prefers-color-scheme: dark) { .td-concept { color: #94A3B8; } }
+  .td-tmx { color: #0F6E56; font-size: 11px; }
+  @media (prefers-color-scheme: dark) { .td-tmx { color: #5DCAA5; } }
+
+  .principle {
+    margin-top: 20px; padding: 16px;
+    border: 1px solid #e5e5e5; border-radius: 10px;
+    background: #f8f8f5;
+  }
+  @media (prefers-color-scheme: dark) { .principle { background: #222; border-color: #333; } }
+  .principle h2 { font-size: 14px; font-weight: 500; margin: 0 0 10px; }
+  .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .principle-grid { grid-template-columns: 1fr; } }
+  .p-item {
+    font-size: 12px; color: #555; line-height: 1.55;
+    padding: 10px; background: #ffffff; border-radius: 7px; border: 1px solid #eee;
+  }
+  @media (prefers-color-scheme: dark) { .p-item { background: #1a1a1a; border-color: #333; color: #999; } }
+  .p-title { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; font-size: 12px; }
+  @media (prefers-color-scheme: dark) { .p-title { color: #e0ddd6; } }
+
+  .tmx-box {
+    margin-top: 16px; padding: 14px 16px;
+    background: #f8f8f5; border-radius: 8px;
+    border-left: 3px solid #185FA5;
+    font-size: 12px; color: #555; line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) { .tmx-box { background: #222; color: #999; } }
+
+  .footer {
+    margin-top: 20px; font-size: 10px; color: #bbb;
+    border-top: 1px solid #eee; padding-top: 12px;
+  }
+  @media (prefers-color-scheme: dark) { .footer { border-color: #333; } }
+</style>
+</head>
+<body>
+
+<h1>Littérature scientifique sur les FNBs — Ce qui est pertinent pour TMX v2</h1>
+<div class="sub">5 domaines de recherche · Mécanismes propres aux ETFs · Implications pour le mean reversion · Avril 2026</div>
+
+<div class="intro-box">
+  <strong>Pourquoi une littérature spécifique aux FNBs?</strong> Les FNBs ne sont pas de simples
+  paniers d'actions passifs. Ils ont des <em>mécanismes propres</em> — création/rachat de parts,
+  arbitrage NAV/prix, comouvements induits — qui créent des dynamiques de prix différentes
+  des actions individuelles. Ces mécanismes <strong>amplifient parfois le mean reversion</strong>
+  (chocs de liquidité non fondamentaux qui se renversent) et <strong>peuvent aussi le contrecarrer</strong>
+  (transmission de volatilité entre marchés). Comprendre ces mécanismes permet à TMX v2 de
+  mieux distinguer les signaux exploitables des faux positifs.
+</div>
+
+<!-- Domaine 1 : Arbitrage NAV -->
+<div class="section-title">Domaine 1 — Mécanisme d'arbitrage NAV/prix (fondation théorique)</div>
+<div class="cards">
+
+  <div class="card blue">
+    <div class="combo-label">Le mécanisme de création/rachat — plancher sous le prix</div>
+    <div class="combo-authors">Madhavan (2016) · Ben-David, Franzoni & Moussawi (2017, AnnRevFE)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-blue">Création/rachat</span>
+      <span class="ind-pill ip-teal">NAV arbitrage</span>
+      <span class="ind-pill ip-gray">Authorized Participants</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-blue" style="width:90px"></div>
+      <span class="gain-num">Demi-vie mispricing : 0.44 jour</span>
+    </div>
+    <div class="card-desc">
+      Le mécanisme fondamental des FNBs : quand le prix d'un FNB s'éloigne de sa Valeur
+      Liquidative (NAV), des arbitrageurs institutionnels (Authorized Participants) exploitent
+      l'écart en créant ou rachetant des parts, ce qui ramène le prix vers la NAV.
+      Rappoport & Tuzun (2020) mesurent une <strong>demi-vie du mispricing de 0.44 jour</strong>
+      pour les FNBs actions — la correction est quasi-instantanée.
+      <br><br>
+      Pour TMX v2 : ce mécanisme crée un <em>plancher naturel</em> sous le prix d'un FNB actions.
+      Une baisse extrême d'un FNB liquide (XIU, XFN) déclenche rapidement l'arbitrage qui
+      soutient le retour vers la NAV. C'est une raison structurelle pourquoi le mean reversion
+      fonctionne mieux sur les FNBs que sur les actions individuelles.
+    </div>
+    <div class="ref-small">Rappoport & Tuzun (2020, Fed Reserve) · Madhavan (2016) · Ben-David et al. (2017, AnnRevFE)</div>
+  </div>
+
+  <div class="card teal">
+    <div class="combo-label">Primes/décotes — processus d'Ornstein-Uhlenbeck</div>
+    <div class="combo-authors">Engle & Sarkar (2006, JDQ) · Hilliard & Zhang (2015, ScienceDirect)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-teal">Prime/décote</span>
+      <span class="ind-pill ip-purple">Ornstein-Uhlenbeck</span>
+      <span class="ind-pill ip-gray">Vitesse de retour</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-teal" style="width:82px"></div>
+      <span class="gain-num">FNBs domestiques : décotes minimes</span>
+    </div>
+    <div class="card-desc">
+      Hilliard & Zhang (2015) modélisent les primes/décotes des FNBs comme un
+      <strong>processus d'Ornstein-Uhlenbeck avec sauts</strong> — exactement le même modèle
+      que le mean reversion en finance. Pour les FNBs actions domestiques (comme XIU, XFN, XEG),
+      les primes/décotes sont minimes et de courte durée.
+      Les FNBs internationaux (comme XIN) ont des primes/décotes plus persistantes à cause
+      des fuseaux horaires et des barrières à l'arbitrage.
+      <br><br>
+      Pour TMX v2 : XIN peut avoir des z-scores déclenchés par des écarts NAV/prix persistants
+      plutôt que par de vrais mouvements de marché — une source de faux signaux potentielle.
+    </div>
+    <div class="ref-small">Hilliard & Zhang (2015, ScienceDirect) · Engle & Sarkar (2006, JDQ)</div>
+  </div>
+
+</div>
+
+<!-- Domaine 2 : Chocs de liquidité et volatilité -->
+<div class="section-title">Domaine 2 — Chocs de liquidité et transmission de volatilité</div>
+<div class="cards">
+
+  <div class="card amber">
+    <div class="combo-label">Les FNBs amplifient la volatilité à court terme</div>
+    <div class="combo-authors">Ben-David, Franzoni & Moussawi (2018, JF) · Da & Shive (2018, EUFM)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-amber">Chocs de liquidité</span>
+      <span class="ind-pill ip-coral">Volatilité transmise</span>
+      <span class="ind-pill ip-teal">Renversement ensuite</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-amber" style="width:86px"></div>
+      <span class="gain-num">Renversement à 5-20 jours confirmé</span>
+    </div>
+    <div class="card-desc">
+      Ben-David et al. (2018) — l'un des articles les plus cités sur les FNBs — démontrent que
+      <strong>les FNBs amplifient les chocs de liquidité</strong> : quand un investisseur vend
+      massivement un FNB, les arbitrageurs vendent les actions sous-jacentes pour couvrir,
+      créant une pression baissière sur les prix qui n'a pas de raison fondamentale.
+      Ces chocs non fondamentaux <strong>se renversent ensuite</strong> — c'est le mécanisme
+      exact que TMX v2 exploite. Da & Shive (2018) mesurent une autocorrélation négative
+      de −0.06 (t = −19.37) sur 549 FNBs — preuve statistique directe.
+      <br><br>
+      Implication clé : une grosse vente de FNB institutionnelle (rachat de parts) peut déclencher
+      un z-score extrême sans aucune mauvaise nouvelle — c'est le signal le plus fiable pour TMX v2.
+    </div>
+    <div class="ref-small">Ben-David, Franzoni & Moussawi (2018, JF) · Da & Shive (2018, EUFM)</div>
+  </div>
+
+  <div class="card purple">
+    <div class="combo-label">Comouvements excessifs — quand les FNBs bougent ensemble</div>
+    <div class="combo-authors">Da & Shive (2018) · Barberis & Shleifer (2003)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-purple">Comovement excessif</span>
+      <span class="ind-pill ip-gray">Trading catégoriel</span>
+      <span class="ind-pill ip-amber">Corrélation induite</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-purple" style="width:75px"></div>
+      <span class="gain-num">Corrélation artificielle mesurée</span>
+    </div>
+    <div class="card-desc">
+      Da & Shive montrent que les FNBs créent des <strong>comouvements artificiels</strong>
+      entre les actions du même panier : quand un investisseur vend XIU, l'arbitrageur vend
+      toutes les 60 actions du S&P/TSX 60 proportionnellement — même celles qui n'ont aucune
+      mauvaise nouvelle. Cela induit une corrélation entre titres qui n'est pas fondamentale.
+      <br><br>
+      Pour TMX v2 — lien direct avec les blocs de corrélation du PRD : XFN et XIU sont
+      dans le même bloc (corrélation 0.91) en partie parce qu'ils partagent des titres
+      (les grandes banques sont dans les deux) mais aussi parce que l'arbitrage ETF
+      amplifie leur co-mouvement. Le Filtre G du PRD capture exactement ce phénomène.
+    </div>
+    <div class="ref-small">Da & Shive (2018, EUFM) · Barberis & Shleifer (2003, JFE)</div>
+  </div>
+
+</div>
+
+<!-- Domaine 3 : Volume et mean reversion -->
+<div class="section-title">Domaine 3 — Volume, capitulation et qualité du signal</div>
+<div class="cards">
+
+  <div class="card coral">
+    <div class="combo-label">Volume élevé = capitulation = meilleur rebond</div>
+    <div class="combo-authors">Conrad, Hameed & Niden (1994) · Kaniel, Saar & Titman (2008)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-coral">Volume anormal</span>
+      <span class="ind-pill ip-teal">Capitulation</span>
+      <span class="ind-pill ip-green">Rebond plus fort</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-coral" style="width:80px"></div>
+      <span class="gain-num">Volume élevé → reversal +40%</span>
+    </div>
+    <div class="card-desc">
+      Conrad, Hameed & Niden (1994) documentent que le renversement de prix est
+      <strong>significativement plus fort quand le volume est élevé</strong> lors de la baisse.
+      Un volume anormalement élevé sur une baisse signale une <em>capitulation</em> :
+      les investisseurs paniquent et vendent massivement, créant une pression baissière
+      temporaire bien au-delà de la justification fondamentale.
+      Kaniel et al. (2008) montrent que les investisseurs particuliers qui achètent
+      lors de ces capitulations obtiennent des rendements supérieurs les jours suivants.
+      <br><br>
+      Lien direct avec TMX v2 : le Filtre E (confirmation par le volume, section 5 du PRD)
+      est soutenu par cette littérature. Volume élevé + baisse = signal de qualité supérieure.
+    </div>
+    <div class="ref-small">Conrad, Hameed & Niden (1994, JFE) · Kaniel, Saar & Titman (2008, JF)</div>
+  </div>
+
+  <div class="card slate">
+    <div class="combo-label">Vélocité intraday — la baisse rapide rebondit mieux</div>
+    <div class="combo-authors">Klössner et al. (2012) · Kudryavtsev (2012)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-gray">Surréaction intraday</span>
+      <span class="ind-pill ip-teal">Vitesse de baisse</span>
+      <span class="ind-pill ip-blue">Rebond dans les heures</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-slate" style="width:68px"></div>
+      <span class="gain-num">Surréaction aux mauvaises nouvelles</span>
+    </div>
+    <div class="card-desc">
+      Klössner et al. (2012) trouvent des preuves significatives de <strong>surréaction
+      aux mauvaises nouvelles en intraday</strong> sur les composantes du S&P 500 et du DAX.
+      Une baisse rapide (forte vélocité sur 1 heure) est plus souvent une surréaction
+      qu'une vraie révision fondamentale.
+      Kudryavtsev (2012) confirme ce pattern sur les composantes du Dow Jones.
+      <br><br>
+      Lien direct avec TMX v2 : la vélocité récente (section 5, Maillon 2 du PRD —
+      "mouvement sur la dernière heure, 12 bougies de 5 minutes") est soutenue par
+      cette littérature. Une baisse en capitulation rapide &gt; une dérive lente.
+    </div>
+    <div class="ref-small">Klössner et al. (2012) · Kudryavtsev (2012a, 2012b)</div>
+  </div>
+
+</div>
+
+<!-- Domaine 4 : VIX et régime -->
+<div class="section-title">Domaine 4 — VIX, régime de marché et mean reversion conditionnel</div>
+<div class="cards">
+
+  <div class="card green">
+    <div class="combo-label">Les investisseurs en FNBs misent sur le mean reversion du VIX</div>
+    <div class="combo-authors">Eriksen, Grønborg & Møller (2024, JIMF) · Cheng (2019)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-green">VIX mean reverting</span>
+      <span class="ind-pill ip-amber">Flux ETP sur VIX</span>
+      <span class="ind-pill ip-teal">Comportement confirmé</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-green" style="width:78px"></div>
+      <span class="gain-num">Relation inverse VIX ↑ → ventes ETP</span>
+    </div>
+    <div class="card-desc">
+      Eriksen et al. (2024) étudient les flux dans les produits VIX (ETPs).
+      Leur résultat principal : les investisseurs vendent massivement les ETPs VIX
+      immédiatement après une forte hausse du VIX — parce qu'ils <strong>anticipent
+      le retour à la moyenne du VIX</strong>. La volatilité est elle-même mean-reverting.
+      <br><br>
+      Pour TMX v2 : cela valide l'utilisation du VIX comme filtre de régime (section 5,
+      Maillon 1). Un VIX à 30 ne dure pas — il tend à revenir vers 16-20. Quand le VIX
+      est élevé, les baisses de FNBs sont plus volatiles mais <em>aussi</em> plus susceptibles
+      de rebondir rapidement quand le VIX recule. Le seuil risk-off (&gt;25) est conservateur —
+      il est justifié par cette littérature.
+    </div>
+    <div class="ref-small">Eriksen, Grønborg & Møller (2024, JIMF) · Cheng (2019) · Park (2023)</div>
+  </div>
+
+  <div class="card rose">
+    <div class="combo-label">Transmission internationale via les FNBs — XIN à surveiller</div>
+    <div class="combo-authors">Filippou, Gozluklu et al. (2022, JBF) · Ben-David et al. (2018)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-coral">Chocs US → Canada</span>
+      <span class="ind-pill ip-purple">VIX transmis via FNBs</span>
+      <span class="ind-pill ip-gray">XIN particulièrement exposé</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-rose" style="width:72px"></div>
+      <span class="gain-num">Corrélation croissante post-2010</span>
+    </div>
+    <div class="card-desc">
+      Filippou et al. (2022) montrent que les investisseurs en FNBs internationaux réagissent
+      principalement aux <strong>chocs du VIX américain plutôt qu'aux fondamentaux locaux</strong>.
+      Ces chocs sont transmis aux marchés locaux via le mécanisme d'arbitrage ETF.
+      Cela crée des baisses dans XIN qui ne reflètent pas les fondamentaux des marchés
+      internationaux mais la panique américaine.
+      <br><br>
+      Pour TMX v2 : XIN (international, bloc marché large) peut déclencher un z-score
+      lors d'une correction américaine sans que les marchés sous-jacents soient vraiment
+      en difficulté. Ce sont d'excellents candidats au mean reversion — la littérature
+      confirme que ces chocs VIX-transmis se renversent.
+    </div>
+    <div class="ref-small">Filippou et al. (2022, JBF) · Ben-David et al. (2018, JF)</div>
+  </div>
+
+</div>
+
+<!-- Domaine 5 : Spécificités sectorielles -->
+<div class="section-title">Domaine 5 — Spécificités sectorielles et FNBs canadiens</div>
+<div class="cards">
+
+  <div class="card blue">
+    <div class="combo-label">FNBs à forte concentration — risque idiosyncratique résiduel</div>
+    <div class="combo-authors">Cremers & Petajisto (2009, RFS) · Kacperczyk, Sialm & Zheng (2005, JF)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-blue">Active Share</span>
+      <span class="ind-pill ip-coral">Concentration ≠ diversification</span>
+      <span class="ind-pill ip-amber">XIT cas extrême</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-blue" style="width:76px"></div>
+      <span class="gain-num">Plus concentré → plus idiosyncratique</span>
+    </div>
+    <div class="card-desc">
+      Cremers & Petajisto (2009) introduisent l'"Active Share" : mesure de combien un fonds
+      dévie de son indice de référence. Un FNB sectoriel concentré (XIT avec Shopify à 55%)
+      a un profil proche d'un fonds actif concentré — <strong>le risque idiosyncratique
+      n'est pas complètement diversifié</strong>.
+      Kacperczyk et al. (2005) montrent que les fonds très concentrés ont des performances
+      plus variables précisément à cause des chocs fondamentaux sur leurs titres dominants.
+      <br><br>
+      Confirmation directe des résultats TMX v2 : XIT à 87% fondamental est exactement
+      ce que cette littérature prédit pour un FNB tech avec un titre dominant à 55%.
+    </div>
+    <div class="ref-small">Cremers & Petajisto (2009, RFS) · Kacperczyk, Sialm & Zheng (2005, JF)</div>
+  </div>
+
+  <div class="card teal">
+    <div class="combo-label">FNBs obligations (ZAG) — comportement différent en crise</div>
+    <div class="combo-authors">Pan & Zeng (2019) · BIS Working Papers n°975</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-teal">Liquidité obligataire</span>
+      <span class="ind-pill ip-amber">Décotes persistantes</span>
+      <span class="ind-pill ip-gray">ZAG comportement propre</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-teal" style="width:65px"></div>
+      <span class="gain-num">Décotes ZAG plus persistantes</span>
+    </div>
+    <div class="card-desc">
+      Les FNBs obligataires (comme ZAG) fonctionnent différemment des FNBs actions :
+      la liquidité du marché obligataire sous-jacent est inférieure au FNB lui-même,
+      ce qui crée des <strong>primes/décotes plus persistantes</strong>. Pan & Zeng (2019)
+      montrent que le mécanisme d'arbitrage est moins efficace pour les FNBs obligataires.
+      <br><br>
+      Pour TMX v2 : ZAG (Bloc Taux, profil lent) a une perte additionnelle moyenne de
+      seulement −1.8% (section 4.3 du PRD) — la plus faible de l'univers. La littérature
+      explique pourquoi : les décotes ZAG se résorbent lentement (d'où l'horizon 25 jours
+      et le seuil plus élevé à 2.5 é.-t. dans le PRD).
+    </div>
+    <div class="ref-small">Pan & Zeng (2019, SSRN) · BIS WP n°975 (2020)</div>
+  </div>
+
+</div>
+
+<!-- Synthèse -->
+<div class="principle">
+  <h2>Correspondance littérature ↔ décisions du PRD v2.1</h2>
+  <div class="principle-grid">
+    <div class="p-item">
+      <div class="p-title">Autocorrélation négative des FNBs (Da & Shive 2018)</div>
+      −0.06 sur 549 FNBs, t = −19.37. C'est la preuve statistique la plus directe que
+      le mean reversion fonctionne sur les FNBs. Le z-score de TMX v2 capte exactement
+      ce phénomène sur un horizon de 8-25 jours.
+    </div>
+    <div class="p-item">
+      <div class="p-title">Demi-vie du mispricing = 0.44 jour (Rappoport & Tuzun 2020)</div>
+      L'arbitrage NAV/prix se fait quasi-instantanément pour les FNBs actions liquides
+      (XIU, XFN, XEG). Un z-score sur ces FNBs reflète une pression de vente temporaire,
+      pas un écart NAV persistant. Le mécanisme d'arbitrage soutient le rebond.
+    </div>
+    <div class="p-item">
+      <div class="p-title">Volume + capitulation (Conrad et al. 1994)</div>
+      Le Filtre E du PRD (confirmation par le volume) est soutenu par la littérature :
+      volume élevé lors d'une baisse = capitulation = pression de vente non fondamentale
+      = rebond plus probable et plus rapide.
+    </div>
+    <div class="p-item">
+      <div class="p-title">FNBs internationaux et chocs VIX (Filippou et al. 2022)</div>
+      XIN baisse souvent à cause de la panique américaine (VIX), pas des fondamentaux
+      des marchés internationaux. C'est un excellent terrain pour le mean reversion —
+      le choc est temporaire par définition (le VIX est lui-même mean-reverting).
+    </div>
+  </div>
+</div>
+
+<div class="tmx-box">
+  <strong>Ce que la littérature spécifique aux FNBs ajoute au document précédent :</strong>
+  Le document précédent expliquait <em>pourquoi</em> certaines baisses rebondissent
+  (chocs temporaires vs fondamentaux). Ce document explique <em>comment</em> la structure
+  des FNBs crée et amplifie ces chocs temporaires — via l'arbitrage NAV, les flux de
+  création/rachat, et les comouvements induits. Pour TMX v2, cela signifie que les filtres
+  existants (régime VIX, cluster, volume) sont non seulement intuitifs mais théoriquement
+  fondés. Les chocs que le système cherche à exploiter sont exactement ceux documentés
+  dans cette littérature.
+</div>
+
+<div class="footer">
+  TMX v2 · Littérature scientifique spécifique aux FNBs · Avril 2026 · Non destiné à des fins de conseil financier.<br>
+  Références principales : Ben-David, Franzoni & Moussawi (2018, JF) · Da & Shive (2018, EUFM) ·
+  Rappoport & Tuzun (2020, Fed Reserve) · Hilliard & Zhang (2015, ScienceDirect) ·
+  Filippou et al. (2022, JBF) · Cremers & Petajisto (2009, RFS) · Conrad, Hameed & Niden (1994, JFE) ·
+  Pan & Zeng (2019) · Eriksen, Grønborg & Møller (2024, JIMF) · BIS WP n°975 (2020)
+</div>
+
+</body>
+</html>

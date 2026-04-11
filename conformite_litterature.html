@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conformité TMX v2 — Littérature scientifique</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafaf8;
+  --bg2: #f3f0eb;
+  --bg3: #e8e3da;
+  --text: #1c1a17;
+  --text2: #4a4640;
+  --text3: #8a8580;
+  --border: #ddd8d0;
+  --green:  #1a5c3a;
+  --green2: #e8f5ee;
+  --amber:  #7c4a0a;
+  --amber2: #fdf3e3;
+  --red:    #7f1d1d;
+  --red2:   #fef2f2;
+  --blue:   #1e3a5f;
+  --blue2:  #eff6ff;
+  --accent: #2d6a4f;
+  --display: 'Syne', sans-serif;
+  --body: 'Lora', Georgia, serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141210; --bg2: #1e1b18; --bg3: #28241f;
+    --text: #ede8e0; --text2: #a09890; --text3: #605850;
+    --border: #3a3530;
+    --green: #4ade80; --green2: #052e16;
+    --amber: #fbbf24; --amber2: #1c1000;
+    --red: #fca5a5; --red2: #2d0000;
+    --blue: #93c5fd; --blue2: #0c1829;
+    --accent: #6ee7b7;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ── Header ── */
+.masthead {
+  background: var(--text);
+  color: var(--bg);
+  padding: 48px 48px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.masthead-label {
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-family: var(--display);
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.masthead .desc {
+  font-family: var(--body);
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  max-width: 600px;
+}
+
+/* ── Score global ── */
+.score-band {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 48px;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.score-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.score-num {
+  font-family: var(--display);
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.score-denom {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text3);
+}
+.score-label {
+  font-size: 13px;
+  color: var(--text2);
+  max-width: 260px;
+  font-style: italic;
+}
+.score-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+.pill {
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+.pill-green { background: var(--green2); color: var(--green); border: 1px solid currentColor; opacity: 0.9; }
+.pill-amber { background: var(--amber2); color: var(--amber); border: 1px solid currentColor; opacity: 0.9; }
+.pill-red   { background: var(--red2);   color: var(--red);   border: 1px solid currentColor; opacity: 0.9; }
+
+/* ── Main ── */
+.main { max-width: 1100px; margin: 0 auto; padding: 40px 48px; }
+
+/* ── Dimension header ── */
+.dim-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 36px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+.dim-num {
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+}
+.dim-title {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+.dim-score {
+  margin-left: auto;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.ds-green { background: var(--green2); color: var(--green); }
+.ds-amber { background: var(--amber2); color: var(--amber); }
+.ds-red   { background: var(--red2);   color: var(--red);   }
+
+/* ── Items ── */
+.items { display: flex; flex-direction: column; gap: 1px; }
+.item {
+  display: grid;
+  grid-template-columns: 3px 1fr auto;
+  gap: 0 16px;
+  align-items: start;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.item-bar { width: 3px; align-self: stretch; border-radius: 0; }
+.bar-green { background: var(--green); }
+.bar-amber { background: var(--amber); }
+.bar-red   { background: var(--red); }
+
+.item-body { padding: 14px 14px 14px 0; }
+.item-title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.item-lit {
+  font-size: 11px;
+  color: var(--text3);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.item-desc {
+  font-size: 12.5px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.item-desc strong { color: var(--text); font-weight: 600; font-style: normal; }
+.item-desc em { font-style: italic; color: var(--text3); }
+
+.item-verdict {
+  padding: 14px 16px 14px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 130px;
+}
+.verdict-badge {
+  font-family: var(--display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vb-green { background: var(--green2); color: var(--green); }
+.vb-amber { background: var(--amber2); color: var(--amber); }
+.vb-red   { background: var(--red2);   color: var(--red);   }
+.verdict-ref {
+  font-size: 10px;
+  color: var(--text3);
+  font-style: italic;
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* ── Tableau récapitulatif ── */
+.recap-section { margin-top: 48px; }
+.recap-section h2 {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.recap-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.recap-table th {
+  font-family: var(--display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.recap-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--bg3);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.recap-table tr:last-child td { border-bottom: none; }
+.td-dim { font-family: var(--display); font-weight: 600; font-size: 12px; }
+.td-status { white-space: nowrap; }
+.tag { display:inline-block; font-family:var(--display); font-size:10px; font-weight:700;
+  padding:2px 8px; border-radius:3px; text-transform:uppercase; }
+.tag-green { background:var(--green2); color:var(--green); }
+.tag-amber { background:var(--amber2); color:var(--amber); }
+.tag-red   { background:var(--red2);   color:var(--red);   }
+.td-action { font-style: italic; color: var(--text2); font-size: 12px; }
+
+/* ── Conclusion ── */
+.conclusion {
+  margin-top: 40px;
+  padding: 24px 28px;
+  background: var(--bg2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+}
+.conclusion h3 {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.conclusion p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+.conclusion p:last-child { margin-bottom: 0; }
+
+/* ── Footer ── */
+footer {
+  margin-top: 48px;
+  padding: 20px 48px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text3);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-label">TMX v2 · Évaluation critique · Avril 2026</div>
+  <h1>Conformité du système TMX v2<br>à la littérature scientifique</h1>
+  <p class="desc">Analyse systématique de 12 dimensions — De la théorie du mean reversion
+  aux spécificités des FNBs canadiens</p>
+</header>
+
+<div class="score-band">
+  <div class="score-main">
+    <div class="score-num">8</div>
+    <div class="score-denom">/12</div>
+  </div>
+  <div class="score-label">
+    dimensions entièrement conformes à la littérature.<br>
+    3 partiellement conformes. 1 lacune identifiée.
+  </div>
+  <div class="score-pills">
+    <span class="pill pill-green">✓ 8 Conformes</span>
+    <span class="pill pill-amber">◐ 3 Partiels</span>
+    <span class="pill pill-red">✗ 1 Lacune</span>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ═══ DIMENSION 1 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">01</span>
+  <span class="dim-title">Fondement du mean reversion</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Z-score comme mesure d'écart à la moyenne</div>
+      <div class="item-lit">Fama & French (1988, JPE) · De Bondt & Thaler (1985, JF) · Poterba & Summers (1988)</div>
+      <div class="item-desc">
+        La littérature établit que les prix contiennent une composante temporaire qui se résorbe.
+        TMX v2 mesure cet écart via le z-score (rendement du jour / écart-type N jours),
+        ce qui est une opérationnalisation directe de cette composante temporaire.
+        <strong>L'approche multi-horizon (z20 + z60)</strong> est cohérente avec Fama & French
+        qui recommandent de mesurer l'écart sur plusieurs horizons pour distinguer le bruit
+        du signal. <em>Aucun ajustement nécessaire.</em>
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Fama & French 1988<br>PRD §4.1</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Autocorrélation négative des FNBs comme fondement empirique</div>
+      <div class="item-lit">Da & Shive (2018, EUFM) · AR(1) = −0.06, t = −19.37 sur 549 FNBs</div>
+      <div class="item-desc">
+        Da & Shive (2018) fournissent la preuve statistique directe que les FNBs ont une
+        autocorrélation négative significative à horizon court — exactement ce que TMX v2
+        cherche à exploiter. <strong>L'horizon de 8–25 jours du PRD est parfaitement positionné</strong>
+        dans la zone où cette autocorrélation est la plus forte (reversal court terme
+        documenté depuis Jegadeesh 1990 et Lehmann 1990).
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Da & Shive 2018<br>PRD §4.3</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 2 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">02</span>
+  <span class="dim-title">Signal — Z-score et seuils</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Seuil de 2 é.-t. pour déclencher un signal</div>
+      <div class="item-lit">Jegadeesh (1990, JF) · Israel & Moskowitz (2013, JFE) · Pagonidis (2014, NAAIM)</div>
+      <div class="item-desc">
+        La littérature sur le court-term reversal identifie des rendements anormaux après
+        des baisses statistiquement significatives. Le seuil de 2 é.-t. correspond à environ
+        <strong>1 événement par mois par FNB</strong> (données PRD : 86/10 ans pour XIU),
+        ce qui est cohérent avec les fréquences documentées dans la littérature.
+        Pagonidis (2014) sur l'IBS Effect utilise des seuils similaires sur les FNBs actions.
+        <em>Résultat soutenu empiriquement.</em>
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Jegadeesh 1990<br>PRD §4.2</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Z-score 60j comme confirmation — ajustement de taille, non filtre bloquant</div>
+      <div class="item-lit">Fama & French (1988) · Israel & Moskowitz (2013)</div>
+      <div class="item-desc">
+        Le PRD utilise le z-score 60j non pas comme filtre bloquant mais comme ajustement
+        de taille (section 7.3 : taille ÷ 1.5 si z60 &gt; −1.5). C'est une décision prudente
+        et soutenue par la littérature : Israel & Moskowitz (2013) montrent que les signaux
+        <strong>doubles horizons</strong> améliorent la fiabilité sans éliminer trop d'opportunités.
+        Timmermann (2006) recommande de combiner plusieurs signaux plutôt que d'en bloquer un.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Timmermann 2006<br>PRD §4.1</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 3 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">03</span>
+  <span class="dim-title">Filtres de régime (VIX)</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">VIX comme filtre de régime avec seuils 16 et 25</div>
+      <div class="item-lit">Park (2023, ScienceDirect) · Eriksen, Grønborg & Møller (2024, JIMF)</div>
+      <div class="item-desc">
+        Park (2023) valide VIX &lt; 16 comme seuil de marché calme et VIX &gt; 25 comme seuil
+        de stress élevé — <strong>exactement les seuils du PRD</strong>. Eriksen et al. (2024)
+        montrent que les investisseurs eux-mêmes utilisent ces niveaux implicitement via
+        leurs flux sur les produits VIX. Le mean reversion est plus fiable en régime calme
+        (VIX bas), ce que le PRD intègre via la réduction de taille en régime neutre.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Park 2023<br>PRD §5 Maillon 1</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 4 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">04</span>
+  <span class="dim-title">Filtres de sécurité (Maillons 3A à 3G)</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Filtre A — Cluster : bloquer quand 7+ FNBs baissent simultanément</div>
+      <div class="item-lit">Ben-David, Franzoni & Moussawi (2018) · Rapach, Strauss & Zhou (2010, RFS)</div>
+      <div class="item-desc">
+        Les clusters de baisses simultanées signalent un choc systémique —
+        Ben-David et al. (2018) montrent que lors de ces périodes, les chocs se propagent
+        via l'arbitrage ETF à tous les FNBs, amplifiant les baisses sans raison fondamentale.
+        Mais Rapach et al. (2010) avertissent : en crise systémique, la combinaison de signaux
+        devient contre-productive. <strong>Le filtre de blocage à 7+ est théoriquement solide.</strong>
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Ben-David 2018<br>PRD §5 Filtre A</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Filtre E — Volume : volume élevé renforce le signal</div>
+      <div class="item-lit">Conrad, Hameed & Niden (1994, JFE) · Kaniel, Saar & Titman (2008, JF)</div>
+      <div class="item-desc">
+        Conrad et al. (1994) documentent que le renversement de prix est
+        <strong>significativement plus fort quand le volume est élevé lors de la baisse</strong> —
+        signe de capitulation (pression de vente non fondamentale). Kaniel et al. (2008) montrent
+        que les acheteurs lors de ces capitulations obtiennent des rendements anormaux positifs.
+        Le Filtre E du PRD (volume élevé → renforce le signal) est entièrement soutenu.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Conrad 1994<br>PRD §5 Filtre E</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Filtre F — SMA 50 : éviter les tendances baissières structurelles</div>
+      <div class="item-lit">Israel & Moskowitz (2013) · De Bondt & Thaler (1985)</div>
+      <div class="item-desc">
+        La littérature distingue clairement le <em>reversal court terme</em> (bruit, capitulation)
+        du <em>momentum moyen terme</em> (tendance fondamentale persistante). Un FNB sous sa
+        SMA 50j est en tendance baissière — Israel & Moskowitz (2013) montrent que le momentum
+        survit sur 2–12 mois. <strong>Le filtre SMA 50 est le garde-fou contre le momentum adverse</strong>
+        qui transformerait un signal mean-reversion en piège. Théoriquement bien fondé.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Israel & Moskowitz 2013<br>PRD §5 Filtre F</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Filtre G — Blocs corrélés : max 1 position par bloc</div>
+      <div class="item-lit">Da & Shive (2018) · Barberis & Shleifer (2003) · Rapach et al. (2010)</div>
+      <div class="item-desc">
+        Da & Shive (2018) démontrent que l'arbitrage ETF crée des comouvements artificiels
+        entre les composantes du même FNB. XIU et XFN (corrélation 0.91) bougent ensemble
+        non seulement pour des raisons fondamentales mais parce que l'arbitrage les lie.
+        <strong>Ouvrir XIU + XFN simultanément, c'est doubler un seul pari</strong> habillé
+        en deux positions. Timmermann (2006) confirme : les signaux très corrélés
+        n'apportent pas d'information supplémentaire.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Da & Shive 2018<br>PRD §5 Filtre G</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 5 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">05</span>
+  <span class="dim-title">Dimensionnement des positions</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Taille proportionnelle à la profondeur du signal (1x / 1.5x / 2x)</div>
+      <div class="item-lit">Kelly & Jiang (2014, JFE) · Barroso & Santa-Clara (2015, JFE)</div>
+      <div class="item-desc">
+        Kelly & Jiang (2014) montrent qu'une position proportionnelle à la force du signal
+        améliore significativement le ratio rendement/risque. Barroso & Santa-Clara (2015)
+        démontrent que normaliser la taille de position par la volatilité récente
+        <strong>réduit le drawdown de moitié sans sacrifice en rendement</strong>.
+        Le PRD fait exactement cela : z-score plus profond → position plus grande,
+        avec ajustements selon la volatilité du profil (rapide/moyen/lent).
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Barroso 2015<br>PRD §7.1</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 6 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">06</span>
+  <span class="dim-title">Règles de sortie</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Sortie partielle à 50% du rebond + trailing stop</div>
+      <div class="item-lit">Jegadeesh & Titman (1993, JF) · Israel & Moskowitz (2013)</div>
+      <div class="item-desc">
+        La littérature sur le momentum montre que les gains se concentrent dans les premiers
+        jours du rebond puis s'atténuent. La sortie partielle à 50% du rebond capture
+        la phase la plus rentable. Le trailing stop protège ensuite les gains acquis.
+        <strong>C'est une application directe du principe de "laisser courir les gagnants
+        prudemment"</strong> documenté dans la littérature sur les stratégies contrariennes.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Jegadeesh 1993<br>PRD §5 Maillon 4</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Horizon max par profil (rapide 10j / moyen 15j / lent 25j)</div>
+      <div class="item-lit">Da & Shive (2018) · Jegadeesh (1990)</div>
+      <div class="item-desc">
+        Da & Shive montrent que l'autocorrélation négative des FNBs est la plus forte
+        à horizon court (&lt;1 mois) puis disparaît. Jegadeesh (1990) identifie des
+        renversements significatifs jusqu'à 4 semaines. <strong>L'horizon maximum de 25 jours
+        (profil lent) est aligné avec la zone temporelle où le mean reversion est actif</strong>
+        selon la littérature. Au-delà, on entre dans la zone momentum qui peut inverser le signal.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Jegadeesh 1990<br>PRD §4.3</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 7 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">07</span>
+  <span class="dim-title">Distinction chocs fondamentaux vs systémiques</span>
+  <span class="dim-score ds-amber">Partiel</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Filtre D (XIU) et Filtre BdC — bon début</div>
+      <div class="item-lit">Vuolteenaho (2002) · Bernard & Thomas (1989)</div>
+      <div class="item-desc">
+        Le PRD distingue partiellement les chocs fondamentaux des systémiques via le
+        Filtre D (XIU stable = correction sectorielle isolée, potentiellement fondamentale →
+        seuil +0.5) et le filtre BdC RPM. Ces deux filtres sont théoriquement fondés :
+        Vuolteenaho (2002) montre que les chocs systémiques (discount-rate news) rebondissent,
+        les fondamentaux (cash-flow news) non. <strong>Le PRD capture l'esprit, pas la lettre.</strong>
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-amber">◐ Partiel</span>
+      <span class="verdict-ref">Vuolteenaho 2002<br>PRD §5 Filtre D</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-amber"></div>
+    <div class="item-body">
+      <div class="item-title">Filtre H (publications trimestrielles) — manquant pour XIT</div>
+      <div class="item-lit">Bernard & Thomas (1989, JAR) · PEAD — 35 ans de littérature robuste</div>
+      <div class="item-desc">
+        Le PEAD (Post-Earnings Announcement Drift) est l'un des résultats les plus robustes
+        en finance empirique. Après une mauvaise publication de résultats, les prix
+        <strong>continuent de baisser 30–60 jours</strong>. Pour XIT (87% de ses signaux
+        sont fondamentaux — Shopify), l'absence d'un filtre de publications trimestrielles
+        est la lacune la plus sérieuse du PRD par rapport à la littérature.
+        <em>L'amendement v2.2 proposé corrige cette lacune.</em>
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-amber">◐ Partiel</span>
+      <span class="verdict-ref">Bernard 1989<br>Amendement v2.2</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 8 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">08</span>
+  <span class="dim-title">Modèle de coûts et réalisme d'exécution</span>
+  <span class="dim-score ds-amber">Partiel</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Spread, commission, slippage — modèle conservateur</div>
+      <div class="item-lit">Jegadeesh & Titman (1993) · Israel & Moskowitz (2013)</div>
+      <div class="item-desc">
+        Israel & Moskowitz (2013) montrent que les coûts de transaction érodent
+        significativement les profits des stratégies de reversal — mais que les FNBs
+        liquides (comme XIU, XFN) ont des coûts suffisamment bas pour que l'edge survive.
+        Le modèle de coûts du PRD (0.20–0.30% aller-retour) est <strong>conservateur
+        et aligné avec les estimations académiques</strong> pour des FNBs TSX liquides.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Israel 2013<br>PRD §8</span>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-bar bar-amber"></div>
+    <div class="item-body">
+      <div class="item-title">Coûts différenciés par FNB — non modélisé</div>
+      <div class="item-lit">Hilliard & Zhang (2015) · Ben-David et al. (2018)</div>
+      <div class="item-desc">
+        La littérature montre que les coûts varient selon la liquidité du FNB.
+        XHC (soins de santé mondiaux) et XMA (matériaux) ont des spreads potentiellement
+        de 0.15–0.20% contre 0.05% pour XIU. <strong>Le PRD utilise un taux unique
+        pour tous les FNBs</strong> (section 8.2 mentionne la variation mais ne l'intègre
+        pas dans le modèle de coûts du simulateur). Le paper trading devra mesurer
+        cet écart réel pour chaque FNB.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-amber">◐ Partiel</span>
+      <span class="verdict-ref">Hilliard 2015<br>PRD §8.2</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 9 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">09</span>
+  <span class="dim-title">Métriques de validation et critères d'arrêt</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Hit rate ≥60%, ratio gain/perte ≥1.5:1, drawdown &lt;15%</div>
+      <div class="item-lit">Israel & Moskowitz (2013) · Rapach et al. (2010)</div>
+      <div class="item-desc">
+        Israel & Moskowitz (2013) documentent des hit rates de 55–65% pour les stratégies
+        de reversal sur ETFs liquides après coûts — <strong>exactement la cible de 60%
+        du PRD</strong>. Un ratio gain/perte de 1.5:1 avec un hit rate de 60% donne
+        une espérance positive robuste. Le drawdown de 15% correspond aux niveaux
+        historiques des stratégies similaires documentées dans la littérature.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Israel 2013<br>PRD §9.1</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 10 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">10</span>
+  <span class="dim-title">Gouvernance et over-fitting</span>
+  <span class="dim-score ds-green">Conforme</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-green"></div>
+    <div class="item-body">
+      <div class="item-title">Gel des paramètres 3 mois + validation hors-échantillon</div>
+      <div class="item-lit">Timmermann (2006) · Rapach, Strauss & Zhou (2010, RFS)</div>
+      <div class="item-desc">
+        Timmermann (2006) — la règle de référence : ne pas ajuster les paramètres en
+        réaction à des trades individuels. Rapach et al. (2010) démontrent que l'over-fitting
+        est la principale cause d'échec des systèmes quant hors-échantillon.
+        <strong>La règle de gel de 3 mois du PRD (section 9.4) est une protection directe
+        contre l'over-fitting</strong>, cohérente avec les recommandations académiques.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-green">✓ Conforme</span>
+      <span class="verdict-ref">Timmermann 2006<br>PRD §9.4</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 11 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">11</span>
+  <span class="dim-title">Momentum / volatilité normalisée</span>
+  <span class="dim-score ds-amber">Partiel</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-amber"></div>
+    <div class="item-body">
+      <div class="item-title">La vélocité intraday est une bonne intuition mais sous-utilisée</div>
+      <div class="item-lit">Barroso & Santa-Clara (2015, JFE) · Klössner et al. (2012)</div>
+      <div class="item-desc">
+        Barroso & Santa-Clara (2015) démontrent que diviser le signal momentum par la
+        volatilité réalisée récente <strong>réduit le drawdown de 50% sans perte de rendement</strong>.
+        TMX v2 calcule la vélocité (section 5, Maillon 2) mais l'utilise comme information
+        complémentaire informelle, non comme ajustement quantitatif de la taille de position.
+        Intégrer la volatilité réalisée récente dans le calcul de taille serait un
+        raffinement à fort ratio impact/effort pour la Phase 2.
+        <em>Bonne intuition, pas encore formalisée.</em>
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-amber">◐ Partiel</span>
+      <span class="verdict-ref">Barroso 2015<br>PRD §5 Maillon 2</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ DIMENSION 12 ═══ -->
+<div class="dim-header">
+  <span class="dim-num">12</span>
+  <span class="dim-title">Spécificités FNBs obligataires (ZAG)</span>
+  <span class="dim-score ds-red">Lacune</span>
+</div>
+<div class="items">
+
+  <div class="item">
+    <div class="item-bar bar-red"></div>
+    <div class="item-body">
+      <div class="item-title">ZAG traité comme un FNB actions — comportement différent non modélisé</div>
+      <div class="item-lit">Pan & Zeng (2019) · BIS WP n°975 (2020) · Hilliard & Zhang (2015)</div>
+      <div class="item-desc">
+        Pan & Zeng (2019) et la BIS (2020) documentent que les FNBs obligataires ont
+        un mécanisme d'arbitrage fondamentalement différent : le marché obligataire
+        sous-jacent est <strong>moins liquide que le FNB lui-même</strong>, ce qui crée
+        des primes/décotes plus persistantes et un mean reversion plus lent.
+        Le PRD traite ZAG comme un FNB actions avec un seuil plus élevé (2.5 é.-t.)
+        et un horizon plus long (25 jours), mais <strong>n'intègre pas explicitement
+        la mécanique différente des FNBs obligataires</strong> : l'arbitrage NAV/prix
+        pour ZAG est structurellement plus faible que pour XIU ou XFN, ce qui rend
+        le mean reversion moins fiable. Le paper trading révélera si le taux de
+        récupération de ZAG (75% historique) se confirme.
+      </div>
+    </div>
+    <div class="item-verdict">
+      <span class="verdict-badge vb-red">✗ Lacune</span>
+      <span class="verdict-ref">Pan & Zeng 2019<br>PRD §6 ZAG</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ Tableau récapitulatif ═══ -->
+<div class="recap-section">
+  <h2>Récapitulatif — Vue d'ensemble des 12 dimensions</h2>
+  <table class="recap-table">
+    <thead>
+      <tr>
+        <th>#</th><th>Dimension</th><th>Statut</th>
+        <th>Référence principale</th><th>Action requise</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>01</td><td class="td-dim">Fondement mean reversion</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Fama & French 1988</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>02</td><td class="td-dim">Z-score et seuils</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Jegadeesh 1990</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>03</td><td class="td-dim">Filtre régime VIX</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Park 2023</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>04</td><td class="td-dim">Filtres de sécurité A-G</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Da & Shive 2018</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>05</td><td class="td-dim">Dimensionnement positions</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Barroso 2015</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>06</td><td class="td-dim">Règles de sortie</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Israel & Moskowitz 2013</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>07</td><td class="td-dim">Chocs fondamentaux vs systémiques</td>
+        <td class="td-status"><span class="tag tag-amber">Partiel</span></td>
+        <td>Vuolteenaho 2002 · Bernard 1989</td>
+        <td class="td-action">Filtre H (amendement v2.2) — Phase 2</td></tr>
+      <tr><td>08</td><td class="td-dim">Modèle de coûts</td>
+        <td class="td-status"><span class="tag tag-amber">Partiel</span></td>
+        <td>Israel 2013 · Hilliard 2015</td>
+        <td class="td-action">Coûts différenciés par FNB — mesurer en paper trading</td></tr>
+      <tr><td>09</td><td class="td-dim">Métriques et critères d'arrêt</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Israel & Moskowitz 2013</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>10</td><td class="td-dim">Gouvernance anti-overfitting</td>
+        <td class="td-status"><span class="tag tag-green">Conforme</span></td>
+        <td>Timmermann 2006</td>
+        <td class="td-action">Aucune</td></tr>
+      <tr><td>11</td><td class="td-dim">Volatilité normalisée</td>
+        <td class="td-status"><span class="tag tag-amber">Partiel</span></td>
+        <td>Barroso & Santa-Clara 2015</td>
+        <td class="td-action">Intégrer vol réalisée dans taille — Phase 3</td></tr>
+      <tr><td>12</td><td class="td-dim">Spécificités FNBs obligataires</td>
+        <td class="td-status"><span class="tag tag-red">Lacune</span></td>
+        <td>Pan & Zeng 2019</td>
+        <td class="td-action">Surveiller ZAG de près en paper trading — réévaluer</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ Conclusion ═══ -->
+<div class="conclusion">
+  <h3>Verdict global — ce que ça veut dire concrètement</h3>
+  <p>
+    TMX v2 est <strong>solidement ancré dans la littérature académique</strong> sur ses fondements
+    essentiels : le mécanisme du mean reversion, les seuils z-score, les filtres de régime,
+    le dimensionnement des positions et les règles de sortie. Ce n'est pas une intuition
+    improvisée — c'est une implémentation cohérente de principes documentés depuis 1985.
+  </p>
+  <p>
+    Les <strong>3 conformités partielles</strong> sont toutes des raffinements connus :
+    (1) le Filtre H pour XIT est en cours de correction via l'amendement v2.2 ;
+    (2) les coûts différenciés seront mesurés précisément pendant le paper trading ;
+    (3) la volatilité normalisée (Barroso 2015) est un ajout naturel pour la Phase 3.
+  </p>
+  <p>
+    La <strong>seule vraie lacune</strong> est ZAG : les FNBs obligataires ont une mécanique
+    d'arbitrage structurellement différente des FNBs actions, et le PRD ne la modélise pas
+    explicitement. Le paper trading dira si c'est un problème pratique ou théorique.
+    Si le taux de récupération de ZAG (75% historique) ne se confirme pas, il faudra
+    soit retirer ZAG de l'univers, soit développer un modèle de coûts/seuils spécifique.
+  </p>
+</div>
+
+</main>
+
+<footer>
+  TMX v2 · Analyse de conformité à la littérature scientifique · Avril 2026 ·
+  Références : Fama & French (1988) · Vuolteenaho (2002) · Da & Shive (2018) ·
+  Ben-David et al. (2018) · Bernard & Thomas (1989) · Israel & Moskowitz (2013) ·
+  Barroso & Santa-Clara (2015) · Rapach et al. (2010) · Timmermann (2006) ·
+  Pan & Zeng (2019) · Park (2023) · Conrad et al. (1994)
+</footer>
+
+</body>
+</html>

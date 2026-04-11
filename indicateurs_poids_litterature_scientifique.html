@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poids des indicateurs — Littérature scientifique · TMX</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 13px; line-height: 1.6;
+    background: #ffffff; color: #1a1a1a;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #e0ddd6; }
+  }
+  h1 { font-size: 18px; font-weight: 500; margin: 0 0 2px; }
+  .sub { font-size: 12px; color: #888; margin-bottom: 18px; }
+
+  .tier-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+    padding: 7px 12px 5px; margin-top: 18px; margin-bottom: 0;
+    border-radius: 6px 6px 0 0;
+  }
+  .t1 { background: #E1F5EE; color: #085041; }
+  .t2 { background: #EEEDFE; color: #26215C; }
+  .t3 { background: #FAEEDA; color: #412402; }
+  .t4 { background: #F1EFE8; color: #444441; }
+  @media (prefers-color-scheme: dark) {
+    .t1 { background: #04342C; color: #5DCAA5; }
+    .t2 { background: #26215C; color: #AFA9EC; }
+    .t3 { background: #412402; color: #EF9F27; }
+    .t4 { background: #2C2C2A; color: #B4B2A9; }
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 2px; }
+  th {
+    font-size: 11px; font-weight: 500; color: #888;
+    padding: 7px 10px; border-bottom: 1px solid #e5e5e5;
+    text-align: left; white-space: nowrap;
+  }
+  @media (prefers-color-scheme: dark) { th { color: #777; border-color: #333; } }
+  td { padding: 9px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: top; line-height: 1.5; }
+  @media (prefers-color-scheme: dark) { td { border-color: #2a2a2a; } }
+  tr:hover td { background: #fafafa; }
+  @media (prefers-color-scheme: dark) { tr:hover td { background: #222; } }
+
+  .ind { font-weight: 600; white-space: nowrap; }
+  .ref { font-size: 10px; color: #aaa; font-style: italic; margin-top: 2px; }
+  @media (prefers-color-scheme: dark) { .ref { color: #666; } }
+
+  .score-bar { display: flex; align-items: center; gap: 7px; }
+  .bar { height: 9px; border-radius: 5px; min-width: 4px; }
+  .bar-1 { background: #1D9E75; }
+  .bar-2 { background: #7F77DD; }
+  .bar-3 { background: #BA7517; }
+  .bar-4 { background: #888780; }
+  .score-num { font-size: 11px; color: #888; white-space: nowrap; }
+  @media (prefers-color-scheme: dark) { .score-num { color: #666; } }
+
+  .tag {
+    display: inline-block; padding: 2px 7px; border-radius: 3px;
+    font-size: 10px; font-weight: 500; white-space: nowrap;
+    margin-bottom: 3px;
+  }
+  .tag-tmx  { background: #E1F5EE; color: #085041; }
+  .tag-abs  { background: #FCEBEB; color: #791F1F; }
+  @media (prefers-color-scheme: dark) {
+    .tag-tmx { background: #04342C; color: #5DCAA5; }
+    .tag-abs { background: #501313; color: #F09595; }
+  }
+
+  .note {
+    font-size: 11px; color: #555; margin-top: 18px;
+    padding: 12px 14px; background: #f8f8f5;
+    border-radius: 6px; border-left: 3px solid #ccc; line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .note { background: #222; color: #aaa; border-color: #444; }
+  }
+
+  .footer {
+    margin-top: 20px; font-size: 10px; color: #bbb;
+    border-top: 1px solid #eee; padding-top: 12px;
+  }
+  @media (prefers-color-scheme: dark) { .footer { border-color: #333; } }
+</style>
+</head>
+<body>
+
+<h1>Poids des indicateurs — Littérature scientifique</h1>
+<div class="sub">Système TMX · Horizon mensuel · Petit capital · Rotation sectorielle · Mars 2026</div>
+
+<!-- TIER 1 -->
+<div class="tier-label t1">★★★★★ Tier 1 — Preuves empiriques très solides (consensus académique)</div>
+<table>
+  <thead><tr>
+    <th style="width:130px">Indicateur</th>
+    <th style="width:130px">Poids empirique</th>
+    <th>Ce que dit la littérature</th>
+    <th style="width:100px">Dans TMX?</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="ind">VIX</div>
+        <div class="ref">Johnson (2017) · NY Fed (2015) · Park (2023)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-1" style="width:90px"></div><span class="score-num">9.2 / 10</span></div></td>
+      <td>Le VIX est le prédicteur le plus robuste des rendements à 3–12 mois. Mais la relation est <strong>non-linéaire</strong> : VIX² et VIX³ ont un pouvoir prédictif 5× supérieur au VIX seul (NY Fed, 2015). La combinaison VIX + pente de la courbe des taux prédit les récessions hors-échantillon mieux que tout autre indicateur isolé (Park, 2023). Seuil critique dans la littérature : VIX > 30 = régime de protection.</td>
+      <td><span class="tag tag-tmx">✓ TMX v11</span><br><small>Seuil binaire à 35</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">HYG / Spreads crédit</div>
+        <div class="ref">Gilchrist &amp; Zakrajšek (2012) · Soper et al. (2024)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-1" style="width:85px"></div><span class="score-num">8.7 / 10</span></div></td>
+      <td>Les spreads de crédit (proxy = HYG) <strong>précèdent les corrections actions de 2–6 semaines</strong>. Gilchrist &amp; Zakrajšek (Fed, 2012) montrent que leur indicateur GZ spread prédit l'activité économique mieux que la courbe des taux seule. HYG↓ avant SPY↓ est l'un des signaux d'alerte les plus répliqués. La relation VIX–HYG est non-linéaire avec des points de rupture structurels (2008, 2020, 2023).</td>
+      <td><span class="tag tag-tmx">✓ TMX v11</span><br><small>Indicateur macro</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">Momentum (3–12 mois)</div>
+        <div class="ref">Jegadeesh &amp; Titman (1993, 2023) · Asness et al. (2013)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-1" style="width:83px"></div><span class="score-num">8.5 / 10</span></div></td>
+      <td>L'anomalie momentum est la plus répliquée de la finance empirique : rendements excédentaires de +0.7–1.0%/mois sur 3–12 mois, confirmée dans 40+ pays et toutes les classes d'actifs (Asness, 2013). Le momentum sectoriel est encore plus stable que le momentum individuel. <strong>Caveat critique</strong> : il crashe brutalement après les crises (2008, 2020). Solution : momentum ajusté par la volatilité réalisée (Barroso &amp; Santa-Clara, 2015).</td>
+      <td><span class="tag tag-tmx">✓ TMX v2</span><br><small>MA court / long</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">TNX (taux 10 ans)</div>
+        <div class="ref">Rapach et al. (2005) · Chen, Roll &amp; Ross (1986) · ScienceDirect (2024)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-1" style="width:80px"></div><span class="score-num">8.2 / 10</span></div></td>
+      <td>Rapach et al. (2005) sur 12 pays industrialisés : <strong>les taux d'intérêt sont les meilleurs prédicteurs macro des rendements boursiers en contexte international</strong>. Chen, Roll &amp; Ross (1986) — l'article fondateur — confirment le lien taux/rendements sectoriels. ScienceDirect (2024) : les betas d'inflation et de taux sont parmi les 5 plus forts prédicteurs cross-sectionnels.</td>
+      <td><span class="tag tag-tmx">✓ TMX v11</span><br><small>Indicateur primaire</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- TIER 2 -->
+<div class="tier-label t2">★★★★ Tier 2 — Preuves solides, avec des nuances importantes</div>
+<table>
+  <thead><tr>
+    <th style="width:130px">Indicateur</th>
+    <th style="width:130px">Poids empirique</th>
+    <th>Ce que dit la littérature</th>
+    <th style="width:100px">Dans TMX?</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="ind">COPPER (cuivre)</div>
+        <div class="ref">Macrosynergy (2025) · Littérature "Dr. Copper"</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-2" style="width:70px"></div><span class="score-num">7.2 / 10</span></div></td>
+      <td>Meilleur proxy de la demande industrielle mondiale parmi les commodités. Les macro-portefeuilles utilisant des facteurs comme le cuivre ont surperformé l'equal-weight de <strong>30 à 100% cumulativement sur 28 ans</strong> (Macrosynergy, 2025). Avance de 1–2 mois sur le cycle économique. Perd de son pouvoir en régimes de perturbation de l'offre (COVID, Ukraine).</td>
+      <td><span class="tag tag-tmx">✓ TMX v11</span><br><small>Secondaire XMA</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">WTI (pétrole)</div>
+        <div class="ref">Liu &amp; Kemp (2019) · ScienceDirect (2024)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-2" style="width:66px"></div><span class="score-num">6.8 / 10</span></div></td>
+      <td>Liu &amp; Kemp (2019) : WTI prédit les rendements excédentaires du secteur énergie, avec des effets <strong>concentrés en marché baissier</strong>. Prédicteur utile mais asymétrique — bien meilleur pour XLE/XEG que pour le marché large. Corrélation croissante avec les actifs réels vs. financiers depuis 2015.</td>
+      <td><span class="tag tag-tmx">✓ TMX v11</span><br><small>Indicateur primaire</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">MA croisées (21/50j)</div>
+        <div class="ref">Neely et al. (2014) · ScienceDirect ML review (2022)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-2" style="width:64px"></div><span class="score-num">6.5 / 10</span></div></td>
+      <td>Neely et al. (2014) dans <em>Management Science</em> : les indicateurs techniques, incluant les moyennes mobiles, prédisent la prime de risque des actions avec un R² hors-échantillon significatif. Revue ML de 138 études (2022) : les MA sont parmi les variables les plus fréquentes. <strong>Mais elles retardent systématiquement par rapport aux signaux macro</strong> — utiles en confirmation, pas en signal primaire.</td>
+      <td><span class="tag tag-tmx">✓ TMX v2</span><br><small>Tendance globale</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">Rendement dividendes</div>
+        <div class="ref">Wang et al. (2018) · Fama &amp; French (1988) · Hammami &amp; Zhu (2020)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-2" style="width:60px"></div><span class="score-num">6.1 / 10</span></div></td>
+      <td>Wang et al. (2018) sur 12 variables macro : <strong>le rendement dividende est le seul qui ait un pouvoir prédictif cohérent</strong>, les autres étant faibles ou inconsistants. Fama &amp; French (1988) l'ont documenté en premier. Particulièrement utile pour la rotation sectorielle (Hammami &amp; Zhu, 2020). Dans TMX, Morningstar fournit ce chiffre pour XIU (2.50%) mais il n'est pas intégré.</td>
+      <td><span class="tag tag-abs">✗ Absent TMX</span><br><small>À intégrer</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- TIER 3 -->
+<div class="tier-label t3">★★★ Tier 3 — Preuves modérées ou conditionnelles</div>
+<table>
+  <thead><tr>
+    <th style="width:130px">Indicateur</th>
+    <th style="width:130px">Poids empirique</th>
+    <th>Ce que dit la littérature</th>
+    <th style="width:100px">Dans TMX?</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="ind">CAD / USD</div>
+        <div class="ref">Mookerjee &amp; Yu (1997) · Littérature petite économie ouverte</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-3" style="width:48px"></div><span class="score-num">4.8 / 10</span></div></td>
+      <td>Pertinent pour économies ouvertes. Pour le Canada, la corrélation CAD–WTI–COPPER est forte mais <strong>redondante avec ces indicateurs</strong>. En finance systématique, le taux de change est généralement exclu des modèles primaires — trop de corrélation avec les commodités et trop de bruit géopolitique (tarifs, interventions, guerres commerciales).</td>
+      <td><span class="tag tag-tmx">✓ TMX v11</span><br><small>Indicateur primaire</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">CCI</div>
+        <div class="ref">Revue ML 138 études (ScienceDirect, 2022)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-3" style="width:40px"></div><span class="score-num">4.0 / 10</span></div></td>
+      <td>Présent dans la littérature ML comme input fréquent, mais <strong>aucune étude n'en fait un prédicteur de premier rang isolément</strong>. Sa valeur réside dans la confirmation multi-signal. Comme les z-scores de TMX, il mesure l'écart à la moyenne — la différence est l'horizon et la normalisation. CCI et z-score sont hautement redondants en pratique.</td>
+      <td><span class="tag tag-abs">✗ Disnat seulement</span></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">Stochastiques (R/L)</div>
+        <div class="ref">Goyal &amp; Welch (2008) · Farias Nazário et al. (2017)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-3" style="width:36px"></div><span class="score-num">3.6 / 10</span></div></td>
+      <td>Les oscillateurs de momentum (stochastique, RSI) apparaissent dans ~35% des études ML mais leur pouvoir prédictif <strong>disparaît presque entièrement hors-échantillon</strong> selon Goyal &amp; Welch (2008). Utiles sur des horizons intra-semaine (timing), peu utiles sur des horizons mensuels — exactement l'horizon de TMX.</td>
+      <td><span class="tag tag-abs">✗ Disnat seulement</span></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">P/E ratio</div>
+        <div class="ref">Fama &amp; French (1988) · Wang et al. (2018)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-3" style="width:38px"></div><span class="score-num">3.8 / 10</span></div></td>
+      <td>Puissant sur de <strong>très longs horizons</strong> (10 ans+) — Shiller CAPE est bien documenté. Sur des horizons de 1–12 mois (l'horizon de TMX), le P/E est un prédicteur médiocre selon Wang et al. (2018). L'alpha Morningstar (-2.28) est plus informatif que le P/E pour évaluer XIU sur horizon court.</td>
+      <td><span class="tag tag-abs">✗ Morningstar seulement</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- TIER 4 -->
+<div class="tier-label t4">★★ Tier 4 — Absents de TMX mais validés dans la littérature spécialisée</div>
+<table>
+  <thead><tr>
+    <th style="width:130px">Indicateur</th>
+    <th style="width:130px">Poids empirique</th>
+    <th>Ce que dit la littérature (opportunité pour TMX)</th>
+    <th style="width:100px">Dans TMX?</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="ind">Term Spread (10Y–2Y)</div>
+        <div class="ref">Park (2023) · Gilchrist &amp; Zakrajšek (2012) · Estrella &amp; Mishkin (1998)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-4" style="width:75px"></div><span class="score-num">7.5 / 10</span></div></td>
+      <td><strong>L'indicateur le plus absent et le plus documenté.</strong> La combinaison VIX + term spread est le meilleur prédicteur de récession sur 6–18 mois (Park, 2023). Courbe inversée (10Y &lt; 2Y) + VIX &gt; 20 = signal de récession avec 85%+ de précision historique. Facile à calculer : TNX – rendement 2 ans US (^IRX via yfinance). <strong>Priorité haute pour TMX v12.</strong></td>
+      <td><span class="tag tag-abs">✗ Absent TMX</span><br><small>Priorité haute</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">Momentum ajusté vol.</div>
+        <div class="ref">Barroso &amp; Santa-Clara (2015) · Daniel &amp; Moskowitz (2016)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-4" style="width:68px"></div><span class="score-num">6.8 / 10</span></div></td>
+      <td>Le momentum brut crashe après les crises. Barroso &amp; Santa-Clara (2015) montrent que <strong>diviser le signal momentum par la volatilité réalisée réduit le MaxDD de 50%+ sans coût en rendement</strong>. C'est exactement le problème observé dans TMX v2 (skip trop agressif). Solution : momentum / vol(21j) comme poids d'allocation. <strong>Priorité haute pour TMX v12.</strong></td>
+      <td><span class="tag tag-abs">✗ Absent TMX</span><br><small>Priorité haute</small></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="ind">Sentiment investisseur</div>
+        <div class="ref">Baker &amp; Wurgler (2007) · Financial Innovation (2024)</div>
+      </td>
+      <td><div class="score-bar"><div class="bar bar-4" style="width:52px"></div><span class="score-num">5.2 / 10</span></div></td>
+      <td>Baker &amp; Wurgler (2007) : le sentiment est un prédicteur cross-sectionnel significatif. Les modèles ML qui l'incluent voient leurs performances s'améliorer substantiellement (Financial Innovation, 2024). Proxy simple et gratuit : ratio VIX / MA50(VIX) — mesure si la peur est au-dessus ou en-dessous de sa tendance. Faisable dans TMX sans nouvelle source de données.</td>
+      <td><span class="tag tag-abs">✗ Absent TMX</span><br><small>Priorité moyenne</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Conclusion clé pour petit capital :</strong> La littérature (Zeng et al., 2022) montre que les indicateurs <em>techniques</em> prédisent mieux les titres peu liquides et volatils (small caps), tandis que les indicateurs <em>macro</em> prédisent mieux les titres liquides comme XIU. Pour un système à 200$/mois sur des FNB canadiens, le macro domine. Les signaux les plus efficaces à horizon mensuel sont, dans l'ordre :
+  <strong>VIX non-linéaire → Spreads crédit (HYG) → Taux 10 ans (TNX) → Momentum ajusté volatilité → Term spread (10Y–2Y)</strong>.
+  Les stochastiques et le CCI disponibles dans Disnat ont peu de valeur ajoutée à cet horizon temporel.
+</div>
+
+<div class="footer">
+  Système TMX v11.0 · Analyse de la littérature scientifique · Mars 2026 · Non destiné à des fins de conseil financier.<br>
+  Références principales : Jegadeesh &amp; Titman (1993, 2023) · Rapach et al. (2005) · Gilchrist &amp; Zakrajšek (2012) · Park (2023) · Barroso &amp; Santa-Clara (2015) · NY Fed (2015) · Macrosynergy (2025)
+</div>
+
+</body>
+</html>

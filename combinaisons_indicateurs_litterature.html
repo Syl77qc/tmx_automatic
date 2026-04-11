@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combinaisons d'indicateurs — Littérature scientifique · TMX</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 13px; line-height: 1.6;
+    background: #ffffff; color: #1a1a1a;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #e0ddd6; }
+  }
+  h1 { font-size: 18px; font-weight: 500; margin: 0 0 2px; }
+  .sub { font-size: 12px; color: #888; margin-bottom: 18px; }
+
+  .section-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    color: #888; margin: 20px 0 10px; text-transform: uppercase;
+  }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+  @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+  .card {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 14px;
+    background: #f8f8f5; transition: border-color 0.15s;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card { background: #222; border-color: #333; }
+  }
+  .card.purple { border-left: 3px solid #534AB7; }
+  .card.teal   { border-left: 3px solid #0F6E56; }
+  .card.amber  { border-left: 3px solid #854F0B; }
+  .card.coral  { border-left: 3px solid #993C1D; }
+  .card.blue   { border-left: 3px solid #185FA5; }
+  .card.green  { border-left: 3px solid #3B6D11; }
+
+  .combo-label { font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+
+  .combo-indicators { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+  .ind-pill {
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 500;
+  }
+  .ip-purple { background: #EEEDFE; color: #3C3489; }
+  .ip-teal   { background: #E1F5EE; color: #085041; }
+  .ip-amber  { background: #FAEEDA; color: #633806; }
+  .ip-gray   { background: #F1EFE8; color: #444441; }
+  @media (prefers-color-scheme: dark) {
+    .ip-purple { background: #26215C; color: #AFA9EC; }
+    .ip-teal   { background: #04342C; color: #5DCAA5; }
+    .ip-amber  { background: #412402; color: #EF9F27; }
+    .ip-gray   { background: #2C2C2A; color: #B4B2A9; }
+  }
+
+  .gain-bar-wrap { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
+  .gain-bar { height: 7px; border-radius: 4px; }
+  .gb-purple { background: #534AB7; }
+  .gb-teal   { background: #0F6E56; }
+  .gb-amber  { background: #854F0B; }
+  .gb-coral  { background: #993C1D; }
+  .gb-blue   { background: #185FA5; }
+  .gb-green  { background: #3B6D11; }
+  .gain-num { font-size: 11px; color: #888; white-space: nowrap; }
+  @media (prefers-color-scheme: dark) { .gain-num { color: #666; } }
+
+  .card-desc { font-size: 12px; color: #555; line-height: 1.55; margin-top: 6px; }
+  @media (prefers-color-scheme: dark) { .card-desc { color: #999; } }
+  .ref-small { font-size: 10px; color: #bbb; font-style: italic; margin-top: 6px; }
+  @media (prefers-color-scheme: dark) { .ref-small { color: #666; } }
+
+  .principle {
+    margin-top: 20px; padding: 16px;
+    border: 1px solid #e5e5e5; border-radius: 10px;
+    background: #f8f8f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    .principle { background: #222; border-color: #333; }
+  }
+  .principle h2 { font-size: 14px; font-weight: 500; margin: 0 0 10px; }
+  .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .principle-grid { grid-template-columns: 1fr; } }
+
+  .p-item {
+    font-size: 12px; color: #555; line-height: 1.55;
+    padding: 10px; background: #ffffff; border-radius: 7px;
+    border: 1px solid #eee;
+  }
+  @media (prefers-color-scheme: dark) {
+    .p-item { background: #1a1a1a; border-color: #333; color: #999; }
+  }
+  .p-title { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; font-size: 12px; }
+  @media (prefers-color-scheme: dark) { .p-title { color: #e0ddd6; } }
+
+  .tmx-box {
+    margin-top: 16px; padding: 14px 16px;
+    background: #f8f8f5; border-radius: 8px;
+    border-left: 3px solid #534AB7;
+    font-size: 12px; color: #555; line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .tmx-box { background: #222; color: #999; }
+  }
+
+  .footer {
+    margin-top: 20px; font-size: 10px; color: #bbb;
+    border-top: 1px solid #eee; padding-top: 12px;
+  }
+  @media (prefers-color-scheme: dark) { .footer { border-color: #333; } }
+</style>
+</head>
+<body>
+
+<h1>Combinaisons d'indicateurs — Ce que prouve la littérature</h1>
+<div class="sub">Les synergies documentées empiriquement · Gain vs. indicateur isolé le plus fort · Système TMX · Mars 2026</div>
+
+<div class="section-title">Combinaisons Tier 1 — Preuves directes et robustes</div>
+<div class="cards">
+
+  <div class="card purple">
+    <div class="combo-label">VIX × Term Spread</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-purple">VIX</span>
+      <span class="ind-pill ip-teal">TNX − IRX</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-purple" style="width:95px"></div>
+      <span class="gain-num">+85% précision récession</span>
+    </div>
+    <div class="card-desc">Park (2023) : la combinaison prédit les récessions hors-échantillon (1950–2022) bien mieux que chaque indicateur séparé. VIX élevé + courbe plate = signal récession quasi-certain. Ils se déplacent en cycles contracycliques qui capturent l'interaction marchés financiers / politique monétaire.</div>
+    <div class="ref-small">Park (2023, ScienceDirect) · Estrella &amp; Mishkin (1998)</div>
+  </div>
+
+  <div class="card teal">
+    <div class="combo-label">Macro × Momentum (MA)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-teal">TNX / HYG / WTI</span>
+      <span class="ind-pill ip-purple">MA 21/50j</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-teal" style="width:88px"></div>
+      <span class="gain-num">R² hors-éch. significatif</span>
+    </div>
+    <div class="card-desc">Neely, Rapach, Tu &amp; Zhou (2014, Management Science) : combiner indicateurs techniques ET macro améliore significativement la prévision de la prime de risque vs. chaque type seul. Les deux types sont orthogonaux — ils capturent des dimensions différentes du marché. C'est la base théorique de TMX v2.</div>
+    <div class="ref-small">Neely et al. (2014, Management Science)</div>
+  </div>
+
+  <div class="card amber">
+    <div class="combo-label">Combination forecast (N indicateurs)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-amber">Moyenne de N signaux</span>
+      <span class="ind-pill ip-gray">Tous horizons</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-amber" style="width:82px"></div>
+      <span class="gain-num">Bat systématiquement</span>
+    </div>
+    <div class="card-desc">Rapach, Strauss &amp; Zhou (2010, Review of Financial Studies — Prix du meilleur article) : les indicateurs individuels échouent hors-échantillon. La simple moyenne de N prévisions individuelles bat constamment la moyenne historique. Plus N augmente et plus les signaux sont orthogonaux, meilleure est la combinaison. TMX utilise déjà ce principe (score 40/30/30).</div>
+    <div class="ref-small">Rapach, Strauss &amp; Zhou (2010, RFS) — article fondateur</div>
+  </div>
+
+  <div class="card coral">
+    <div class="combo-label">VRP × Spreads crédit (DFY)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-purple">VIX − vol réalisée</span>
+      <span class="ind-pill ip-teal">HYG / BAA−TNX</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-coral" style="width:78px"></div>
+      <span class="gain-num">Prédiction macro supérieure</span>
+    </div>
+    <div class="card-desc">McMillan (2023, Manchester School) : la prime de risque de variance (VRP = VIX − vol réalisée) combinée au default yield (DFY = spreads BAA − TNX) prédit mieux l'activité économique future que les variables individuelles. La combinaison VRP + DFY offre un R² nettement supérieur dans les régressions hors-échantillon.</div>
+    <div class="ref-small">McMillan (2023) · Gilchrist &amp; Zakrajšek (2012)</div>
+  </div>
+
+</div>
+
+<div class="section-title">Combinaisons Tier 2 — Preuves solides, moins directes</div>
+<div class="cards">
+
+  <div class="card blue">
+    <div class="combo-label">Copper × WTI (régime industriel)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-teal">COPPER</span>
+      <span class="ind-pill ip-amber">WTI</span>
+      <span class="ind-pill ip-gray">+ CAD/USD</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-blue" style="width:65px"></div>
+      <span class="gain-num">Signal croissance robuste</span>
+    </div>
+    <div class="card-desc">Macrosynergy (2025) : les macro-portefeuilles qui combinent plusieurs facteurs de commodités surperforment l'equal-weight de 30–100% sur 28 ans. COPPER et WTI ensemble confirment mutuellement le régime de demande mondiale. Si les deux montent : régime croissance/inflation confirmé. Si divergent : signal confus à ignorer.</div>
+    <div class="ref-small">Macrosynergy (2025) · Littérature Dr. Copper</div>
+  </div>
+
+  <div class="card green">
+    <div class="combo-label">Momentum × Volatilité réalisée</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-purple">Retour 3–12 mois</span>
+      <span class="ind-pill ip-amber">÷ vol(21j)</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-green" style="width:70px"></div>
+      <span class="gain-num">MaxDD −50% sans perte rend.</span>
+    </div>
+    <div class="card-desc">Barroso &amp; Santa-Clara (2015) : diviser le signal momentum par la volatilité réalisée récente crée un signal composite qui réduit le drawdown maximum de moitié sans sacrifice en rendement. Le momentum seul crashe après les crises ; le momentum/vol reste stable. C'est la correction manquante dans TMX v2.</div>
+    <div class="ref-small">Barroso &amp; Santa-Clara (2015) · Daniel &amp; Moskowitz (2016)</div>
+  </div>
+
+</div>
+
+<div class="principle">
+  <h2>Le principe central : orthogonalité</h2>
+  <div class="principle-grid">
+    <div class="p-item">
+      <div class="p-title">Pourquoi les combinaisons gagnent</div>
+      Deux indicateurs corrélés (ex : WTI et CAD/USD) apportent peu d'information supplémentaire. Deux indicateurs orthogonaux (ex : VIX et COPPER) capturent des dimensions indépendantes du marché — leur erreur de prévision se compense, réduisant le bruit global du signal.
+    </div>
+    <div class="p-item">
+      <div class="p-title">La règle de Timmermann (2006)</div>
+      Les méthodes de combinaison simples (moyenne égale) battent systématiquement les méthodes complexes sur de nouvelles données. Pas besoin de ML sophistiqué — une moyenne pondérée de N signaux orthogonaux suffit. Plus simple = plus robuste hors-échantillon.
+    </div>
+    <div class="p-item">
+      <div class="p-title">Paires à éviter (redondance)</div>
+      WTI + CAD/USD (corrélation 0.75+) · QQQ + SPY (corrélation 0.90+) · Stochastique rapide + lent · CCI + z-score TMX. Ces paires n'apportent pas d'information nouvelle — elles doublent le poids d'un seul signal sans réduire l'incertitude.
+    </div>
+    <div class="p-item">
+      <div class="p-title">Paires à privilégier (orthogonales)</div>
+      VIX × COPPER (peur vs. demande réelle) · TNX × HYG (taux sans risque vs. risque crédit) · Momentum × VIX (trend vs. peur) · Term spread × VRP (politique monétaire vs. aversion risque).
+    </div>
+  </div>
+</div>
+
+<div class="tmx-box">
+  <strong>Implication directe pour TMX :</strong> TMX utilise déjà la combination forecast implicitement via le score 40/30/30. Mais il mélange des indicateurs redondants (WTI + CAD/USD très corrélés, QQQ + SPY très corrélés) et manque les combinaisons les plus puissantes documentées : <strong>VIX × Term Spread</strong> (meilleure combinaison récession) et <strong>Momentum × vol réalisée</strong> (protection crash). Remplacer CAD/USD par le term spread (TNX − IRX via ^IRX sur yfinance) serait la modification avec le meilleur ratio impact/effort pour TMX v12.
+</div>
+
+<div class="footer">
+  Système TMX v11.0 · Combinaisons d'indicateurs — littérature scientifique · Mars 2026 · Non destiné à des fins de conseil financier.<br>
+  Références principales : Rapach, Strauss &amp; Zhou (2010, RFS) · Neely et al. (2014, Management Science) · Park (2023) · Barroso &amp; Santa-Clara (2015) · McMillan (2023) · Timmermann (2006) · Macrosynergy (2025)
+</div>
+
+</body>
+</html>

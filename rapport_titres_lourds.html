@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMX v2 — Analyse des titres lourds</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #0d0f12;
+    --bg2: #141720;
+    --bg3: #1c2030;
+    --border: #2a2f3e;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --gray: #6b7280;
+    --accent: #818cf8;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* ── Header ── */
+.site-header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.header-left .sys-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+.header-left h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+.header-left .subtitle {
+    font-size: 0.85rem;
+    color: var(--text2);
+    margin-top: 0.25rem;
+}
+.header-right {
+    text-align: right;
+}
+.header-right .ts {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text3);
+}
+.header-right .warning-badge {
+    display: inline-block;
+    margin-top: 0.4rem;
+    background: #f59e0b15;
+    border: 1px solid #f59e0b40;
+    color: var(--amber);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+}
+
+/* ── Nav ── */
+.nav-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 3rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+}
+.nav-bar a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text3);
+    text-decoration: none;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+.nav-bar a:hover { color: var(--text); border-color: var(--accent); }
+
+/* ── Main ── */
+.main { padding: 2rem 3rem; max-width: 1600px; margin: 0 auto; }
+
+/* ── Résumé global ── */
+.global-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.summary-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+.summary-card h2 {
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.big-stat {
+    font-family: var(--mono);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+}
+.big-stat-sub {
+    font-size: 0.8rem;
+    color: var(--text2);
+    margin-top: 0.4rem;
+}
+.chart-container {
+    position: relative;
+    height: 200px;
+}
+
+/* ── Avertissement méthodologique ── */
+.methodo-box {
+    background: #818cf815;
+    border: 1px solid #818cf830;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.82rem;
+    color: var(--text2);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+.methodo-box .icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+/* ── Sections FNB ── */
+.fnb-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+.fnb-header {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.fnb-ticker {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-right: 0.75rem;
+}
+.fnb-nom {
+    font-size: 0.9rem;
+    color: var(--text2);
+}
+.fnb-stats-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+.stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    min-width: 70px;
+}
+.stat-pill.red   { background: #ef444415; border: 1px solid #ef444430; }
+.stat-pill.amber { background: #f59e0b15; border: 1px solid #f59e0b30; }
+.stat-pill.gray  { background: #6b728015; border: 1px solid #6b728030; }
+.stat-pill.blue  { background: #3b82f615; border: 1px solid #3b82f630; }
+.sp-val { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; }
+.stat-pill.red   .sp-val { color: var(--red); }
+.stat-pill.amber .sp-val { color: var(--amber); }
+.stat-pill.gray  .sp-val { color: var(--gray); }
+.stat-pill.blue  .sp-val { color: var(--blue); }
+.sp-lbl { font-size: 0.65rem; color: var(--text3); margin-top: 0.1rem; }
+
+.fnb-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+}
+.col-left {
+    border-right: 1px solid var(--border);
+    padding: 1.5rem;
+}
+.col-right {
+    padding: 1.5rem;
+    overflow: hidden;
+}
+.sub-title {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+/* Holdings */
+.holdings-list, .titres-dom-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.holding-row, .titre-dom-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+}
+.h-ticker, .titre-nom {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 0.7rem;
+}
+.h-nom { color: var(--text2); font-size: 0.7rem; }
+.h-bar-wrap, .titre-bar-wrap {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.h-bar { height: 100%; background: var(--accent); border-radius: 2px; }
+.titre-bar { height: 100%; background: var(--red); border-radius: 2px; }
+.h-poids, .titre-count {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text3);
+    white-space: nowrap;
+}
+
+.alerte-box {
+    margin-top: 1.25rem;
+    background: #f59e0b08;
+    border: 1px solid #f59e0b25;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    color: var(--text2);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+.alerte-icon { flex-shrink: 0; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+.events-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+}
+.events-table th {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+.events-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid #1c2030;
+    vertical-align: middle;
+}
+.events-table tr:hover td { background: #ffffff04; }
+.td-date { font-family: var(--mono); color: var(--text2); white-space: nowrap; }
+.td-z, .td-rend { font-family: var(--mono); font-weight: 600; }
+.td-expl { color: var(--text2); font-size: 0.7rem; max-width: 200px; }
+.badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-family: var(--mono);
+    white-space: nowrap;
+}
+
+/* Mini contributions */
+.td-contrib { min-width: 200px; }
+.mini-contrib {
+    display: grid;
+    grid-template-columns: 40px 46px 1fr 36px;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.2rem;
+}
+.mc-ticker { font-family: var(--mono); font-size: 0.65rem; color: var(--text3); }
+.mc-rend { font-family: var(--mono); font-size: 0.65rem; text-align: right; }
+.mc-bar-wrap { height: 3px; border-radius: 2px; background: var(--border); overflow: hidden; }
+.mc-bar { height: 100%; border-radius: 2px; }
+.mc-rel { font-family: var(--mono); font-size: 0.6rem; color: var(--text3); text-align: right; }
+
+.no-data { font-size: 0.75rem; color: var(--text3); font-style: italic; }
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text3);
+    font-size: 0.72rem;
+    font-family: var(--mono);
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+}
+
+@media (max-width: 900px) {
+    .global-summary { grid-template-columns: 1fr; }
+    .fnb-body { grid-template-columns: 1fr; }
+    .col-left { border-right: none; border-bottom: 1px solid var(--border); }
+    .site-header { padding: 1.5rem; }
+    .main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-left">
+        <div class="sys-label">TMX v2 · Amendement PRD</div>
+        <h1>Analyse des titres lourds dans les FNBs concentrés</h1>
+        <div class="subtitle">
+            Corrélation entre les baisses ≥ 2 é.-t. et les mouvements des titres dominants
+            · XFN · XIT · XEG · XGD · 2016–2025
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="ts">Généré le 08 April 2026 à 00:20</div>
+        <div class="warning-badge">⚠ Poids actuels utilisés comme proxy historique</div>
+    </div>
+</header>
+
+<nav class="nav-bar">
+    <a href="#sommaire">Sommaire</a>
+    <a href="#XFN_TO">XFN · Financières</a>
+    <a href="#XIT_TO">XIT · Technologies</a>
+    <a href="#XEG_TO">XEG · Énergie</a>
+    <a href="#XGD_TO">XGD · Mines d'or</a>
+</nav>
+
+<main class="main">
+
+<div class="methodo-box">
+    <span class="icon">🔬</span>
+    <div>
+        <strong>Note méthodologique :</strong> Les poids des titres lourds utilisés sont les poids
+        <em>actuels</em> de chaque FNB, appliqués rétroactivement sur toute la période 2016-2025.
+        Cette approximation surestime le poids de Shopify (XIT) pour les années 2016-2019 et peut
+        sous-estimer d'autres titres qui ont perdu de leur importance. Les classifications
+        «&nbsp;Fondamental&nbsp;» sont donc indicatives — non définitives. Contribution estimée =
+        rendement_titre × poids_actuel / rendement_FNB.
+    </div>
+</div>
+
+<section id="sommaire">
+<div class="global-summary">
+    <div class="summary-card">
+        <h2>Classification globale des 301 événements analysés</h2>
+        <div style="display:flex;gap:2rem;align-items:flex-end;margin-bottom:1rem">
+            <div>
+                <div class="big-stat">27%</div>
+                <div class="big-stat-sub">des baisses ≥ 2 é.-t. sont potentiellement<br>
+                d'origine fondamentale (titre lourd dominant)</div>
+            </div>
+            <div style="flex:1">
+                <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.5rem">
+                    Répartition par type</div>
+                <div style="display:flex;gap:0.75rem">
+                    <div style="text-align:center">
+                        <div style="font-family:var(--mono);font-size:1.2rem;
+                            color:var(--red)">80</div>
+                        <div style="font-size:0.65rem;color:var(--text3)">Fondamental</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="chartClass"></canvas>
+        </div>
+    </div>
+    <div class="summary-card">
+        <h2>Contribution moyenne des titres lourds par FNB</h2>
+        <div class="big-stat-sub" style="margin-bottom:1rem">
+            Pourcentage moyen de la baisse du FNB expliqué par les titres lourds trackés</div>
+        <div class="chart-container">
+            <canvas id="chartContrib"></canvas>
+        </div>
+    </div>
+</div>
+</section>
+
+
+        <section class="fnb-section" id="XFN_TO">
+            <div class="fnb-header">
+                <div class="fnb-title-block">
+                    <span class="fnb-ticker">XFN.TO</span>
+                    <span class="fnb-nom">Financières CA</span>
+                </div>
+                <div class="fnb-stats-row">
+                    <div class="stat-pill red">
+                        <span class="sp-val">2%</span>
+                        <span class="sp-lbl">Fondamental</span>
+                    </div>
+                    <div class="stat-pill amber">
+                        <span class="sp-val">70%</span>
+                        <span class="sp-lbl">Sectoriel</span>
+                    </div>
+                    <div class="stat-pill gray">
+                        <span class="sp-val">28%</span>
+                        <span class="sp-lbl">Systémique</span>
+                    </div>
+                    <div class="stat-pill blue">
+                        <span class="sp-val">87</span>
+                        <span class="sp-lbl">Événements</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fnb-body">
+                <div class="col-left">
+                    <h3 class="sub-title">Composition (poids actuels)</h3>
+                    <div class="holdings-list">
+            <div class="holding-row">
+                <span class="h-ticker">RY</span>
+                <span class="h-nom">Royal Bank</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:22%"></div>
+                </div>
+                <span class="h-poids">22%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">TD</span>
+                <span class="h-nom">TD Bank</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:18%"></div>
+                </div>
+                <span class="h-poids">18%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">BNS</span>
+                <span class="h-nom">Scotiabank</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:11%"></div>
+                </div>
+                <span class="h-poids">11%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">BMO</span>
+                <span class="h-nom">BMO</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:11%"></div>
+                </div>
+                <span class="h-poids">11%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">CM</span>
+                <span class="h-nom">CIBC</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:10%"></div>
+                </div>
+                <span class="h-poids">10%</span>
+            </div></div>
+
+                    <h3 class="sub-title" style="margin-top:1.5rem">
+                        Titres déclencheurs les plus fréquents</h3>
+                    <div class="titres-dom-list">
+            <div class="titre-dom-row">
+                <span class="titre-nom">Royal Bank</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:100%"></div>
+                </div>
+                <span class="titre-count">51× (59%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">TD Bank</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:83%"></div>
+                </div>
+                <span class="titre-count">24× (28%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">BMO</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:21%"></div>
+                </div>
+                <span class="titre-count">6× (7%)</span>
+            </div></div>
+
+                    <div class="alerte-box">
+                        <span class="alerte-icon">⚠️</span>
+                        <p><strong>Implication PRD :</strong>
+                        2% des événements z-score de XFN.TO sont
+                        potentiellement d'origine fondamentale. Un filtre de publications
+                        trimestrielles pourrait filtrer une partie de ces faux signaux.</p>
+                    </div>
+                </div>
+
+                <div class="col-right">
+                    <h3 class="sub-title">Top 5 événements les plus extrêmes</h3>
+                    <div class="table-wrap">
+                        <table class="events-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th><th>Z-score</th><th>Rend.</th>
+                                    <th>Classification</th>
+                                    <th>Contribution des titres lourds</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            <tr>
+                <td class="td-date">2020-03-09</td>
+                <td class="td-z" style="color:#ef4444">-3.71</td>
+                <td class="td-rend" style="color:#ef4444">-10.66%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">RY</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.36%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:34%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">17%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">TD</span>
+                        <span class="mc-rend" style="color:#ef4444">-12.33%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:42%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">21%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BNS</span>
+                        <span class="mc-rend" style="color:#ef4444">-11.48%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:24%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">12%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-13.29%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:27%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">14%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CM</span>
+                        <span class="mc-rend" style="color:#ef4444">-13.67%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:26%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (76% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2018-02-05</td>
+                <td class="td-z" style="color:#ef4444">-3.43</td>
+                <td class="td-rend" style="color:#ef4444">-2.44%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">RY</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.33%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:42%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">21%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">TD</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.91%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:43%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">21%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BNS</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.41%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:22%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">11%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.98%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:27%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CM</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.67%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:22%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">11%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (78% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2021-11-26</td>
+                <td class="td-z" style="color:#ef4444">-3.41</td>
+                <td class="td-rend" style="color:#ef4444">-1.90%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">RY</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.54%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:36%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">18%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">TD</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.60%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:30%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">15%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BNS</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.83%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:33%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">16%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.09%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:24%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">12%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CM</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.87%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:20%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">10%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (71% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2024-12-18</td>
+                <td class="td-z" style="color:#ef4444">-3.31</td>
+                <td class="td-rend" style="color:#ef4444">-2.00%</td>
+                <td><span class="badge" style="background:#6b728020;
+                    color:#6b7280;border:1px solid #6b728040">Systémique</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">RY</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.29%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:50%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">25%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">TD</span>
+                        <span class="mc-rend" style="color:#ef4444">-0.55%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:10%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">5%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BNS</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.54%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:17%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">8%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.52%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:17%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">8%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CM</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.68%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:17%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">8%</span>
+                    </div></td>
+                <td class="td-expl">Baisse non expliquée par les titres lourds (55%)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2018-05-29</td>
+                <td class="td-z" style="color:#ef4444">-3.27</td>
+                <td class="td-rend" style="color:#ef4444">-1.64%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">RY</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.21%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:33%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">16%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">TD</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.51%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:33%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">17%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BNS</span>
+                        <span class="mc-rend" style="color:#ef4444">-3.73%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:50%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">25%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">BMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.90%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:25%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CM</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.66%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:20%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">10%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (81% expliqué)</td>
+            </tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="fnb-section" id="XIT_TO">
+            <div class="fnb-header">
+                <div class="fnb-title-block">
+                    <span class="fnb-ticker">XIT.TO</span>
+                    <span class="fnb-nom">Technologies CA</span>
+                </div>
+                <div class="fnb-stats-row">
+                    <div class="stat-pill red">
+                        <span class="sp-val">87%</span>
+                        <span class="sp-lbl">Fondamental</span>
+                    </div>
+                    <div class="stat-pill amber">
+                        <span class="sp-val">0%</span>
+                        <span class="sp-lbl">Sectoriel</span>
+                    </div>
+                    <div class="stat-pill gray">
+                        <span class="sp-val">13%</span>
+                        <span class="sp-lbl">Systémique</span>
+                    </div>
+                    <div class="stat-pill blue">
+                        <span class="sp-val">85</span>
+                        <span class="sp-lbl">Événements</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fnb-body">
+                <div class="col-left">
+                    <h3 class="sub-title">Composition (poids actuels)</h3>
+                    <div class="holdings-list">
+            <div class="holding-row">
+                <span class="h-ticker">SHOP</span>
+                <span class="h-nom">Shopify</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:55%"></div>
+                </div>
+                <span class="h-poids">55%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">CSU</span>
+                <span class="h-nom">Constellation Soft.</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:14%"></div>
+                </div>
+                <span class="h-poids">14%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">CGI</span>
+                <span class="h-nom">CGI Group</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:8%"></div>
+                </div>
+                <span class="h-poids">8%</span>
+            </div></div>
+
+                    <h3 class="sub-title" style="margin-top:1.5rem">
+                        Titres déclencheurs les plus fréquents</h3>
+                    <div class="titres-dom-list">
+            <div class="titre-dom-row">
+                <span class="titre-nom">Shopify</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:100%"></div>
+                </div>
+                <span class="titre-count">80× (94%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">Constellation Soft.</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:14%"></div>
+                </div>
+                <span class="titre-count">4× (5%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">CGI Group</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:4%"></div>
+                </div>
+                <span class="titre-count">1× (1%)</span>
+            </div></div>
+
+                    <div class="alerte-box">
+                        <span class="alerte-icon">⚠️</span>
+                        <p><strong>Implication PRD :</strong>
+                        87% des événements z-score de XIT.TO sont
+                        potentiellement d'origine fondamentale. Un filtre de publications
+                        trimestrielles pourrait filtrer une partie de ces faux signaux.</p>
+                    </div>
+                </div>
+
+                <div class="col-right">
+                    <h3 class="sub-title">Top 5 événements les plus extrêmes</h3>
+                    <div class="table-wrap">
+                        <table class="events-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th><th>Z-score</th><th>Rend.</th>
+                                    <th>Classification</th>
+                                    <th>Contribution des titres lourds</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            <tr>
+                <td class="td-date">2018-07-27</td>
+                <td class="td-z" style="color:#ef4444">-3.15</td>
+                <td class="td-rend" style="color:#ef4444">-4.29%</td>
+                <td><span class="badge" style="background:#ef444420;
+                    color:#ef4444;border:1px solid #ef444440">Fondamental</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">SHOP</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.00%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:100%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">77%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CSU</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.98%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:59%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">29%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CGI</span>
+                        <span class="mc-rend" style="color:#ef4444">-0.16%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:1%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">0%</span>
+                    </div></td>
+                <td class="td-expl">Expliqué à 77% par Shopify</td>
+            </tr>
+            <tr>
+                <td class="td-date">2024-12-18</td>
+                <td class="td-z" style="color:#ef4444">-3.14</td>
+                <td class="td-rend" style="color:#ef4444">-4.36%</td>
+                <td><span class="badge" style="background:#ef444420;
+                    color:#ef4444;border:1px solid #ef444440">Fondamental</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">SHOP</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.33%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:100%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">92%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CSU</span>
+                        <span class="mc-rend" style="color:#ef4444">-4.08%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:26%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CGI</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.49%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:5%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">3%</span>
+                    </div></td>
+                <td class="td-expl">Expliqué à 92% par Shopify</td>
+            </tr>
+            <tr>
+                <td class="td-date">2016-10-26</td>
+                <td class="td-z" style="color:#ef4444">-3.00</td>
+                <td class="td-rend" style="color:#ef4444">-2.78%</td>
+                <td><span class="badge" style="background:#6b728020;
+                    color:#6b7280;border:1px solid #6b728040">Systémique</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">SHOP</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.05%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:42%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">21%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CSU</span>
+                        <span class="mc-rend" style="color:#22c55e">+1.02%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:10%;background:#22c55e40;
+                            border-left:2px solid #22c55e"></div></div>
+                        <span class="mc-rel">-5%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CGI</span>
+                        <span class="mc-rend" style="color:#ef4444">-0.55%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:3%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">2%</span>
+                    </div></td>
+                <td class="td-expl">Baisse non expliquée par les titres lourds (17%)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2024-02-13</td>
+                <td class="td-z" style="color:#ef4444">-2.97</td>
+                <td class="td-rend" style="color:#ef4444">-4.83%</td>
+                <td><span class="badge" style="background:#ef444420;
+                    color:#ef4444;border:1px solid #ef444440">Fondamental</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">SHOP</span>
+                        <span class="mc-rend" style="color:#ef4444">-12.54%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:100%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">143%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CSU</span>
+                        <span class="mc-rend" style="color:#ef4444">-1.59%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:9%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">5%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CGI</span>
+                        <span class="mc-rend" style="color:#ef4444">-2.28%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:8%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">4%</span>
+                    </div></td>
+                <td class="td-expl">Expliqué à 143% par Shopify</td>
+            </tr>
+            <tr>
+                <td class="td-date">2025-04-03</td>
+                <td class="td-z" style="color:#ef4444">-2.94</td>
+                <td class="td-rend" style="color:#ef4444">-9.00%</td>
+                <td><span class="badge" style="background:#ef444420;
+                    color:#ef4444;border:1px solid #ef444440">Fondamental</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">SHOP</span>
+                        <span class="mc-rend" style="color:#ef4444">-19.63%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:100%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">120%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CSU</span>
+                        <span class="mc-rend" style="color:#ef4444">-4.65%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:14%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">7%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CGI</span>
+                        <span class="mc-rend" style="color:#ef4444">-5.10%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:9%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">5%</span>
+                    </div></td>
+                <td class="td-expl">Expliqué à 120% par Shopify</td>
+            </tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="fnb-section" id="XEG_TO">
+            <div class="fnb-header">
+                <div class="fnb-title-block">
+                    <span class="fnb-ticker">XEG.TO</span>
+                    <span class="fnb-nom">Énergie CA</span>
+                </div>
+                <div class="fnb-stats-row">
+                    <div class="stat-pill red">
+                        <span class="sp-val">0%</span>
+                        <span class="sp-lbl">Fondamental</span>
+                    </div>
+                    <div class="stat-pill amber">
+                        <span class="sp-val">82%</span>
+                        <span class="sp-lbl">Sectoriel</span>
+                    </div>
+                    <div class="stat-pill gray">
+                        <span class="sp-val">18%</span>
+                        <span class="sp-lbl">Systémique</span>
+                    </div>
+                    <div class="stat-pill blue">
+                        <span class="sp-val">68</span>
+                        <span class="sp-lbl">Événements</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fnb-body">
+                <div class="col-left">
+                    <h3 class="sub-title">Composition (poids actuels)</h3>
+                    <div class="holdings-list">
+            <div class="holding-row">
+                <span class="h-ticker">CNQ</span>
+                <span class="h-nom">Canadian Natural</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:23%"></div>
+                </div>
+                <span class="h-poids">23%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">SU</span>
+                <span class="h-nom">Suncor</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:20%"></div>
+                </div>
+                <span class="h-poids">20%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">CVE</span>
+                <span class="h-nom">Cenovus</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:16%"></div>
+                </div>
+                <span class="h-poids">16%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">IMO</span>
+                <span class="h-nom">Imperial Oil</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:8%"></div>
+                </div>
+                <span class="h-poids">8%</span>
+            </div></div>
+
+                    <h3 class="sub-title" style="margin-top:1.5rem">
+                        Titres déclencheurs les plus fréquents</h3>
+                    <div class="titres-dom-list">
+            <div class="titre-dom-row">
+                <span class="titre-nom">Canadian Natural</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:100%"></div>
+                </div>
+                <span class="titre-count">45× (66%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">Cenovus</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:57%"></div>
+                </div>
+                <span class="titre-count">13× (19%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">Suncor</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:44%"></div>
+                </div>
+                <span class="titre-count">10× (15%)</span>
+            </div></div>
+
+                    <div class="alerte-box">
+                        <span class="alerte-icon">⚠️</span>
+                        <p><strong>Implication PRD :</strong>
+                        0% des événements z-score de XEG.TO sont
+                        potentiellement d'origine fondamentale. Un filtre de publications
+                        trimestrielles pourrait filtrer une partie de ces faux signaux.</p>
+                    </div>
+                </div>
+
+                <div class="col-right">
+                    <h3 class="sub-title">Top 5 événements les plus extrêmes</h3>
+                    <div class="table-wrap">
+                        <table class="events-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th><th>Z-score</th><th>Rend.</th>
+                                    <th>Classification</th>
+                                    <th>Contribution des titres lourds</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            <tr>
+                <td class="td-date">2020-03-09</td>
+                <td class="td-z" style="color:#ef4444">-4.01</td>
+                <td class="td-rend" style="color:#ef4444">-27.05%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">CNQ</span>
+                        <span class="mc-rend" style="color:#ef4444">-29.18%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:50%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">25%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">SU</span>
+                        <span class="mc-rend" style="color:#ef4444">-17.78%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:26%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CVE</span>
+                        <span class="mc-rend" style="color:#ef4444">-51.65%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:61%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">31%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">IMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-16.61%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:10%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">5%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (73% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2025-04-03</td>
+                <td class="td-z" style="color:#ef4444">-3.76</td>
+                <td class="td-rend" style="color:#ef4444">-7.05%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">CNQ</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.68%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:44%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">22%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">SU</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.58%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:43%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">22%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CVE</span>
+                        <span class="mc-rend" style="color:#ef4444">-9.70%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:44%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">22%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">IMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.08%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:18%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">9%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (75% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2018-08-15</td>
+                <td class="td-z" style="color:#ef4444">-3.62</td>
+                <td class="td-rend" style="color:#ef4444">-3.61%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">CNQ</span>
+                        <span class="mc-rend" style="color:#ef4444">-3.44%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:44%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">22%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">SU</span>
+                        <span class="mc-rend" style="color:#ef4444">-4.23%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:47%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">23%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CVE</span>
+                        <span class="mc-rend" style="color:#ef4444">-5.92%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:52%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">26%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">IMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-3.43%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:15%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">8%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (79% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2024-06-03</td>
+                <td class="td-z" style="color:#ef4444">-3.21</td>
+                <td class="td-rend" style="color:#ef4444">-4.45%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">CNQ</span>
+                        <span class="mc-rend" style="color:#ef4444">-4.58%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:47%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">24%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">SU</span>
+                        <span class="mc-rend" style="color:#ef4444">-4.75%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:43%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">21%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CVE</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.05%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:44%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">22%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">IMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-5.19%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:19%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">9%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (76% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2025-04-04</td>
+                <td class="td-z" style="color:#ef4444">-3.07</td>
+                <td class="td-rend" style="color:#ef4444">-8.66%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">CNQ</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.68%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:35%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">18%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">SU</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.82%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:41%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">20%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">CVE</span>
+                        <span class="mc-rend" style="color:#ef4444">-11.89%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:44%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">22%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">IMO</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.70%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:12%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">6%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (66% expliqué)</td>
+            </tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="fnb-section" id="XGD_TO">
+            <div class="fnb-header">
+                <div class="fnb-title-block">
+                    <span class="fnb-ticker">XGD.TO</span>
+                    <span class="fnb-nom">Mines d'or</span>
+                </div>
+                <div class="fnb-stats-row">
+                    <div class="stat-pill red">
+                        <span class="sp-val">7%</span>
+                        <span class="sp-lbl">Fondamental</span>
+                    </div>
+                    <div class="stat-pill amber">
+                        <span class="sp-val">72%</span>
+                        <span class="sp-lbl">Sectoriel</span>
+                    </div>
+                    <div class="stat-pill gray">
+                        <span class="sp-val">21%</span>
+                        <span class="sp-lbl">Systémique</span>
+                    </div>
+                    <div class="stat-pill blue">
+                        <span class="sp-val">61</span>
+                        <span class="sp-lbl">Événements</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fnb-body">
+                <div class="col-left">
+                    <h3 class="sub-title">Composition (poids actuels)</h3>
+                    <div class="holdings-list">
+            <div class="holding-row">
+                <span class="h-ticker">AEM</span>
+                <span class="h-nom">Agnico Eagle</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:25%"></div>
+                </div>
+                <span class="h-poids">25%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">ABX</span>
+                <span class="h-nom">Barrick Gold</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:20%"></div>
+                </div>
+                <span class="h-poids">20%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">FNV</span>
+                <span class="h-nom">Franco-Nevada</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:15%"></div>
+                </div>
+                <span class="h-poids">15%</span>
+            </div>
+            <div class="holding-row">
+                <span class="h-ticker">WPM</span>
+                <span class="h-nom">Wheaton Precious</span>
+                <div class="h-bar-wrap">
+                    <div class="h-bar" style="width:12%"></div>
+                </div>
+                <span class="h-poids">12%</span>
+            </div></div>
+
+                    <h3 class="sub-title" style="margin-top:1.5rem">
+                        Titres déclencheurs les plus fréquents</h3>
+                    <div class="titres-dom-list">
+            <div class="titre-dom-row">
+                <span class="titre-nom">Agnico Eagle</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:100%"></div>
+                </div>
+                <span class="titre-count">45× (74%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">Barrick Gold</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:74%"></div>
+                </div>
+                <span class="titre-count">15× (25%)</span>
+            </div>
+            <div class="titre-dom-row">
+                <span class="titre-nom">Wheaton Precious</span>
+                <div class="titre-bar-wrap">
+                    <div class="titre-bar" style="width:5%"></div>
+                </div>
+                <span class="titre-count">1× (2%)</span>
+            </div></div>
+
+                    <div class="alerte-box">
+                        <span class="alerte-icon">⚠️</span>
+                        <p><strong>Implication PRD :</strong>
+                        7% des événements z-score de XGD.TO sont
+                        potentiellement d'origine fondamentale. Un filtre de publications
+                        trimestrielles pourrait filtrer une partie de ces faux signaux.</p>
+                    </div>
+                </div>
+
+                <div class="col-right">
+                    <h3 class="sub-title">Top 5 événements les plus extrêmes</h3>
+                    <div class="table-wrap">
+                        <table class="events-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th><th>Z-score</th><th>Rend.</th>
+                                    <th>Classification</th>
+                                    <th>Contribution des titres lourds</th>
+                                    <th>Explication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            <tr>
+                <td class="td-date">2025-04-04</td>
+                <td class="td-z" style="color:#ef4444">-3.40</td>
+                <td class="td-rend" style="color:#ef4444">-8.14%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">AEM</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.43%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:46%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">23%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">ABX</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.02%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:39%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">20%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">FNV</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.85%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:29%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">14%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">WPM</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.78%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:26%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (70% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2018-08-15</td>
+                <td class="td-z" style="color:#ef4444">-3.30</td>
+                <td class="td-rend" style="color:#ef4444">-5.62%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">AEM</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.85%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:61%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">30%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">ABX</span>
+                        <span class="mc-rend" style="color:#ef4444">-3.61%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:26%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">FNV</span>
+                        <span class="mc-rend" style="color:#ef4444">-5.58%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:30%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">15%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">WPM</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.63%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:33%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">16%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (74% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2016-08-24</td>
+                <td class="td-z" style="color:#ef4444">-3.29</td>
+                <td class="td-rend" style="color:#ef4444">-7.30%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">AEM</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.86%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:47%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">23%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">ABX</span>
+                        <span class="mc-rend" style="color:#ef4444">-9.41%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:52%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">26%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">FNV</span>
+                        <span class="mc-rend" style="color:#ef4444">-5.30%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:22%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">11%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">WPM</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.93%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:26%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (73% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2025-10-17</td>
+                <td class="td-z" style="color:#ef4444">-2.87</td>
+                <td class="td-rend" style="color:#ef4444">-7.30%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">AEM</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.25%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:43%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">21%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">ABX</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.69%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:37%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">18%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">FNV</span>
+                        <span class="mc-rend" style="color:#ef4444">-5.64%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:23%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">12%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">WPM</span>
+                        <span class="mc-rend" style="color:#ef4444">-8.10%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:27%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">13%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (65% expliqué)</td>
+            </tr>
+            <tr>
+                <td class="td-date">2020-08-11</td>
+                <td class="td-z" style="color:#ef4444">-2.84</td>
+                <td class="td-rend" style="color:#ef4444">-7.50%</td>
+                <td><span class="badge" style="background:#f59e0b20;
+                    color:#f59e0b;border:1px solid #f59e0b40">Sectoriel</span></td>
+                <td class="td-contrib"><div class="mini-contrib">
+                        <span class="mc-ticker">AEM</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.02%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:40%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">20%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">ABX</span>
+                        <span class="mc-rend" style="color:#ef4444">-9.00%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:48%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">24%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">FNV</span>
+                        <span class="mc-rend" style="color:#ef4444">-6.95%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:28%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">14%</span>
+                    </div><div class="mini-contrib">
+                        <span class="mc-ticker">WPM</span>
+                        <span class="mc-rend" style="color:#ef4444">-7.09%</span>
+                        <div class="mc-bar-wrap"><div class="mc-bar"
+                            style="width:23%;background:#ef444440;
+                            border-left:2px solid #ef4444"></div></div>
+                        <span class="mc-rel">11%</span>
+                    </div></td>
+                <td class="td-expl">Baisse diffuse dans le secteur (69% expliqué)</td>
+            </tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION : Guide de décision — 3 types de baisse
+     ══════════════════════════════════════════════════════════════ -->
+<section id="guide-decision" style="max-width:1600px;margin:0 auto 3rem;padding:0 3rem;">
+
+  <div style="border-top:1px solid #2a2f3e;padding-top:2rem;margin-bottom:1.5rem;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;
+                color:#818cf8;letter-spacing:0.15em;text-transform:uppercase;
+                margin-bottom:0.5rem;">
+      TMX v2 · Guide de décision
+    </div>
+    <h2 style="font-size:1.3rem;font-weight:600;color:#e2e8f0;letter-spacing:-0.02em;">
+      Les 3 types de baisse — Quoi faire ?
+    </h2>
+    <p style="font-size:0.85rem;color:#94a3b8;margin-top:0.4rem;">
+      Basé sur l'analyse de 301 événements z-score ≥ 2 é.-t. (2016–2025) ·
+      L'agent news TMX v2 classifie automatiquement chaque signal dans l'une de ces catégories.
+    </p>
+  </div>
+
+  <!-- Tableau principal -->
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+      <thead>
+        <tr style="background:#1c2030;border-bottom:2px solid #818cf8;">
+          <th style="padding:14px 18px;text-align:left;font-family:'IBM Plex Mono',monospace;
+                     font-size:0.7rem;color:#94a3b8;letter-spacing:0.08em;
+                     text-transform:uppercase;width:15%;">Type</th>
+          <th style="padding:14px 18px;text-align:left;font-family:'IBM Plex Mono',monospace;
+                     font-size:0.7rem;color:#94a3b8;letter-spacing:0.08em;
+                     text-transform:uppercase;width:25%;">Signification</th>
+          <th style="padding:14px 18px;text-align:left;font-family:'IBM Plex Mono',monospace;
+                     font-size:0.7rem;color:#94a3b8;letter-spacing:0.08em;
+                     text-transform:uppercase;width:25%;">Exemple concret</th>
+          <th style="padding:14px 18px;text-align:left;font-family:'IBM Plex Mono',monospace;
+                     font-size:0.7rem;color:#94a3b8;letter-spacing:0.08em;
+                     text-transform:uppercase;width:15%;">Action TMX v2</th>
+          <th style="padding:14px 18px;text-align:left;font-family:'IBM Plex Mono',monospace;
+                     font-size:0.7rem;color:#94a3b8;letter-spacing:0.08em;
+                     text-transform:uppercase;width:20%;">FNBs les plus exposés</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- SECTORIEL -->
+        <tr style="background:#141720;border-bottom:1px solid #2a2f3e;">
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="display:inline-flex;align-items:center;gap:8px;">
+              <span style="font-size:1.2rem;">🟡</span>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-weight:600;
+                            color:#f59e0b;font-size:0.9rem;">SECTORIEL</div>
+                <div style="font-size:0.7rem;color:#64748b;margin-top:2px;">
+                  Tout le secteur baisse ensemble</div>
+              </div>
+            </div>
+          </td>
+          <td style="padding:16px 18px;color:#cbd5e1;vertical-align:top;line-height:1.6;">
+            Réaction émotionnelle ou mécanique du marché à une nouvelle macro ou sectorielle.
+            Les titres dans le FNB baissent <em>tous</em> dans des proportions similaires —
+            aucun n'est spécialement visé.
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="background:#f59e0b10;border:1px solid #f59e0b30;border-radius:6px;
+                        padding:10px 12px;font-size:0.78rem;color:#94a3b8;line-height:1.5;">
+              📉 WTI perd 4% après une décision OPEP+ décevante
+              → CNQ, Suncor, Cenovus baissent tous de 5-8%
+              → <strong style="color:#f59e0b;">XEG déclenche z = −3.1</strong>
+            </div>
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="background:#22c55e15;border:1px solid #22c55e40;border-radius:8px;
+                        padding:10px 14px;text-align:center;">
+              <div style="font-size:1.4rem;">✅</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;
+                          color:#22c55e;font-size:0.85rem;margin-top:4px;">ACHETER</div>
+              <div style="font-size:0.68rem;color:#64748b;margin-top:4px;line-height:1.4;">
+                Rebond historiquement fiable · Meilleur terrain pour TMX v2
+              </div>
+            </div>
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#22c55e20;border:1px solid #22c55e50;color:#22c55e;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XEG 82%</span>
+              <span style="background:#22c55e20;border:1px solid #22c55e50;color:#22c55e;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XGD 72%</span>
+              <span style="background:#22c55e20;border:1px solid #22c55e50;color:#22c55e;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XFN 70%</span>
+              <span style="background:#22c55e20;border:1px solid #22c55e50;color:#22c55e;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XUT 68%</span>
+              <span style="background:#22c55e20;border:1px solid #22c55e50;color:#22c55e;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">ZAG 70%</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- FONDAMENTAL -->
+        <tr style="background:#0d0f12;border-bottom:1px solid #2a2f3e;">
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="display:inline-flex;align-items:center;gap:8px;">
+              <span style="font-size:1.2rem;">🔴</span>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-weight:600;
+                            color:#ef4444;font-size:0.9rem;">FONDAMENTAL</div>
+                <div style="font-size:0.7rem;color:#64748b;margin-top:2px;">
+                  Un titre lourd a une mauvaise nouvelle</div>
+              </div>
+            </div>
+          </td>
+          <td style="padding:16px 18px;color:#cbd5e1;vertical-align:top;line-height:1.6;">
+            Un titre qui pèse lourd dans le FNB baisse de façon
+            <em>disproportionnée</em> par rapport aux autres — publications
+            trimestrielles décevantes, guidance réduite, annonce défavorable.
+            La baisse peut <strong style="color:#ef4444;">persister</strong>
+            si la nouvelle est réellement mauvaise.
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="background:#ef444410;border:1px solid #ef444430;border-radius:6px;
+                        padding:10px 12px;font-size:0.78rem;color:#94a3b8;line-height:1.5;">
+              📊 Shopify annonce des résultats trimestriels décevants
+              → SHOP baisse de 12%, CSU et CGI bougent peu
+              → <strong style="color:#ef4444;">XIT déclenche z = −3.0</strong>
+            </div>
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="background:#ef444415;border:1px solid #ef444440;border-radius:8px;
+                        padding:10px 14px;text-align:center;">
+              <div style="font-size:1.4rem;">⛔</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;
+                          color:#ef4444;font-size:0.85rem;margin-top:4px;">PRUDENCE</div>
+              <div style="font-size:0.68rem;color:#64748b;margin-top:4px;line-height:1.4;">
+                Rebond non garanti · Vérifier les nouvelles avant d'agir
+              </div>
+            </div>
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#ef444420;border:1px solid #ef444450;color:#ef4444;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XIT 87% ⚠️</span>
+              <span style="background:#ef444420;border:1px solid #ef444450;color:#ef4444;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XHC 20%</span>
+              <span style="background:#6b728020;border:1px solid #6b728050;color:#94a3b8;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XGD 7%</span>
+              <span style="background:#6b728020;border:1px solid #6b728050;color:#94a3b8;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">XFN 2%</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- SYSTÉMIQUE -->
+        <tr style="background:#141720;">
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="display:inline-flex;align-items:center;gap:8px;">
+              <span style="font-size:1.2rem;">🚫</span>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-weight:600;
+                            color:#6b7280;font-size:0.9rem;">SYSTÉMIQUE</div>
+                <div style="font-size:0.7rem;color:#64748b;margin-top:2px;">
+                  Tout le marché s'effondre en même temps</div>
+              </div>
+            </div>
+          </td>
+          <td style="padding:16px 18px;color:#cbd5e1;vertical-align:top;line-height:1.6;">
+            Crise globale — COVID, crash financier, tarifs Trump.
+            Tout baisse simultanément : banques, mines d'or, énergie, technologie.
+            Le FNB ne baisse pas pour ses propres raisons —
+            il suit simplement la marée générale.
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="background:#6b728010;border:1px solid #6b728030;border-radius:6px;
+                        padding:10px 12px;font-size:0.78rem;color:#94a3b8;line-height:1.5;">
+              🌍 Annonce de tarifs douaniers massifs de Trump
+              → XIU, XFN, XEG, XIT, XGD baissent tous ≥ 3%
+              → <strong style="color:#6b7280;">7+ FNBs en signal simultané</strong>
+            </div>
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="background:#6b728015;border:1px solid #6b728040;border-radius:8px;
+                        padding:10px 14px;text-align:center;">
+              <div style="font-size:1.4rem;">🚫</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;
+                          color:#6b7280;font-size:0.85rem;margin-top:4px;">DÉJÀ BLOQUÉ</div>
+              <div style="font-size:0.68rem;color:#64748b;margin-top:4px;line-height:1.4;">
+                Filtre cluster 7+ et VIX s'en occupent dans le scanner
+              </div>
+            </div>
+          </td>
+          <td style="padding:16px 18px;vertical-align:top;">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span style="background:#6b728020;border:1px solid #6b728050;color:#94a3b8;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">Tous les FNBs</span>
+              <span style="background:#6b728020;border:1px solid #6b728050;color:#94a3b8;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">VIX > 25</span>
+              <span style="background:#6b728020;border:1px solid #6b728050;color:#94a3b8;
+                           font-family:'IBM Plex Mono',monospace;font-size:0.68rem;
+                           padding:3px 8px;border-radius:4px;">Cluster 7+</span>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Note de bas de section -->
+  <div style="background:#818cf810;border:1px solid #818cf825;border-radius:8px;
+              padding:14px 18px;margin-top:1.5rem;font-size:0.8rem;color:#94a3b8;
+              display:flex;gap:10px;align-items:flex-start;">
+    <span style="font-size:1rem;flex-shrink:0;">🤖</span>
+    <div>
+      <strong style="color:#e2e8f0;">Agent news TMX v2 :</strong>
+      Dès qu'un z-score ≤ −2 est détecté par le scanner, l'agent consulte
+      Yahoo Finance RSS + Google News et soumet le contexte à Groq (llama-3.3-70b).
+      Groq classifie automatiquement la baisse dans l'une des trois catégories ci-dessus
+      et injecte un résumé de 3-5 lignes dans la notification courriel + SMS.
+      <strong style="color:#e2e8f0;">La décision finale appartient toujours à l'investisseur.</strong>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+    TMX v2 · Analyse des titres lourds · Données 2016–2025 ·
+    Source : yfinance + données historiques PRD ·
+    Poids des holdings : iShares Canada (approximation actuelle)
+</footer>
+
+<script>
+const DATA = {"labels": ["XFN.TO", "XIT.TO", "XEG.TO", "XGD.TO"], "fondamental": [2.3, 87.1, 0.0, 6.6], "sectoriel": [70.1, 0.0, 82.4, 72.1], "systemique": [27.6, 12.9, 17.6, 21.3], "contrib_moy": [67.1, 114.0, 67.0, 67.2]};
+
+const baseOpts = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            labels: {
+                color: '#94a3b8',
+                font: { family: "'IBM Plex Mono'", size: 10 },
+                boxWidth: 10, padding: 12
+            }
+        },
+        tooltip: {
+            backgroundColor: '#1c2030',
+            borderColor: '#2a2f3e',
+            borderWidth: 1,
+            titleColor: '#e2e8f0',
+            bodyColor: '#94a3b8',
+            titleFont: { family: "'IBM Plex Mono'" },
+            bodyFont: { family: "'IBM Plex Mono'" },
+        }
+    },
+    scales: {
+        x: {
+            ticks: { color: '#64748b', font: { family: "'IBM Plex Mono'", size: 10 } },
+            grid: { color: '#2a2f3e' }
+        },
+        y: {
+            ticks: { color: '#64748b', font: { family: "'IBM Plex Mono'", size: 10 },
+                callback: v => v + '%' },
+            grid: { color: '#2a2f3e' }
+        }
+    }
+};
+
+// Graphique classification
+new Chart(document.getElementById('chartClass'), {
+    type: 'bar',
+    data: {
+        labels: DATA.labels,
+        datasets: [
+            { label: 'Fondamental', data: DATA.fondamental,
+               backgroundColor: '#ef444440', borderColor: '#ef4444', borderWidth: 1 },
+            { label: 'Sectoriel',   data: DATA.sectoriel,
+               backgroundColor: '#f59e0b40', borderColor: '#f59e0b', borderWidth: 1 },
+            { label: 'Systémique',  data: DATA.systemique,
+               backgroundColor: '#6b728040', borderColor: '#6b7280', borderWidth: 1 },
+        ]
+    },
+    options: { ...baseOpts, scales: { ...baseOpts.scales,
+        x: { ...baseOpts.scales.x, stacked: true },
+        y: { ...baseOpts.scales.y, stacked: true } } }
+});
+
+// Graphique contribution
+new Chart(document.getElementById('chartContrib'), {
+    type: 'bar',
+    data: {
+        labels: DATA.labels,
+        datasets: [{
+            label: '% moyen expliqué',
+            data: DATA.contrib_moy,
+            backgroundColor: ['#818cf840','#22c55e40','#f59e0b40','#ef444440'],
+            borderColor:     ['#818cf8',  '#22c55e',  '#f59e0b',  '#ef4444'],
+            borderWidth: 1
+        }]
+    },
+    options: baseOpts
+});
+</script>
+</body>
+</html>

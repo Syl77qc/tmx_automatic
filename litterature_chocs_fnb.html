@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chocs fondamentaux vs systémiques — Littérature scientifique · TMX v2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    font-size: 13px; line-height: 1.6;
+    background: #ffffff; color: #1a1a1a;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #e0ddd6; }
+  }
+
+  h1 { font-size: 18px; font-weight: 500; margin: 0 0 2px; }
+  .sub { font-size: 12px; color: #888; margin-bottom: 18px; }
+
+  .discovery-box {
+    margin-bottom: 20px; padding: 14px 16px;
+    background: #f0fdf4; border-radius: 8px;
+    border-left: 3px solid #166534;
+    font-size: 12px; color: #14532d; line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .discovery-box { background: #052e16; color: #bbf7d0; border-color: #16a34a; }
+  }
+
+  .section-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    color: #888; margin: 20px 0 10px; text-transform: uppercase;
+  }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+  @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+  .card {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 14px;
+    background: #f8f8f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card { background: #222; border-color: #333; }
+  }
+  .card.indigo  { border-left: 3px solid #4338CA; }
+  .card.teal    { border-left: 3px solid #0F6E56; }
+  .card.amber   { border-left: 3px solid #854F0B; }
+  .card.coral   { border-left: 3px solid #993C1D; }
+  .card.blue    { border-left: 3px solid #185FA5; }
+  .card.purple  { border-left: 3px solid #7C3AED; }
+  .card.rose    { border-left: 3px solid #9F1239; }
+  .card.slate   { border-left: 3px solid #334155; }
+
+  .combo-label { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .combo-authors { font-size: 11px; color: #888; margin-bottom: 6px; }
+
+  .combo-indicators { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+  .ind-pill {
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 500;
+  }
+  .ip-indigo { background: #EEF2FF; color: #3730A3; }
+  .ip-teal   { background: #E1F5EE; color: #085041; }
+  .ip-amber  { background: #FAEEDA; color: #633806; }
+  .ip-gray   { background: #F1EFE8; color: #444441; }
+  .ip-coral  { background: #FFF0ED; color: #7F2009; }
+  .ip-purple { background: #F5F3FF; color: #5B21B6; }
+  @media (prefers-color-scheme: dark) {
+    .ip-indigo { background: #1E1B4B; color: #A5B4FC; }
+    .ip-teal   { background: #04342C; color: #5DCAA5; }
+    .ip-amber  { background: #412402; color: #EF9F27; }
+    .ip-gray   { background: #2C2C2A; color: #B4B2A9; }
+    .ip-coral  { background: #450A0A; color: #FCA5A5; }
+    .ip-purple { background: #2E1065; color: #DDD6FE; }
+  }
+
+  .gain-bar-wrap { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
+  .gain-bar { height: 7px; border-radius: 4px; }
+  .gb-indigo { background: #4338CA; }
+  .gb-teal   { background: #0F6E56; }
+  .gb-amber  { background: #854F0B; }
+  .gb-coral  { background: #993C1D; }
+  .gb-blue   { background: #185FA5; }
+  .gb-purple { background: #7C3AED; }
+  .gb-rose   { background: #9F1239; }
+  .gb-slate  { background: #334155; }
+  .gain-num { font-size: 11px; color: #888; white-space: nowrap; }
+  @media (prefers-color-scheme: dark) { .gain-num { color: #666; } }
+
+  .card-desc { font-size: 12px; color: #555; line-height: 1.55; margin-top: 6px; }
+  @media (prefers-color-scheme: dark) { .card-desc { color: #999; } }
+  .ref-small { font-size: 10px; color: #bbb; font-style: italic; margin-top: 6px; }
+  @media (prefers-color-scheme: dark) { .ref-small { color: #666; } }
+
+  /* Tableau de résultats TMX */
+  .results-table {
+    width: 100%; border-collapse: collapse;
+    margin: 12px 0; font-size: 12px;
+  }
+  .results-table th {
+    text-align: left; padding: 6px 10px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.05em; color: #888;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    .results-table th { border-color: #333; }
+  }
+  .results-table td {
+    padding: 7px 10px; border-bottom: 1px solid #f0ede6;
+    vertical-align: top;
+  }
+  @media (prefers-color-scheme: dark) {
+    .results-table td { border-color: #2a2a28; }
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .td-fnb { font-weight: 600; font-family: monospace; }
+  .td-fond { color: #991B1B; font-weight: 600; }
+  .td-sect { color: #92400E; font-weight: 600; }
+  .td-syst { color: #374151; }
+  .td-impl { color: #555; font-size: 11px; }
+  @media (prefers-color-scheme: dark) {
+    .td-fond { color: #FCA5A5; }
+    .td-sect { color: #FCD34D; }
+    .td-syst { color: #9CA3AF; }
+    .td-impl { color: #999; }
+  }
+
+  /* Principe central */
+  .principle {
+    margin-top: 20px; padding: 16px;
+    border: 1px solid #e5e5e5; border-radius: 10px;
+    background: #f8f8f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    .principle { background: #222; border-color: #333; }
+  }
+  .principle h2 { font-size: 14px; font-weight: 500; margin: 0 0 10px; }
+  .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .principle-grid { grid-template-columns: 1fr; } }
+  .p-item {
+    font-size: 12px; color: #555; line-height: 1.55;
+    padding: 10px; background: #ffffff; border-radius: 7px;
+    border: 1px solid #eee;
+  }
+  @media (prefers-color-scheme: dark) {
+    .p-item { background: #1a1a1a; border-color: #333; color: #999; }
+  }
+  .p-title { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; font-size: 12px; }
+  @media (prefers-color-scheme: dark) { .p-title { color: #e0ddd6; } }
+
+  /* Box TMX */
+  .tmx-box {
+    margin-top: 16px; padding: 14px 16px;
+    background: #f8f8f5; border-radius: 8px;
+    border-left: 3px solid #4338CA;
+    font-size: 12px; color: #555; line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .tmx-box { background: #222; color: #999; }
+  }
+
+  .warn-box {
+    margin-top: 12px; padding: 12px 14px;
+    background: #FFFBEB; border-radius: 8px;
+    border-left: 3px solid #D97706;
+    font-size: 12px; color: #78350F; line-height: 1.6;
+  }
+  @media (prefers-color-scheme: dark) {
+    .warn-box { background: #1C1400; color: #FCD34D; border-color: #D97706; }
+  }
+
+  .footer {
+    margin-top: 20px; font-size: 10px; color: #bbb;
+    border-top: 1px solid #eee; padding-top: 12px;
+  }
+  @media (prefers-color-scheme: dark) { .footer { border-color: #333; } }
+</style>
+</head>
+<body>
+
+<h1>Chocs fondamentaux vs systémiques et mean reversion — Ce que prouve la littérature</h1>
+<div class="sub">Pertinence pour TMX v2 · Titres lourds dans les FNBs concentrés · Avril 2026</div>
+
+<!-- Encadré "découverte ou pas?" -->
+<div class="discovery-box">
+  <strong>✅ Ce n'est pas une découverte originale — c'est de la finance académique bien établie.</strong><br>
+  Ce que vous avez observé empiriquement sur XFN, XIT, XEG et XGD est exactement ce que la littérature
+  appelle la <em>décomposition choc fondamental / choc systémique</em>. La question "est-ce qu'un titre lourd
+  explique la baisse d'un FNB?" est une application directe de trois décennies de recherche sur la
+  décomposition des rendements. <strong>Votre contribution est l'application originale à des FNBs canadiens
+  dans le cadre d'un système de mean reversion automatisé</strong> — ça, la littérature ne l'a pas fait.
+</div>
+
+<!-- Résultats TMX v2 -->
+<div class="section-title">Vos résultats TMX v2 — 978 événements (2016–2025)</div>
+<table class="results-table">
+  <thead>
+    <tr>
+      <th>FNB</th><th>Fondamental</th><th>Sectoriel</th><th>Systémique</th>
+      <th>Titre déclencheur #1</th><th>Implication PRD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="td-fnb">XFN.TO</td>
+      <td class="td-fond">2%</td>
+      <td class="td-sect">70%</td>
+      <td class="td-syst">28%</td>
+      <td>Royal Bank (51×)</td>
+      <td class="td-impl">Excellent candidat mean reversion — baisses principalement sectorielles</td>
+    </tr>
+    <tr>
+      <td class="td-fnb">XIT.TO</td>
+      <td class="td-fond">87%</td>
+      <td class="td-sect">0%</td>
+      <td class="td-syst">13%</td>
+      <td>Shopify (80×)</td>
+      <td class="td-impl">⚠️ Risque élevé — filtre publications Shopify requis</td>
+    </tr>
+    <tr>
+      <td class="td-fnb">XEG.TO</td>
+      <td class="td-fond">0%</td>
+      <td class="td-sect">82%</td>
+      <td class="td-syst">18%</td>
+      <td>Canadian Natural (45×)</td>
+      <td class="td-impl">Excellent — baisses sectorielles pétrolières, rebond probable</td>
+    </tr>
+    <tr>
+      <td class="td-fnb">XGD.TO</td>
+      <td class="td-fond">7%</td>
+      <td class="td-sect">72%</td>
+      <td class="td-syst">21%</td>
+      <td>Agnico Eagle (45×)</td>
+      <td class="td-impl">Bon candidat — baisses sectorielles métaux, rebond probable</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Fondements théoriques -->
+<div class="section-title">Fondements théoriques — Les 3 piliers de la littérature</div>
+<div class="cards">
+
+  <div class="card indigo">
+    <div class="combo-label">Composantes permanentes vs temporaires</div>
+    <div class="combo-authors">Fama & French (1988) · Journal of Political Economy</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-indigo">Choc permanent</span>
+      <span class="ind-pill ip-teal">Choc temporaire</span>
+      <span class="ind-pill ip-gray">Mean reversion</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-indigo" style="width:90px"></div>
+      <span class="gain-num">25–40% variance expliquée</span>
+    </div>
+    <div class="card-desc">
+      Le papier fondateur. Fama & French montrent que les prix des actions contiennent
+      deux composantes : une <strong>permanente</strong> (changement réel de la valeur fondamentale —
+      pas de rebond) et une <strong>temporaire</strong> (bruit, surréaction — rebond probable).
+      La composante temporaire explique 25–40% de la variance des rendements sur 3–5 ans.
+      C'est la base théorique du mean reversion : on parie que la composante temporaire
+      va se résorber.
+    </div>
+    <div class="ref-small">Fama & French (1988, JPE vol.96) · Poterba & Summers (1988, NBER)</div>
+  </div>
+
+  <div class="card teal">
+    <div class="combo-label">News flux de trésorerie vs taux d'actualisation</div>
+    <div class="combo-authors">Vuolteenaho (2002) · Journal of Finance · Campbell (1991)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-coral">Cash-flow news = permanent</span>
+      <span class="ind-pill ip-teal">DR news = temporaire</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-teal" style="width:85px"></div>
+      <span class="gain-num">~5× plus de CF que DR news</span>
+    </div>
+    <div class="card-desc">
+      Vuolteenaho décompose les rendements en deux types de nouvelles :
+      <strong>Cash-flow news (CF)</strong> = une vraie révision des bénéfices futurs de la compagnie
+      → choc <em>permanent</em>, pas de rebond.
+      <strong>Discount-rate news (DR)</strong> = changement du taux requis par les investisseurs
+      → choc <em>temporaire</em>, rebond probable.
+      La CF news est idiosyncratique (propre à la compagnie), la DR news est systémique.
+      Quand Shopify rate ses résultats = CF news = permanent = pas de mean reversion.
+      Quand les taux montent et tout le secteur vend = DR news = temporaire = mean reversion.
+    </div>
+    <div class="ref-small">Vuolteenaho (2002, JF) · Campbell & Vuolteenaho (2004, AER) · Campbell (1991, EJ)</div>
+  </div>
+
+  <div class="card amber">
+    <div class="combo-label">Chocs idiosyncratiques dans les ETFs</div>
+    <div class="combo-authors">Da & Shive (2018) · European Financial Management</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-amber">Non-fundamental shocks</span>
+      <span class="ind-pill ip-teal">ETF arbitrage</span>
+      <span class="ind-pill ip-gray">Price reversal</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-amber" style="width:78px"></div>
+      <span class="gain-num">AR(1) = −0.06 (t = −19.37)</span>
+    </div>
+    <div class="card-desc">
+      Da & Shive montrent que les ETFs ont une autocorrélation journalière
+      <strong>négatif et significatif</strong> (−0.06) — preuve directe de mean reversion
+      à court terme. Les baisses non-fondamentales (chocs de sentiment, pression de vente,
+      arbitrage ETF) se renversent rapidement. Cependant, les chocs fondamentaux
+      (nouvelles sur un titre lourd) ne se renversent pas. C'est exactement la distinction
+      que TMX v2 cherche à capter avec son filtre de titres lourds.
+    </div>
+    <div class="ref-small">Da & Shive (2018, EUFM) · Ben-David, Franzoni & Moussawi (2018, JF)</div>
+  </div>
+
+  <div class="card coral">
+    <div class="combo-label">Dérive après annonces de résultats</div>
+    <div class="combo-authors">Bernard & Thomas (1989) · Chan, Jegadeesh & Lakonishok (1996)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-coral">PEAD</span>
+      <span class="ind-pill ip-gray">Post-earnings drift</span>
+      <span class="ind-pill ip-teal">Sous-réaction</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-coral" style="width:72px"></div>
+      <span class="gain-num">Drift 60j après CF news</span>
+    </div>
+    <div class="card-desc">
+      Le <em>Post-Earnings Announcement Drift</em> (PEAD) est l'un des résultats les plus robustes
+      de la finance empirique : après une mauvaise annonce de résultats, les prix
+      <strong>continuent de baisser pendant 30 à 60 jours</strong> (pas de rebond).
+      C'est l'opposé du mean reversion. Bernard & Thomas (1989) et Chan et al. (1996)
+      documentent ce phénomène sur des décennies de données. Pour TMX v2 :
+      si XIT baisse parce que Shopify a raté ses résultats, le PEAD prédit une
+      <em>continuation</em> de la baisse, pas un rebond — acheter serait une erreur.
+    </div>
+    <div class="ref-small">Bernard & Thomas (1989, JAR) · Chan, Jegadeesh & Lakonishok (1996, JF)</div>
+  </div>
+
+</div>
+
+<!-- Littérature complémentaire -->
+<div class="section-title">Littérature complémentaire — Applications pratiques</div>
+<div class="cards">
+
+  <div class="card blue">
+    <div class="combo-label">Mean reversion conditionnel au type de choc</div>
+    <div class="combo-authors">Lehmann (1990) · Jegadeesh (1990) · De Bondt & Thaler (1985)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-teal">Choc systémique → rebond</span>
+      <span class="ind-pill ip-coral">Choc fondamental → dérive</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-blue" style="width:80px"></div>
+      <span class="gain-num">Reversal 1 mois robuste</span>
+    </div>
+    <div class="card-desc">
+      De Bondt & Thaler (1985) montrent les premiers que les "perdants" sur 3–5 ans
+      rebondissent — mais seulement quand la baisse initiale est une <em>surréaction émotionnelle</em>.
+      Lehmann (1990) et Jegadeesh (1990) documentent des retournements à court terme
+      (1 semaine, 1 mois). La condition clé dans toute cette littérature :
+      <strong>le mean reversion ne fonctionne que sur les chocs temporaires</strong>
+      (sentiment, pression de vente, macro). Il échoue sur les chocs fondamentaux
+      (vraie détérioration de la valeur intrinsèque).
+    </div>
+    <div class="ref-small">De Bondt & Thaler (1985, JF) · Jegadeesh (1990, JF) · Lehmann (1990, JF)</div>
+  </div>
+
+  <div class="card purple">
+    <div class="combo-label">Concentration et risque idiosyncratique dans les fonds</div>
+    <div class="combo-authors">Cremers & Petajisto (2009) · Kacperczyk, Sialm & Zheng (2005)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-purple">Active Share</span>
+      <span class="ind-pill ip-amber">Concentration sectorielle</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-purple" style="width:68px"></div>
+      <span class="gain-num">High Active Share → + idiosyncratique</span>
+    </div>
+    <div class="card-desc">
+      Cremers & Petajisto (2009) introduisent l'"Active Share" — mesure de combien un fonds
+      dévie de son indice. Plus un FNB est concentré (comme XIT avec Shopify à 55%),
+      plus son risque est idiosyncratique. Kacperczyk et al. (2005) montrent que
+      les fonds sectoriellement concentrés ont une performance plus variable précisément
+      à cause des chocs fondamentaux sur leurs titres dominants.
+      <strong>XIT avec Shopify à 55% est un cas extrême de concentration</strong> —
+      la littérature prédit exactement les 87% de chocs fondamentaux que vous observez.
+    </div>
+    <div class="ref-small">Cremers & Petajisto (2009, RFS) · Kacperczyk, Sialm & Zheng (2005, JF)</div>
+  </div>
+
+  <div class="card rose">
+    <div class="combo-label">Retournement court terme vs momentum</div>
+    <div class="combo-authors">Israel & Moskowitz (2013) · Asness, Moskowitz & Pedersen (2013)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-coral">1 mois : reversal</span>
+      <span class="ind-pill ip-teal">2–12 mois : momentum</span>
+      <span class="ind-pill ip-gray">Horizon critique</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-rose" style="width:74px"></div>
+      <span class="gain-num">Horizon TMX v2 = 8–25 jours ✓</span>
+    </div>
+    <div class="card-desc">
+      La littérature sur momentum vs reversal montre un pattern cohérent :
+      <strong>retournement à très court terme</strong> (1–4 semaines = bruit, microstructure),
+      <strong>momentum à moyen terme</strong> (2–12 mois = tendances fondamentales persistantes),
+      <strong>retournement à long terme</strong> (3–5 ans = surréaction).
+      L'horizon de 8–25 jours de TMX v2 est parfaitement positionné dans la zone
+      de reversal court terme — là où la littérature confirme l'effet.
+      Attention : cet effet est plus fort pour les chocs systémiques que fondamentaux.
+    </div>
+    <div class="ref-small">Israel & Moskowitz (2013, JFE) · Asness, Moskowitz & Pedersen (2013, JF)</div>
+  </div>
+
+  <div class="card slate">
+    <div class="combo-label">ETF mean reversion — preuves directes</div>
+    <div class="combo-authors">Pagonidis (2014, NAAIM) · TradeQuantiX (2025)</div>
+    <div class="combo-indicators">
+      <span class="ind-pill ip-gray">IBS Effect</span>
+      <span class="ind-pill ip-teal">Pas de risque idiosyncratique</span>
+      <span class="ind-pill ip-indigo">Flux passifs = plancher</span>
+    </div>
+    <div class="gain-bar-wrap">
+      <div class="gain-bar gb-slate" style="width:65px"></div>
+      <span class="gain-num">Mean reversion > actions individuelles</span>
+    </div>
+    <div class="card-desc">
+      Pagonidis (2014) documente l'"IBS Effect" (Internal Bar Strength) sur les ETFs :
+      les ETFs qui clôturent près de leur bas journalier tendent à rebondir le lendemain.
+      La raison théorique : les ETFs <em>diversifiés</em> n'ont pas de risque idiosyncratique —
+      les nouvelles fondamentales d'un titre se diluent dans le panier.
+      Mais ce raisonnement tient seulement quand <strong>aucun titre individuel ne domine</strong>
+      le FNB. XIT avec Shopify à 55% viole cette condition. XEG avec CNQ + SU + CVE
+      bien répartis la respecte.
+    </div>
+    <div class="ref-small">Pagonidis (2014, NAAIM) · Da & Shive (2018)</div>
+  </div>
+
+</div>
+
+<!-- Principe central -->
+<div class="principle">
+  <h2>Le principe central : pourquoi le mean reversion fonctionne (ou pas)</h2>
+  <div class="principle-grid">
+    <div class="p-item">
+      <div class="p-title">La règle fondamentale (Fama & French 1988)</div>
+      Le mean reversion fonctionne sur les composantes <em>temporaires</em> des prix —
+      celles qui s'éloignent de la valeur fondamentale pour des raisons de sentiment,
+      de panique, de pression de vente mécanique. Ces composantes se résorbent.
+      Il ne fonctionne <em>pas</em> sur les composantes permanentes — les vraies révisions
+      de la valeur intrinsèque d'une compagnie.
+    </div>
+    <div class="p-item">
+      <div class="p-title">La distinction clé pour TMX v2</div>
+      Choc sectoriel (XFN, XEG, XGD à 70–82%) = les banques ou les pétrolières baissent
+      toutes ensemble → probablement temporaire → mean reversion attendu ✓<br>
+      Choc fondamental (XIT à 87%) = Shopify a eu une vraie mauvaise nouvelle →
+      probablement permanent → pas de mean reversion attendu ✗
+    </div>
+    <div class="p-item">
+      <div class="p-title">Le PEAD — l'ennemi du mean reversion</div>
+      Post-Earnings Announcement Drift : après une mauvaise annonce de résultats,
+      le prix continue de baisser pendant 30–60 jours. C'est robuste depuis 1989.
+      Pour XIT : si Shopify annonce des résultats décevants un mardi,
+      acheter XIT ce jour-là sur un z-score de −2 est potentiellement acheter
+      au début d'une tendance baissière de 2 mois, pas une aubaine.
+    </div>
+    <div class="p-item">
+      <div class="p-title">La limite de la méthode TMX v2</div>
+      Le z-score mesure l'ampleur statistique de la baisse mais pas son origine.
+      C'est reconnu dans le PRD (section 13). La solution n'est pas d'abandonner
+      le z-score — c'est d'ajouter un signal contextuel (filtre publications
+      trimestrielles) qui distingue les jours à risque fondamental élevé
+      des jours de correction sectorielle ordinaire.
+    </div>
+  </div>
+</div>
+
+<!-- Box implication TMX -->
+<div class="tmx-box">
+  <strong>Implication directe pour TMX v2 (amendement PRD) :</strong>
+  La littérature valide entièrement votre approche — et confirme que XIT mérite
+  un traitement spécial. La modification suggérée : pour XIT spécifiquement,
+  vérifier si Shopify a une publication trimestrielle dans les ±2 jours du signal
+  (dates : début février, mai, août, novembre). Si oui, exiger un z-score ≥ 3.0
+  (au lieu de 2.0) et réduire la taille de position à 25%.
+  Pour XFN, XEG, XGD : aucun changement requis — vos résultats confirment
+  que leur profil de mean reversion est sain.
+</div>
+
+<!-- Avertissement méthodologique -->
+<div class="warn-box">
+  <strong>⚠️ Limite de l'analyse TMX v2 :</strong> Les poids utilisés pour attribuer les baisses
+  sont les poids <em>actuels</em> des FNBs, appliqués à 10 ans de données historiques.
+  Le poids de Shopify dans XIT était marginal en 2016–2018 (avant son explosion de valorisation).
+  Les résultats pour XIT sont donc potentiellement surestimés pour la période pré-2019.
+  Une analyse avec les poids historiques réels (disponibles sur iShares archives)
+  affinerait les résultats.
+</div>
+
+<div class="footer">
+  TMX v2 · Analyse des titres lourds — Fondements littérature scientifique · Avril 2026 ·
+  Non destiné à des fins de conseil financier.<br>
+  Références principales : Fama & French (1988, JPE) · Vuolteenaho (2002, JF) ·
+  Da & Shive (2018, EUFM) · Bernard & Thomas (1989, JAR) · De Bondt & Thaler (1985, JF) ·
+  Cremers & Petajisto (2009, RFS) · Jegadeesh (1990, JF) · Lehmann (1990, JF) ·
+  Israel & Moskowitz (2013, JFE) · Campbell (1991, EJ)
+</div>
+
+</body>
+</html>
