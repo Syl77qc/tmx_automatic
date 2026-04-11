@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNBLab — À propos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0f11;--bg2:#131619;--bg3:#1a1e22;--bg4:#21262d;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#e8e4dd;--text2:#8a8880;--text3:#555250;
+  --accent:#e8c97e;
+  --mono:'DM Mono',monospace;--display:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;}
+.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;}
+.nav-links{display:flex;gap:2px;}
+.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color 0.15s,background 0.15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
+.page{max-width:800px;margin:0 auto;padding:40px 32px 80px;}
+.hero{margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;color:var(--text);line-height:1.2;margin-bottom:8px;}
+.hero-title span{color:var(--accent);font-style:normal;font-weight:500;}
+.section{margin-bottom:36px;}
+.section-title{font-family:var(--display);font-size:16px;font-weight:400;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.prose{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:12px;}
+.prose strong{color:var(--text);}
+.outils{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+@media(max-width:600px){.outils{grid-template-columns:1fr 1fr;}}
+.outil{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.outil-nom{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);margin-bottom:3px;}
+.outil-desc{font-size:11px;color:var(--text3);}
+.timeline{display:flex;flex-direction:column;gap:12px;}
+.tl-item{display:flex;gap:16px;align-items:flex-start;}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0;}
+.tl-content{font-size:12px;color:var(--text3);line-height:1.6;}
+.tl-content strong{color:var(--text2);}
+.disclaimer-box{margin-top:40px;padding:24px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);font-size:12px;color:var(--text3);line-height:1.8;}
+.disclaimer-box strong{color:var(--text2);}
+.disclaimer-box h3{font-family:var(--display);font-size:15px;font-weight:400;color:var(--text);margin-bottom:12px;}
+footer{max-width:800px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
+.footer-brand{font-family:var(--display);font-size:14px;color:var(--accent);font-style:italic;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="recherche.html">Recherche</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="apropos.html" class="active">À propos</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <div class="hero-title">À propos de <span>FNBLab</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Le projet</div>
+    <p class="prose">FNBLab documente la construction, le déploiement et le suivi d'un système de <strong>mean reversion automatisé</strong> sur 12 FNBs sectoriels canadiens cotés à la Bourse de Toronto (TSX).</p>
+    <p class="prose">L'objectif est de tester rigoureusement, en <strong>paper trading</strong> pendant 6 à 9 mois, si les anomalies de mean reversion documentées dans la littérature académique sont exploitables de façon systématique sur ce segment de marché, avec un modèle de coûts réaliste.</p>
+    <p class="prose">Ce site est public par choix — la transparence complète sur la méthodologie, les résultats et les erreurs est une condition nécessaire à la crédibilité scientifique de la démarche.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Philosophie</div>
+    <p class="prose"><strong>Ancrage académique.</strong> Chaque décision de conception est justifiée par la littérature empirique. Les références sont documentées dans la section Recherche.</p>
+    <p class="prose"><strong>Simplicité délibérée.</strong> Timmermann (2006) démontre que les modèles simples battent les modèles complexes hors-échantillon. TMX v2 applique ce principe : des règles claires, des seuils fixes, pas d'optimisation excessive.</p>
+    <p class="prose"><strong>Contrôle du risque en priorité.</strong> Les 8 filtres de sécurité, le dimensionnement conservateur et le paper trading obligatoire reflètent une philosophie d'investissement orientée vers la préservation du capital.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Outils utilisés</div>
+    <div class="outils">
+      <div class="outil"><div class="outil-nom">Python 3.12</div><div class="outil-desc">Scanner, simulateur, générateur dashboard</div></div>
+      <div class="outil"><div class="outil-nom">yfinance</div><div class="outil-desc">Données de marché historiques (TSX + VIX)</div></div>
+      <div class="outil"><div class="outil-nom">GitHub Actions</div><div class="outil-desc">Automatisation toutes les 5 min</div></div>
+      <div class="outil"><div class="outil-nom">GitHub Pages</div><div class="outil-desc">Publication statique de ce site</div></div>
+      <div class="outil"><div class="outil-nom">Groq (llama-3.3)</div><div class="outil-desc">Classification contextuelle des signaux</div></div>
+      <div class="outil"><div class="outil-nom">Disnat</div><div class="outil-desc">Exécution manuelle des ordres réels (futur)</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Phases du projet</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content"><strong>Phase 1 — Paper trading (en cours)</strong><br>6 à 9 mois de simulation. Critères de passage : ≥ 30 trades, hit rate ≥ 60%, drawdown &lt; 15%.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--text3)"></div>
+        <div class="tl-content"><strong>Phase 2 — Capital réel limité</strong><br>Si les critères sont atteints, déploiement avec un capital modeste pour valider les hypothèses sur coûts réels et slippage.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--text3)"></div>
+        <div class="tl-content"><strong>Phase 3 — Optimisation</strong><br>Intégration de la volatilité normalisée (Barroso & Santa-Clara 2015) et révision du traitement de ZAG.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    <h3>Avis légal important</h3>
+    <p>Ce site et son contenu sont fournis <strong>à titre informatif et éducatif uniquement</strong>. FNBLab ne constitue pas un conseil financier, une recommandation d'investissement, ni une offre d'achat ou de vente de titres.</p>
+    <br>
+    <p>Toutes les positions affichées sont des <strong>simulations de paper trading</strong> et n'impliquent aucune transaction financière réelle. Les performances passées, simulées ou réelles, ne garantissent pas les performances futures.</p>
+    <br>
+    <p>Avant de prendre toute décision d'investissement, consultez un <strong>conseiller financier agréé</strong>. L'auteur de ce site ne peut être tenu responsable des décisions prises sur la base des informations présentées.</p>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-brand">FNBLab</span>
+  <span>TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
+  <span>Ce site ne constitue pas un conseil financier</span>
+</footer>
+</body>
+</html>

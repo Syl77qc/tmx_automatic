@@ -291,4 +291,114 @@ if __name__ == "__main__":
             print(f"⚠️  positions.json illisible : {e}")
 
     ok = generer_dashboard(rapport, positions)
+
+    # Générer resultats.html
+    now = datetime.now(EASTERN)
+    generer_resultats(
+        trades_log,
+        portefeuille,
+        now.strftime('%Y-%m-%d %H:%M'),
+        str(now.year)
+    )
+
     exit(0 if ok else 1)
+
+
+# ── Génération de resultats.html ───────────────────────────────────────────────
+
+TEMPLATE_RESULTATS = open(Path(__file__).parent / "resultats_template.html", encoding="utf-8").read() \
+    if Path("resultats_template.html").exists() else ""
+
+
+def generer_trades_html(trades_fermes):
+    if not trades_fermes:
+        return '''<div class="empty-state">
+          <div class="big">[ ]</div>
+          <div>Aucun trade complété pour le moment.<br>
+          Les résultats apparaîtront ici dès la première position fermée.</div>
+        </div>'''
+    rows = ""
+    for t in sorted(trades_fermes, key=lambda x: x.get("date_sortie",""), reverse=True):
+        ticker      = t.get("ticker","")
+        pnl         = t.get("pnl_net_pct", 0)
+        pnl_cad     = t.get("pnl_net_cad", 0)
+        gagnant     = t.get("gagnant", False)
+        date_e      = t.get("date_entree","")[:10]
+        date_s      = t.get("date_sortie","")[:10]
+        jours       = t.get("jours_detenus", 0)
+        type_sortie = t.get("type_sortie","")
+        z20         = t.get("z20_entree")
+        z20_str     = f"{z20:+.2f}" if z20 else "—"
+        pnl_class   = "win" if gagnant else "loss"
+        badge       = '<span class="badge-win">✓ gain</span>' if gagnant else '<span class="badge-loss">✗ perte</span>'
+        rows += f'''<tr>
+          <td style="font-family:var(--mono);font-weight:500">{ticker}</td>
+          <td>{date_e}</td><td>{date_s}</td>
+          <td class="r" style="font-family:var(--mono)">{jours}j</td>
+          <td class="r"><span class="neutral">{z20_str}</span></td>
+          <td class="r"><span class="{pnl_class}">{pnl:+.2f}%</span></td>
+          <td class="r"><span class="{pnl_class}">{pnl_cad:+.2f}$</span></td>
+          <td style="font-size:11px;color:var(--text3)">{type_sortie}</td>
+          <td>{badge}</td>
+        </tr>'''
+    return f'''<table>
+      <thead><tr>
+        <th>FNB</th><th>Entrée</th><th>Sortie</th>
+        <th class="r">Durée</th><th class="r">Z20</th>
+        <th class="r">Rend. %</th><th class="r">P&L $</th>
+        <th>Type sortie</th><th>Résultat</th>
+      </tr></thead><tbody>{rows}</tbody></table>'''
+
+
+def generer_resultats(trades_log, portefeuille, scan_at, scan_year):
+    if not TEMPLATE_RESULTATS:
+        print("⚠️  resultats_template.html introuvable — resultats.html non généré")
+        return False
+
+    trades_fermes = [t for t in trades_log if not t.get("partielle", False)]
+    n = len(trades_fermes)
+
+    hit_rate = "—"; hit_class = ""
+    rendement = "—"; rend_class = ""
+    drawdown = "—"; dd_class = ""
+    pb_trades_pct = min(100, n / 30 * 100)
+    pb_trades_class = "pb-ok" if n >= 30 else "pb-neutral"
+    pb_hr_pct = 0; pb_hr_class = "pb-neutral"
+    pb_dd_pct = 0; pb_dd_class = "pb-neutral"
+
+    if trades_fermes:
+        gagnants = [t for t in trades_fermes if t.get("gagnant")]
+        hr = len(gagnants) / n * 100
+        hit_rate = f"{hr:.0f}%"
+        hit_class = "metric-ok" if hr >= 60 else "metric-warn"
+        pb_hr_pct = min(100, hr / 60 * 100)
+        pb_hr_class = "pb-ok" if hr >= 60 else "pb-warn"
+        rends = [t.get("pnl_net_pct", 0) for t in trades_fermes]
+        rend_moy = sum(rends) / n
+        rendement = f"{rend_moy:+.2f}%"
+        rend_class = "metric-ok" if rend_moy >= 1.5 else "metric-warn"
+        capital_i = portefeuille.get("capital_initial", 100000)
+        capital_a = portefeuille.get("capital_disponible", capital_i)
+        dd = (capital_i - capital_a) / capital_i * 100
+        drawdown = f"{dd:.1f}%"
+        dd_class = "metric-ok" if dd < 15 else "metric-warn"
+        pb_dd_pct = min(100, dd / 15 * 100)
+        pb_dd_class = "pb-ok" if dd < 15 else "pb-warn"
+
+    html = TEMPLATE_RESULTATS
+    for k, v in {
+        "{SCAN_AT}": scan_at, "{SCAN_YEAR}": scan_year,
+        "{HIT_RATE}": hit_rate, "{HIT_RATE_CLASS}": hit_class,
+        "{RENDEMENT_MOYEN}": rendement, "{RENDEMENT_CLASS}": rend_class,
+        "{DRAWDOWN}": drawdown, "{DRAWDOWN_CLASS}": dd_class,
+        "{N_TRADES}": str(n),
+        "{PB_TRADES_PCT}": f"{pb_trades_pct:.0f}", "{PB_TRADES_CLASS}": pb_trades_class,
+        "{PB_HR_PCT}": f"{pb_hr_pct:.0f}", "{PB_HR_CLASS}": pb_hr_class,
+        "{PB_DD_PCT}": f"{pb_dd_pct:.0f}", "{PB_DD_CLASS}": pb_dd_class,
+        "{TRADES_HTML}": generer_trades_html(trades_fermes),
+    }.items():
+        html = html.replace(k, v)
+
+    Path("resultats.html").write_text(html, encoding="utf-8")
+    print(f"✅ resultats.html généré — {n} trade(s)")
+    return True

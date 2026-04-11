@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNBLab — Résultats paper trading</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0f11;--bg2:#131619;--bg3:#1a1e22;--bg4:#21262d;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#e8e4dd;--text2:#8a8880;--text3:#555250;
+  --green:#4ade80;--amber:#f59e0b;--red:#f87171;
+  --accent:#e8c97e;
+  --mono:'DM Mono',monospace;--display:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;}
+.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;}
+.nav-links{display:flex;gap:2px;}
+.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color 0.15s,background 0.15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
+.page{max-width:1100px;margin:0 auto;padding:40px 32px 80px;}
+.hero{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
+.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;color:var(--text);line-height:1.2;}
+.hero-title span{color:var(--accent);font-style:normal;font-weight:500;}
+.hero-meta{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;line-height:2;}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0.3;}
+.metric-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.metric-value{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--text);line-height:1;margin-bottom:4px;}
+.metric-sub{font-size:11px;color:var(--text3);}
+.metric-ok .metric-value{color:var(--green);}
+.metric-warn .metric-value{color:var(--amber);}
+.section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;}
+.section-title-text{font-family:var(--display);font-size:16px;font-weight:400;color:var(--text);}
+.section-sub{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{border-bottom:1px solid var(--border);}
+thead th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;padding:10px 14px;text-align:left;background:var(--bg3);}
+thead th.r{text-align:right;}
+tbody tr{border-bottom:1px solid var(--border);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,0.02);}
+td{padding:10px 14px;color:var(--text);vertical-align:middle;}
+td.r{text-align:right;}
+.win{color:var(--green);font-family:var(--mono);}
+.loss{color:var(--red);font-family:var(--mono);}
+.neutral{color:var(--text3);font-family:var(--mono);}
+.badge-win{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;}
+.badge-loss{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.2);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;}
+.empty-state{padding:48px;text-align:center;color:var(--text3);}
+.empty-state .big{font-family:var(--mono);font-size:24px;opacity:0.2;margin-bottom:12px;}
+.progress-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:28px;}
+.progress-title{font-size:12px;color:var(--text2);margin-bottom:16px;}
+.progress-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:600px){.progress-bars{grid-template-columns:1fr;}}
+.progress-item{}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px;}
+.progress-label span:last-child{font-family:var(--mono);}
+.progress-bar-bg{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:3px;transition:width 0.3s;}
+.pb-ok{background:var(--green);}
+.pb-warn{background:var(--amber);}
+.pb-neutral{background:var(--text3);}
+.disclaimer{margin-top:48px;padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);font-size:11px;color:var(--text3);line-height:1.7;}
+footer{max-width:1100px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
+.footer-brand{font-family:var(--display);font-size:14px;color:var(--accent);font-style:italic;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="recherche.html">Recherche</a>
+    <a href="resultats.html" class="active">Résultats</a>
+    <a href="apropos.html">À propos</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <div>
+      <div class="hero-title">Résultats<br><span>Paper trading</span></div>
+    </div>
+    <div class="hero-meta">
+      Mis à jour : 2026-04-11 09:09<br>
+      Capital virtuel : 100 000 $ CAD<br>
+      Phase 1 en cours
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric ">
+      <div class="metric-label">Hit rate</div>
+      <div class="metric-value">—</div>
+      <div class="metric-sub">Cible : ≥ 60%</div>
+    </div>
+    <div class="metric ">
+      <div class="metric-label">Rendement moyen</div>
+      <div class="metric-value">—</div>
+      <div class="metric-sub">Cible : ≥ +1.5% / trade</div>
+    </div>
+    <div class="metric ">
+      <div class="metric-label">Drawdown max</div>
+      <div class="metric-value">—</div>
+      <div class="metric-sub">Limite : &lt; 15%</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Trades complétés</div>
+      <div class="metric-value">0</div>
+      <div class="metric-sub">Cible : ≥ 30</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-title">Progression vers les critères go-live (Section 9.3 PRD)</div>
+    <div class="progress-bars">
+      <div class="progress-item">
+        <div class="progress-label"><span>Trades complétés</span><span>0 / 30</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Hit rate</span><span>— / 60%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Drawdown (limite 15%)</span><span>—</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title-text">Historique des trades</div>
+    <div class="section-sub">0 trade(s) complété(s)</div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="empty-state">
+          <div class="big">[ ]</div>
+          <div>Aucun trade complété pour le moment.<br>
+          Les résultats apparaîtront ici dès la première position fermée.</div>
+        </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Avis important</strong> — Résultats de paper trading (simulation). Aucune transaction réelle. Ce site ne constitue pas un conseil financier.
+  </div>
+</div>
+
+<footer>
+  <span class="footer-brand">FNBLab</span>
+  <span>TMX v2 · Résultats · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
+  <span>Ce site ne constitue pas un conseil financier</span>
+</footer>
+</body>
+</html>
