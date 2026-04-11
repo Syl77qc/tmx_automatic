@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNBLab — Recherche</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f11; --bg2: #131619; --bg3: #1a1e22; --bg4: #21262d;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --text: #e8e4dd; --text2: #8a8880; --text3: #555250;
+  --accent: #e8c97e;
+  --mono: 'DM Mono', monospace;
+  --display: 'Fraunces', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.6; min-height: 100vh; }
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,17,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px; display: flex; align-items: center;
+  height: 52px; gap: 0;
+}
+.nav-brand { font-family: var(--display); font-size: 17px; font-weight: 500; color: var(--accent); margin-right: 32px; text-decoration: none; }
+.nav-links { display: flex; gap: 2px; }
+.nav-links a { font-size: 12px; color: var(--text2); padding: 6px 12px; border-radius: 6px; text-decoration: none; transition: color 0.15s, background 0.15s; }
+.nav-links a:hover { color: var(--text); background: var(--bg3); }
+.nav-links a.active { color: var(--text); background: var(--bg3); }
+.page { max-width: 1100px; margin: 0 auto; padding: 40px 32px 80px; }
+.hero { margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.hero-title { font-family: var(--display); font-size: 28px; font-weight: 300; font-style: italic; color: var(--text); line-height: 1.2; margin-bottom: 8px; }
+.hero-title span { color: var(--accent); font-style: normal; font-weight: 500; }
+.hero-sub { font-size: 13px; color: var(--text3); }
+.section-title { font-family: var(--display); font-size: 16px; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+@media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+  text-decoration: none; color: var(--text);
+  transition: border-color 0.15s, background 0.15s;
+  display: block;
+}
+.card:hover { border-color: var(--border2); background: var(--bg3); }
+.card-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+.card-desc { font-size: 12px; color: var(--text3); line-height: 1.55; }
+.card-meta { margin-top: 12px; font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.disclaimer { margin-top: 48px; padding: 16px 20px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg2); font-size: 11px; color: var(--text3); line-height: 1.7; }
+footer { max-width: 1100px; margin: 0 auto; padding: 0 32px 40px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); }
+.footer-brand { font-family: var(--display); font-size: 14px; color: var(--accent); font-style: italic; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#systeme">Système</a>
+    <a href="recherche.html" class="active">Recherche</a>
+    <a href="index.html#resultats">Résultats</a>
+    <a href="index.html#apropos">À propos</a>
+  </div>
+</nav>
+<div class="page">
+  <div class="hero">
+    <div class="hero-title">Recherche & <span>Littérature</span></div>
+    <div class="hero-sub">Fondements académiques du système TMX v2 · Mean reversion sur FNBs canadiens (TSX)</div>
+  </div>
+
+  <div class="section-title">Fondements théoriques</div>
+  <div class="cards">
+    <a class="card" href="litterature_chocs_fnb.html">
+      <div class="card-tag">Théorie · Fondamental</div>
+      <div class="card-title">Chocs fondamentaux vs systémiques</div>
+      <div class="card-desc">Pourquoi certaines baisses rebondissent et d'autres non. Décomposition cash-flow news vs discount-rate news. Base théorique du classificateur Groq.</div>
+      <div class="card-meta">Fama & French 1988 · Vuolteenaho 2002 · Bernard & Thomas 1989</div>
+    </a>
+    <a class="card" href="litterature_fnb_specifique.html">
+      <div class="card-tag">FNBs · Microstructure</div>
+      <div class="card-title">Littérature spécifique aux FNBs</div>
+      <div class="card-desc">7 domaines : arbitrage NAV, liquidité, volume, VIX, concentration, obligations, microstructure intraday et saisonnalité sectorielle.</div>
+      <div class="card-meta">Da & Shive 2018 · Ben-David 2018 · Pan & Zeng 2019</div>
+    </a>
+    <a class="card" href="combinaisons_indicateurs_litterature.html">
+      <div class="card-tag">Signaux · Combinaisons</div>
+      <div class="card-title">Combinaisons d'indicateurs</div>
+      <div class="card-desc">Les synergies documentées empiriquement. Pourquoi les combinaisons orthogonales battent les indicateurs individuels hors-échantillon.</div>
+      <div class="card-meta">Rapach, Strauss & Zhou 2010 · Timmermann 2006</div>
+    </a>
+  </div>
+
+  <div class="section-title">Analyses quantitatives</div>
+  <div class="cards">
+    <a class="card" href="rapport_titres_lourds.html">
+      <div class="card-tag">Analyse · 978 événements</div>
+      <div class="card-title">Rapport titres lourds dans les FNBs concentrés</div>
+      <div class="card-desc">Analyse de 978 événements z-score ≥ 2 é.-t. sur 10 ans (2016–2025). Identification des titres déclencheurs par FNB. Base de l'amendement PRD v2.2.</div>
+      <div class="card-meta">XIT 87% fondamental · XEG 0% · XFN 2% · XGD 7%</div>
+    </a>
+    <a class="card" href="conformite_litterature.html">
+      <div class="card-tag">Évaluation · 12 dimensions</div>
+      <div class="card-title">Conformité TMX v2 à la littérature</div>
+      <div class="card-desc">Évaluation systématique de 12 dimensions du système. Score 8/12 conformes, 3 partiels, 1 lacune. Analyse honnête des forces et faiblesses.</div>
+      <div class="card-meta">8 conformes · 3 partiels · 1 lacune (ZAG)</div>
+    </a>
+    <a class="card" href="indicateurs_poids_litterature_scientifique.html">
+      <div class="card-tag">Indicateurs · Pondération</div>
+      <div class="card-title">Poids des indicateurs selon la littérature</div>
+      <div class="card-desc">Classement des indicateurs par robustesse académique. Quel poids accorder à chaque signal selon les preuves empiriques disponibles.</div>
+      <div class="card-meta">VIX · Z-score · SMA · Volume · Momentum</div>
+    </a>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Avis important</strong> — Ce site ne constitue pas un conseil financier. FNBLab est un projet de recherche personnel documentant la construction d'un système de mean reversion sur FNBs canadiens. Toutes les positions affichées sont du paper trading (simulation). Les performances passées ne garantissent pas les performances futures.
+  </div>
+</div>
+<footer>
+  <span class="footer-brand">FNBLab</span>
+  <span>TMX v2 · Recherche · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
+  <span>Ce site ne constitue pas un conseil financier</span>
+</footer>
+</body>
+</html>

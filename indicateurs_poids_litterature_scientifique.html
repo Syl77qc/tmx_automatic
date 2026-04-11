@@ -86,8 +86,53 @@
   }
   @media (prefers-color-scheme: dark) { .footer { border-color: #333; } }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+.fnblab-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,17,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 0 28px;
+  display: flex; align-items: center;
+  height: 48px; gap: 0;
+  margin: -24px -24px 24px;
+}
+.fnblab-brand {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 16px; font-weight: 500;
+  color: #e8c97e;
+  letter-spacing: -0.01em;
+  margin-right: 28px;
+  text-decoration: none;
+}
+.fnblab-links { display: flex; gap: 2px; }
+.fnblab-links a {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px; font-weight: 400;
+  color: #8a8880;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+.fnblab-links a:hover { color: #e8e4dd; background: #1a1e22; }
+.fnblab-links a.active { color: #e8e4dd; background: #1a1e22; }
+</style>
+<nav class="fnblab-nav">
+  <a class="fnblab-brand" href="index.html">FNBLab</a>
+  <div class="fnblab-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#systeme">Système</a>
+    <a href="recherche.html" class="active">Recherche</a>
+    <a href="index.html#resultats">Résultats</a>
+    <a href="index.html#apropos">À propos</a>
+  </div>
+</nav>
+
 
 <h1>Poids des indicateurs — Littérature scientifique</h1>
 <div class="sub">Système TMX · Horizon mensuel · Petit capital · Rotation sectorielle · Mars 2026</div>
