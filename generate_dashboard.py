@@ -1,11 +1,12 @@
 """
 FNBLab — generate_dashboard.py
 Appelé par GitHub Actions après scanner.py.
-Lit scan_results.json + positions.json et génère index.html.
+Lit scan_results.json + positions.json + trades_log.json
+Génère index.html et resultats.html
 """
 
 import json
-import os
+import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from pathlib import Path
@@ -21,9 +22,8 @@ SECTEURS = {
     "XGD.TO": "Or",            "ZAG.TO": "Obligations",
 }
 
-TEMPLATE = open(Path(__file__).parent / "index.html", encoding="utf-8").read() \
-    if Path("index.html").exists() else None
 
+# ── Helpers dashboard ──────────────────────────────────────────────────────────
 
 def generer_row_fnb(r, regime, filtre_D, cluster_action):
     ticker = r["ticker"]
@@ -40,10 +40,10 @@ def generer_row_fnb(r, regime, filtre_D, cluster_action):
     def z_fmt(z):
         if z is None: return "z-pos", "—"
         t = f"{z:+.2f}"
-        if z <= -2.5:  return "z-signal", t
+        if z <= -2.5:   return "z-signal", t
         elif z <= -1.5: return "z-watch",  t
-        elif z < 0:    return "z-neg",    t
-        else:          return "z-pos",    t
+        elif z < 0:     return "z-neg",    t
+        else:           return "z-pos",    t
 
     z20c, z20t = z_fmt(z20)
     z60c, z60t = z_fmt(z60)
@@ -72,9 +72,9 @@ def generer_row_fnb(r, regime, filtre_D, cluster_action):
         az20   = abs(z20) if z20 else 2.0
         mult   = 2.0 if az20 >= 3.0 else (1.5 if az20 >= 2.5 else 1.0)
         t = base * mult
-        if reg == "neutre":              t /= 2
-        if sma_ok is False:              t /= 2
-        if z60 is not None and z60 > -1.5: t /= 1.5
+        if reg == "neutre":                    t /= 2
+        if sma_ok is False:                    t /= 2
+        if z60 is not None and z60 > -1.5:     t /= 1.5
         if "positif" in ctx or "stable" in ctx: t /= 1.5
         taille_html = f'<span class="taille-actif">{t:.2f}x</span>'
         action_html = '<span class="badge b-signal">Signal</span>'
@@ -110,7 +110,7 @@ def generer_positions_html(positions):
     if not ouvertes:
         return '''<div class="positions-empty">
           <span>[ ]</span>
-          Aucune position ouverte. Le premier signal déclenchera l'entrée en paper trading.
+          Aucune position ouverte. Le premier signal déclenchera l\'entrée en paper trading.
         </div>'''
     rows = ""
     for p in ouvertes:
@@ -119,8 +119,8 @@ def generer_positions_html(positions):
         prix_a  = p.get("prix_actuel", prix_e)
         pnl     = (prix_a - prix_e) / prix_e * 100 if prix_e else 0
         date_e  = p.get("date_entree", "")[:10]
-        taille  = p.get("taille", 0)
-        horizon = p.get("horizon_restant_j", "?")
+        taille  = p.get("multiplicateur", 0)
+        horizon = p.get("jours_restants", "?")
         pnl_cls = "var-pos" if pnl >= 0 else "var-neg"
         rows += f'''<tr>
           <td><span class="fnb-name">{ticker}</span></td>
@@ -142,12 +142,12 @@ def generer_positions_html(positions):
 
 
 def generer_status_pills(rapport):
-    regime  = rapport.get("regime_marche", {})
-    bdc     = rapport.get("jour_bdc", {})
-    n_sig   = rapport.get("n_signaux", 0)
-    source  = rapport.get("source_donnees", "yfinance")
-    vix     = regime.get("vix", "?")
-    reg     = regime.get("regime", "inconnu")
+    regime = rapport.get("regime_marche", {})
+    bdc    = rapport.get("jour_bdc", {})
+    n_sig  = rapport.get("n_signaux", 0)
+    source = rapport.get("source_donnees", "yfinance")
+    vix    = regime.get("vix", "?")
+    reg    = regime.get("regime", "inconnu")
 
     vix_pill = {
         "risk_on":  f'<span class="status-pill sp-green">VIX {vix} — Risk-on</span>',
@@ -183,83 +183,46 @@ def generer_dashboard(rapport, positions=None):
     reg = regime.get("regime", "inconnu")
     pulse_color = {"risk_on": "#4ade80", "neutre": "#f59e0b", "risk_off": "#f87171"}.get(reg, "#888")
 
-    trades_fermes   = [p for p in positions if p.get("statut") == "ferme"]
-    trades_completes = len(trades_fermes)
-    pos_ouvertes    = len([p for p in positions if p.get("statut") == "ouvert"])
-
+    pos_ouvertes = len([p for p in positions if p.get("statut") == "ouvert"])
     hit_rate  = "—"; hit_class  = ""
     drawdown  = "—"; dd_class   = ""
-    if trades_fermes:
-        gagnants  = [p for p in trades_fermes if p.get("rendement_pct", 0) > 0]
-        hr        = len(gagnants) / len(trades_fermes) * 100
-        hit_rate  = f"{hr:.0f}%"
-        hit_class = "metric-ok" if hr >= 60 else "metric-warn"
-        rends     = [p.get("rendement_pct", 0) for p in trades_fermes]
-        dd        = min(0, min(rends))
-        drawdown  = f"{dd:.1f}%"
-        dd_class  = "metric-ok" if abs(dd) < 15 else "metric-warn"
 
     rows     = "\n".join([generer_row_fnb(r, regime, filtre_D, cluster.get("action", "normal"))
                           for r in rapport.get("tous_fnbs", []) if not r.get("erreur")])
     pos_html = generer_positions_html(positions)
     status   = generer_status_pills(rapport)
 
-    # Lire le template depuis index.html existant
     template_path = Path("index.html")
     if not template_path.exists():
-        print("❌ index.html introuvable — impossible de générer le dashboard")
+        print("❌ index.html introuvable")
         return False
 
     html = template_path.read_text(encoding="utf-8")
 
-    # Remplacements
-    replacements = {
-        "2026-04-11 07:58": scan_at,
-        "Saturday 11 april 2026": scan_date,
-        "yfinance (fallback)": source[:40],
-        "LIVE": mode,
-        "DAILY": mode,
-    }
-
-    # Injection dynamique via marqueurs
-    # On remplace le contenu entre les balises tbody du tableau FNBs
-    import re
-
-    # Status pills
     html = re.sub(
         r'(<div class="status-bar">)(.*?)(</div>)',
         lambda m: m.group(1) + status + m.group(3),
         html, flags=re.DOTALL
     )
 
-    # Métriques
-    html = html.replace(
-        ">0<\n          <div class=\"metric-sub\">Cible : 30 pour validation</div>",
-        f">{trades_completes}<\n          <div class=\"metric-sub\">Cible : 30 pour validation</div>"
-    )
-
-    # Tableau FNBs — remplacer le tbody
     html = re.sub(
         r'(<tbody>)(.*?)(</tbody>)',
         lambda m: m.group(1) + rows + m.group(3),
         html, flags=re.DOTALL
     )
 
-    # Positions
     html = re.sub(
         r'(<div class="positions-wrap">)(.*?)(</div>\s*\n\s*<div class="section-header")',
         lambda m: m.group(1) + "\n    " + pos_html + "\n  </div>\n\n  " + m.group(3)[6:],
         html, flags=re.DOTALL
     )
 
-    # Scan_at dans le nav
     html = re.sub(
         r'Dernière mise à jour : [\d\- :]+',
         f'Dernière mise à jour : {scan_at}',
         html
     )
 
-    # Pulse color
     html = re.sub(
         r'background: #[0-9a-f]{6};\s*animation: pulse',
         f'background: {pulse_color}; animation: pulse',
@@ -271,12 +234,7 @@ def generer_dashboard(rapport, positions=None):
     return True
 
 
-
-# ── Génération de resultats.html ───────────────────────────────────────────────
-
-TEMPLATE_RESULTATS = open(Path(__file__).parent / "resultats_template.html", encoding="utf-8").read() \
-    if Path("resultats_template.html").exists() else ""
-
+# ── Helpers résultats ──────────────────────────────────────────────────────────
 
 def generer_trades_html(trades_fermes):
     if not trades_fermes:
@@ -286,15 +244,15 @@ def generer_trades_html(trades_fermes):
           Les résultats apparaîtront ici dès la première position fermée.</div>
         </div>'''
     rows = ""
-    for t in sorted(trades_fermes, key=lambda x: x.get("date_sortie",""), reverse=True):
-        ticker      = t.get("ticker","")
+    for t in sorted(trades_fermes, key=lambda x: x.get("date_sortie", ""), reverse=True):
+        ticker      = t.get("ticker", "")
         pnl         = t.get("pnl_net_pct", 0)
         pnl_cad     = t.get("pnl_net_cad", 0)
         gagnant     = t.get("gagnant", False)
-        date_e      = t.get("date_entree","")[:10]
-        date_s      = t.get("date_sortie","")[:10]
+        date_e      = t.get("date_entree", "")[:10]
+        date_s      = t.get("date_sortie", "")[:10]
         jours       = t.get("jours_detenus", 0)
-        type_sortie = t.get("type_sortie","")
+        type_sortie = t.get("type_sortie", "")
         z20         = t.get("z20_entree")
         z20_str     = f"{z20:+.2f}" if z20 else "—"
         pnl_class   = "win" if gagnant else "loss"
@@ -313,13 +271,77 @@ def generer_trades_html(trades_fermes):
       <thead><tr>
         <th>FNB</th><th>Entrée</th><th>Sortie</th>
         <th class="r">Durée</th><th class="r">Z20</th>
-        <th class="r">Rend. %</th><th class="r">P&L $</th>
+        <th class="r">Rend. %</th><th class="r">P&amp;L $</th>
         <th>Type sortie</th><th>Résultat</th>
       </tr></thead><tbody>{rows}</tbody></table>'''
 
 
+def generer_resultats(trades_log, portefeuille, scan_at, scan_year):
+    template_path = Path("resultats_template.html")
+    if not template_path.exists():
+        print("⚠️  resultats_template.html introuvable — resultats.html non généré")
+        return False
+
+    template = template_path.read_text(encoding="utf-8")
+    trades_fermes = [t for t in trades_log if not t.get("partielle", False)]
+    n = len(trades_fermes)
+
+    hit_rate = "—"; hit_class = ""
+    rendement = "—"; rend_class = ""
+    drawdown = "—"; dd_class = ""
+    pb_trades_pct   = min(100, n / 30 * 100)
+    pb_trades_class = "pb-ok" if n >= 30 else "pb-neutral"
+    pb_hr_pct = 0; pb_hr_class = "pb-neutral"
+    pb_dd_pct = 0; pb_dd_class = "pb-neutral"
+
+    if trades_fermes:
+        gagnants  = [t for t in trades_fermes if t.get("gagnant")]
+        hr        = len(gagnants) / n * 100
+        hit_rate  = f"{hr:.0f}%"
+        hit_class = "metric-ok" if hr >= 60 else "metric-warn"
+        pb_hr_pct   = min(100, hr / 60 * 100)
+        pb_hr_class = "pb-ok" if hr >= 60 else "pb-warn"
+        rends       = [t.get("pnl_net_pct", 0) for t in trades_fermes]
+        rend_moy    = sum(rends) / n
+        rendement   = f"{rend_moy:+.2f}%"
+        rend_class  = "metric-ok" if rend_moy >= 1.5 else "metric-warn"
+        capital_i   = portefeuille.get("capital_initial", 100000)
+        capital_a   = portefeuille.get("capital_disponible", capital_i)
+        dd          = (capital_i - capital_a) / capital_i * 100
+        drawdown    = f"{dd:.1f}%"
+        dd_class    = "metric-ok" if dd < 15 else "metric-warn"
+        pb_dd_pct   = min(100, dd / 15 * 100)
+        pb_dd_class = "pb-ok" if dd < 15 else "pb-warn"
+
+    html = template
+    for k, v in {
+        "{SCAN_AT}": scan_at,
+        "{SCAN_YEAR}": scan_year,
+        "{HIT_RATE}": hit_rate,
+        "{HIT_RATE_CLASS}": hit_class,
+        "{RENDEMENT_MOYEN}": rendement,
+        "{RENDEMENT_CLASS}": rend_class,
+        "{DRAWDOWN}": drawdown,
+        "{DRAWDOWN_CLASS}": dd_class,
+        "{N_TRADES}": str(n),
+        "{PB_TRADES_PCT}": f"{pb_trades_pct:.0f}",
+        "{PB_TRADES_CLASS}": pb_trades_class,
+        "{PB_HR_PCT}": f"{pb_hr_pct:.0f}",
+        "{PB_HR_CLASS}": pb_hr_class,
+        "{PB_DD_PCT}": f"{pb_dd_pct:.0f}",
+        "{PB_DD_CLASS}": pb_dd_class,
+        "{TRADES_HTML}": generer_trades_html(trades_fermes),
+    }.items():
+        html = html.replace(k, v)
+
+    Path("resultats.html").write_text(html, encoding="utf-8")
+    print(f"✅ resultats.html généré — {n} trade(s)")
+    return True
+
+
+# ── Point d'entrée ─────────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
-    # Lire scan_results.json
     scan_path = Path("scan_results.json")
     if not scan_path.exists():
         print("❌ scan_results.json introuvable")
@@ -327,10 +349,10 @@ if __name__ == "__main__":
 
     rapport = json.loads(scan_path.read_text(encoding="utf-8"))
 
-    # Lire positions.json si disponible
-    pos_path = Path("positions.json")
-    positions = []
+    # Lire positions.json
     portefeuille = {"capital_initial": 100000, "capital_disponible": 100000}
+    positions = []
+    pos_path = Path("positions.json")
     if pos_path.exists():
         try:
             data = json.loads(pos_path.read_text(encoding="utf-8"))
@@ -342,9 +364,9 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"⚠️  positions.json illisible : {e}")
 
-    # Lire trades_log.json si disponible
-    trades_path = Path("trades_log.json")
+    # Lire trades_log.json
     trades_log = []
+    trades_path = Path("trades_log.json")
     if trades_path.exists():
         try:
             trades_log = json.loads(trades_path.read_text(encoding="utf-8"))
@@ -353,7 +375,6 @@ if __name__ == "__main__":
 
     ok = generer_dashboard(rapport, positions)
 
-    # Générer resultats.html
     now = datetime.now(EASTERN)
     generer_resultats(
         trades_log,
