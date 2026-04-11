@@ -2,14 +2,6 @@
 TMX v2 — Scanner de signaux z-scores
 Phase 1, item 2 : Calcul des z-scores 20j et 60j sur les 12 FNBs
 
-Références PRD :
-  - Section 4.1  : Formule z-score (rendement du jour / écart-type N jours)
-  - Section 4.3  : Profils FNB (rapide / moyen / lent) et seuils
-  - Section 5    : Maillon 2 (scanner) et Maillon 3 (filtres)
-  - Section 6    : Univers des 12 FNBs avec seuils et blocs de corrélation
-  - Section 7.3  : Ajustement de taille selon z-score 60j
-  - Section 9    : Métriques et tags de basketing
-
 Source de données : Questrade API (temps réel) avec fallback yfinance automatique
 Rotation token   : Le refresh token Questrade est mis à jour automatiquement
                    dans GitHub Secrets via GH_PAT à chaque exécution.
@@ -17,10 +9,6 @@ Rotation token   : Le refresh token Questrade est mis à jour automatiquement
 Secrets GitHub requis :
   QUESTRADE_REFRESH_TOKEN : token Questrade (renouvelé automatiquement)
   GH_PAT                  : Personal Access Token GitHub (scope: repo)
-
-Usage             : python scanner.py
-                    python scanner.py --mode live   (pendant heures de marché)
-                    python scanner.py --mode daily  (fin de journée)
 """
 
 import json
@@ -41,8 +29,6 @@ import yfinance as yf
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-# ── Constantes PRD ─────────────────────────────────────────────────────────────
-
 EASTERN = ZoneInfo("America/Toronto")
 
 UNIVERSE = {
@@ -60,12 +46,12 @@ UNIVERSE = {
     "ZAG.TO": {"profil": "lent",   "seuil_min": 2.5, "horizon_j": 25, "bloc": "taux"},
 }
 
-VIX_RISK_ON    = 16.0
-VIX_RISK_OFF   = 25.0
-WINDOW_COURT   = 20
-WINDOW_MOYEN   = 60
+VIX_RISK_ON            = 16.0
+VIX_RISK_OFF           = 25.0
+WINDOW_COURT           = 20
+WINDOW_MOYEN           = 60
 Z60_SEUIL_CONFIRMATION = -1.5
-JOURS_HISTORIQUE = 100
+JOURS_HISTORIQUE       = 100
 
 # ── Questrade API ──────────────────────────────────────────────────────────────
 
@@ -78,10 +64,6 @@ QUESTRADE_SYMBOLS = {
 
 
 def _questrade_auth(refresh_token: str) -> dict | None:
-    """
-    Échange le refresh token contre un access token Questrade.
-    Retourne { access_token, api_server, new_refresh_token } ou None si échec.
-    """
     url = "https://login.questrade.com/oauth2/token"
     payload = urllib.parse.urlencode({
         "grant_type":    "refresh_token",
@@ -98,7 +80,6 @@ def _questrade_auth(refresh_token: str) -> dict | None:
             "new_refresh_token": data["refresh_token"],
         }
     except urllib.error.HTTPError as e:
-        # ── DIAGNOSTIC AMÉLIORÉ ──────────────────────────────────────────────
         try:
             corps = e.read().decode("utf-8", errors="replace")
         except Exception:
@@ -117,10 +98,6 @@ def _questrade_auth(refresh_token: str) -> dict | None:
 
 
 def _github_update_secret(repo: str, secret_name: str, secret_value: str, gh_pat: str) -> bool:
-    """
-    Met à jour un secret GitHub via l'API REST.
-    Nécessite GH_PAT avec scope repo.
-    """
     try:
         url_key = f"https://api.github.com/repos/{repo}/actions/secrets/public-key"
         headers = {
@@ -130,10 +107,8 @@ def _github_update_secret(repo: str, secret_name: str, secret_value: str, gh_pat
         req = urllib.request.Request(url_key, headers=headers)
         with urllib.request.urlopen(req, timeout=10) as resp:
             key_data = json.loads(resp.read())
-
         key_id      = key_data["key_id"]
         pub_key_b64 = key_data["key"]
-
         try:
             from nacl import encoding, public as nacl_public
             pub_key_bytes = base64.b64decode(pub_key_b64)
@@ -143,7 +118,6 @@ def _github_update_secret(repo: str, secret_name: str, secret_value: str, gh_pat
         except ImportError:
             print("   ⚠️  PyNaCl non installé — rotation token skippée.")
             return False
-
         url_secret = f"https://api.github.com/repos/{repo}/actions/secrets/{secret_name}"
         payload = json.dumps({
             "encrypted_value": encrypted_b64,
@@ -154,16 +128,12 @@ def _github_update_secret(repo: str, secret_name: str, secret_value: str, gh_pat
         )
         with urllib.request.urlopen(req2, timeout=10) as resp2:
             return resp2.status in (201, 204)
-
     except Exception as e:
         print(f"   ⚠️  Mise à jour GitHub Secret échouée : {e}")
         return False
 
 
 def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.DataFrame | None:
-    """
-    Récupère les prix de clôture historiques quotidiens via Questrade.
-    """
     try:
         access_token = auth["access_token"]
         api_server   = auth["api_server"]
@@ -171,10 +141,8 @@ def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.Data
             "Authorization": f"Bearer {access_token}",
             "Content-Type":  "application/json",
         }
-
         fin   = date.today()
         debut = fin - timedelta(days=jours)
-
         symbol_ids = {}
         for ticker in tickers:
             sym = QUESTRADE_SYMBOLS.get(ticker, ticker.replace(".TO", ""))
@@ -185,10 +153,8 @@ def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.Data
             symbols = data.get("symbols", [])
             if symbols:
                 symbol_ids[ticker] = symbols[0]["symbolId"]
-
         if not symbol_ids:
             return None
-
         all_closes = {}
         for ticker, sym_id in symbol_ids.items():
             url = (
@@ -200,7 +166,6 @@ def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.Data
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as resp:
                 data = json.loads(resp.read())
-
             candles = data.get("candles", [])
             if candles:
                 closes = {
@@ -208,23 +173,19 @@ def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.Data
                     for c in candles if c.get("close")
                 }
                 all_closes[ticker] = closes
-
         if not all_closes:
             return None
-
         dfs = {}
         for ticker, closes_dict in all_closes.items():
             s = pd.Series(closes_dict, name="Close")
             s.index = pd.DatetimeIndex(s.index)
             dfs[ticker] = pd.DataFrame({"Close": s})
-
         combined = pd.concat(dfs, axis=1)
         combined.columns = pd.MultiIndex.from_tuples(
             [(ticker, "Close") for ticker in dfs.keys()]
         )
         combined = combined.dropna(how="all")
         return combined
-
     except Exception as e:
         print(f"   ⚠️  Questrade données échouées : {e}")
         return None
@@ -233,9 +194,6 @@ def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.Data
 # ── Téléchargement des données ─────────────────────────────────────────────────
 
 def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) -> pd.DataFrame:
-    """
-    Priorité : Questrade API → fallback yfinance automatique.
-    """
     refresh_token = os.environ.get("QUESTRADE_REFRESH_TOKEN", "")
     gh_pat        = os.environ.get("GH_PAT", "")
     repo          = os.environ.get("GITHUB_REPOSITORY", "")
@@ -247,7 +205,6 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
     if refresh_token:
         print(f"\n📥 Téléchargement des données ({jours} jours) via Questrade API...")
         auth = _questrade_auth(refresh_token)
-
         if auth:
             new_token = auth["new_refresh_token"]
             if gh_pat and repo and new_token != refresh_token:
@@ -256,7 +213,6 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
                     print("   🔄 Refresh token Questrade renouvelé automatiquement.")
                 else:
                     print("   ⚠️  Rotation token échouée — token actuel encore valide.")
-
             data = _questrade_get_closes(auth, tickers, jours)
             if data is not None and len(data) >= WINDOW_COURT:
                 print(f"   ✅ {len(data)} jours récupérés via Questrade (temps réel)")
@@ -268,10 +224,8 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
     else:
         print(f"\n📥 Téléchargement des données ({jours} jours) via yfinance...")
 
-    # Fallback yfinance
     fin   = date.today()
     debut = fin - timedelta(days=jours)
-
     data = yf.download(
         tickers=tickers,
         start=debut.strftime("%Y-%m-%d"),
@@ -284,10 +238,8 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
     data = data.dropna(how="all")
     n_jours = len(data)
     print(f"   ✅ {n_jours} jours de bourse récupérés via yfinance ({debut} → {fin})")
-
     if n_jours < WINDOW_MOYEN:
         print(f"   ⚠️  {n_jours} jours < {WINDOW_MOYEN} requis pour z-score 60j — résultats partiels")
-
     return data
 
 
@@ -439,18 +391,15 @@ def calculer_multiplicateur_taille(
     cfg    = UNIVERSE[ticker]
     profil = cfg["profil"]
     base   = {"rapide": 1.00, "moyen": 0.75, "lent": 0.50}[profil]
-
-    az20 = abs(z20)
+    az20   = abs(z20)
     if az20 >= 3.0:
         mult_signal, bucket_z20 = 2.0, "z20:≥3.0"
     elif az20 >= 2.5:
         mult_signal, bucket_z20 = 1.5, "z20:2.5-2.99"
     else:
         mult_signal, bucket_z20 = 1.0, "z20:2.0-2.49"
-
     taille      = base * mult_signal
     ajustements = []
-
     if regime == "neutre":
         taille /= 2; ajustements.append("régime_neutre÷2")
     if dessus_sma50 is False:
@@ -461,10 +410,8 @@ def calculer_multiplicateur_taille(
         taille /= 1.5; ajustements.append("filtreD_XIU_stable÷1.5")
     if cluster_action == "reduire_taille_50pct_et_seuil_2.5":
         taille /= 2; ajustements.append("cluster_4_6÷2")
-
     tag_z60 = ("z60:N/A" if z60 is None
                else ("z60:confirmé" if z60 <= Z60_SEUIL_CONFIRMATION else "z60:faible"))
-
     return {"taille_finale": round(taille,4), "base_profil": base,
             "mult_signal": mult_signal, "ajustements": ajustements,
             "bucket_z20": bucket_z20, "tag_z60": tag_z60}
@@ -475,32 +422,25 @@ def calculer_multiplicateur_taille(
 def analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, mode):
     cfg    = UNIVERSE[ticker]
     closes = extraire_closes(data, ticker)
-
     if closes.empty or len(closes) < WINDOW_COURT + 1:
         return {"ticker": ticker, "erreur": f"Données insuffisantes ({len(closes)} jours)", "signal": False}
-
     rendements     = calculer_rendements(closes)
     z20            = calculer_zscore(rendements, WINDOW_COURT)
     z60            = calculer_zscore(rendements, WINDOW_MOYEN)
     sma_info       = calculer_sma50(closes)
     rendement_jour = float(rendements.iloc[-1]) if len(rendements) > 0 else None
-
     seuil_effectif = cfg["seuil_min"]
     fnbs_taux      = {"XRE.TO", "XUT.TO", "XFN.TO", "ZAG.TO"}
     if jour_bdc["type_bdc"] == "RPM" and ticker in fnbs_taux:
         seuil_effectif += 0.5
     if filtre_D.get("ajustement") == "seuil+0.5_taille÷1.5":
         seuil_effectif += 0.5
-
     signal_actif = z20 is not None and z20 <= -seuil_effectif
-
     intraday = {}
     if mode == "live" and signal_actif:
         intraday = calculer_momentum_intraday(ticker)
-
     tags = [jour_bdc["tag"], regime_info["tag"],
             f"bloc:{cfg['bloc'] or 'autre'}", f"profil:{cfg['profil']}"]
-
     if z20 is not None:
         az20 = abs(z20)
         tags.append("z20:2.0-2.49" if az20 < 2.5 else ("z20:2.5-2.99" if az20 < 3.0 else "z20:≥3.0"))
@@ -508,7 +448,6 @@ def analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, mode):
                 else ("z60:faible" if z60 is not None else "z60:N/A"))
     if sma_info["dessus_sma50"] is not None:
         tags.append("trend:SMA50_dessus" if sma_info["dessus_sma50"] else "trend:SMA50_sous")
-
     resultat = {
         "ticker": ticker, "profil": cfg["profil"],
         "seuil_min_base": cfg["seuil_min"], "seuil_effectif": seuil_effectif,
@@ -531,9 +470,8 @@ def generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info):
     signaux = [r for r in resultats if r.get("signal")]
     for s in signaux:
         s["tags"].append(cluster_info["tag"])
-
-    maintenant         = datetime.now(EASTERN)
-    est_heures_marche  = (
+    maintenant        = datetime.now(EASTERN)
+    est_heures_marche = (
         maintenant.weekday() < 5
         and maintenant.hour >= 9
         and (maintenant.hour > 9 or maintenant.minute >= 30)
@@ -555,31 +493,26 @@ def afficher_console(rapport):
     regime  = rapport["regime_marche"]
     bdc     = rapport["jour_bdc"]
     cluster = rapport["cluster"]
-
     print("\n" + "=" * 65)
     print(f"  TMX v2 — Scan z-scores   {now}")
     print("=" * 65)
-
     icone_regime = {"risk_on": "🟢", "neutre": "🟡", "risk_off": "🔴"}.get(regime["regime"], "⚪")
     print(f"\n  {icone_regime} Régime VIX : {regime.get('description', 'inconnu')}")
-
     if bdc["est_jour_bdc"]:
         print(f"  ⚠️  Jour BdC ({bdc['type_bdc']}) : {bdc['regle']}")
-
     n = cluster["n_signaux"]
     if n == 0:
         print(f"\n  Aucun signal actif sur les {rapport['n_fnbs_scannes']} FNBs scannés.")
     else:
         icone_cluster = "🟢" if n <= 3 else ("🟡" if n <= 6 else "🔴")
         print(f"\n  {icone_cluster} {n} signal(s) — {cluster['action']}")
-
     if rapport["signaux"]:
         print(f"\n  {'FNB':<10} {'Profil':<8} {'Z20':>7} {'Z60':>7} {'SMA50':>8} {'Seuil':>7} {'Taille':>8}")
         print("  " + "-" * 58)
         for s in rapport["signaux"]:
-            z20_str    = f"{s['z20']:+.2f}" if s["z20"] is not None else "  N/A"
-            z60_str    = f"{s['z60']:+.2f}" if s["z60"] is not None else "  N/A"
-            sma_str    = "✓" if s.get("dessus_sma50") else ("✗" if s.get("dessus_sma50") is False else "?")
+            z20_str = f"{s['z20']:+.2f}" if s["z20"] is not None else "  N/A"
+            z60_str = f"{s['z60']:+.2f}" if s["z60"] is not None else "  N/A"
+            sma_str = "✓" if s.get("dessus_sma50") else ("✗" if s.get("dessus_sma50") is False else "?")
             taille_info = calculer_multiplicateur_taille(
                 s["ticker"], s["z20"], s["z60"],
                 rapport["regime_marche"]["regime"], rapport["filtre_D"],
@@ -587,7 +520,6 @@ def afficher_console(rapport):
             )
             print(f"  {s['ticker']:<10} {s['profil']:<8} {z20_str:>7} {z60_str:>7} "
                   f"{sma_str:>8} {s['seuil_effectif']:>7.1f} {taille_info['taille_finale']:.2f}x")
-
     print(f"\n  {'FNB':<10} {'Z20':>7} {'Z60':>7} {'SMA50':>8} {'Prix':>8}")
     print("  " + "-" * 45)
     for r in rapport["tous_fnbs"]:
@@ -608,7 +540,7 @@ def main():
     parser = argparse.ArgumentParser(description="TMX v2 — Scanner z-scores")
     parser.add_argument("--mode", choices=["daily", "live"], default="daily")
     parser.add_argument("--output", default="scan_results.json")
-    args, _ = parser.parse_known_args()   # parse_known_args = compatible Colab/Jupyter
+    args, _ = parser.parse_known_args()
 
     print("=" * 65)
     print("  TMX v2 — Scanner de signaux z-scores")
@@ -616,10 +548,10 @@ def main():
     print("=" * 65)
 
     tickers = list(UNIVERSE.keys())
+    data    = telecharger_historique(tickers)
 
-    data       = telecharger_historique(tickers)
     print("\n📊 Récupération du VIX...")
-    vix        = telecharger_vix()
+    vix         = telecharger_vix()
     regime_info = determiner_regime_vix(vix)
     print(f"   {regime_info['description']}")
 
@@ -651,9 +583,32 @@ def main():
         json.dump(rapport, f, ensure_ascii=False, indent=2, default=str)
     print(f"  📄 Rapport sauvegardé : {output_path.resolve()}")
 
+    # ── Notifications ──────────────────────────────────────────────────────────
     print("\n📬 Envoi des notifications...")
-    from notifier import envoyer_notifications
-    envoyer_notifications(rapport)
+    try:
+        from notifier import envoyer_notifications
+        envoyer_notifications(rapport)
+    except Exception as e:
+        print(f"   ⚠️  Notifications : {e}")
+
+    # ── Simulateur paper trading ───────────────────────────────────────────────
+    print("\n📊 Mise à jour du simulateur paper trading...")
+    try:
+        from simulateur import (
+            charger_positions, charger_trades_log,
+            action_evaluer, action_surveiller,
+            sauvegarder_positions, sauvegarder_trades_log,
+        )
+        portefeuille = charger_positions()
+        trades_log   = charger_trades_log()
+        action_evaluer(portefeuille, trades_log, 100_000.0)
+        action_surveiller(portefeuille, trades_log)
+        sauvegarder_positions(portefeuille)
+        sauvegarder_trades_log(trades_log)
+        print("   ✅ Simulateur mis à jour")
+    except Exception as e:
+        print(f"   ⚠️  Simulateur : {e}")
+
     print()
 
 
