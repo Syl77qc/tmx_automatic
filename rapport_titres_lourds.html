@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TMX v2 — Analyse des titres lourds</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
     --bg: #0d0f12;
@@ -20,9 +20,9 @@
     --green: #22c55e;
     --blue: #3b82f6;
     --gray: #6b7280;
-    --accent: #818cf8;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
+    --accent: #e8c97e;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -144,8 +144,8 @@ body {
 
 /* ── Avertissement méthodologique ── */
 .methodo-box {
-    background: #818cf815;
-    border: 1px solid #818cf830;
+    background: #e8c97e15;
+    border: 1px solid #e8c97e30;
     border-radius: 8px;
     padding: 1rem 1.5rem;
     margin-bottom: 2rem;
@@ -299,7 +299,7 @@ body {
     border-bottom: 1px solid #1c2030;
     vertical-align: middle;
 }
-.events-table tr:hover td { background: #0d0f1204; }
+.events-table tr:hover td { background: #ffffff04; }
 .td-date { font-family: var(--mono); color: var(--text2); white-space: nowrap; }
 .td-z, .td-rend { font-family: var(--mono); font-weight: 600; }
 .td-expl { color: var(--text2); font-size: 0.7rem; max-width: 200px; }
@@ -348,10 +348,10 @@ footer {
     .main { padding: 1rem; }
 }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 .fnblab-nav {
   position: sticky; top: 0; z-index: 100;
@@ -364,16 +364,16 @@ footer {
   margin: -24px -24px 24px;
 }
 .fnblab-brand {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-size: 16px; font-weight: 500;
-  color: #818cf8;
+  color: #e8c97e;
   letter-spacing: -0.01em;
   margin-right: 28px;
   text-decoration: none;
 }
 .fnblab-links { display: flex; gap: 2px; }
 .fnblab-links a {
-  font-family: 'IBM Plex Sans',sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 12px; font-weight: 400;
   color: #8a8880;
   padding: 5px 10px;
@@ -1680,7 +1680,7 @@ footer {
 
   <div style="border-top:1px solid #2a2f3e;padding-top:2rem;margin-bottom:1.5rem;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;
-                color:#818cf8;letter-spacing:0.15em;text-transform:uppercase;
+                color:#e8c97e;letter-spacing:0.15em;text-transform:uppercase;
                 margin-bottom:0.5rem;">
       TMX v2 · Guide de décision
     </div>
@@ -1697,7 +1697,7 @@ footer {
   <div style="overflow-x:auto;">
     <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
       <thead>
-        <tr style="background:#1c2030;border-bottom:2px solid #818cf8;">
+        <tr style="background:#1c2030;border-bottom:2px solid #e8c97e;">
           <th style="padding:14px 18px;text-align:left;font-family:'IBM Plex Mono',monospace;
                      font-size:0.7rem;color:#94a3b8;letter-spacing:0.08em;
                      text-transform:uppercase;width:15%;">Type</th>
@@ -1890,7 +1890,7 @@ footer {
   </div>
 
   <!-- Note de bas de section -->
-  <div style="background:#818cf810;border:1px solid #818cf825;border-radius:8px;
+  <div style="background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;
               padding:14px 18px;margin-top:1.5rem;font-size:0.8rem;color:#94a3b8;
               display:flex;gap:10px;align-items:flex-start;">
     <span style="font-size:1rem;flex-shrink:0;">🤖</span>
@@ -1978,8 +1978,8 @@ new Chart(document.getElementById('chartContrib'), {
         datasets: [{
             label: '% moyen expliqué',
             data: DATA.contrib_moy,
-            backgroundColor: ['#818cf840','#22c55e40','#f59e0b40','#ef444440'],
-            borderColor:     ['#818cf8',  '#22c55e',  '#f59e0b',  '#ef4444'],
+            backgroundColor: ['#e8c97e40','#22c55e40','#f59e0b40','#ef444440'],
+            borderColor:     ['#e8c97e',  '#22c55e',  '#f59e0b',  '#ef4444'],
             borderWidth: 1
         }]
     },

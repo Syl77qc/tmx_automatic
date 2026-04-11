@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TMX v2 — Anatomie des chocs de marché</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:     #0d0f12;
-  --bg2:    #141720;
-  --bg3:    #1c2030;
+  --bg:     #0d0f11;
+  --bg2:    #131619;
+  --bg3:    #1a1e22;
   --border: #2a2f3e;
   --text:   #e2e8f0;
   --text2:  #94a3b8;
@@ -20,9 +20,9 @@
   --green:  #22c55e;
   --blue:   #3b82f6;
   --gray:   #6b7280;
-  --accent: #818cf8;
-  --mono:   'IBM Plex Mono', monospace;
-  --sans:   'IBM Plex Sans', sans-serif;
+  --accent: #e8c97e;
+  --mono:   'DM Mono', monospace;
+  --sans:   'DM Sans', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; }
@@ -70,7 +70,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); line
   padding: 0.3rem 0.75rem; border-radius: 4px; transition: all 0.15s;
 }
 .trail-step a:hover { color: var(--text); background: var(--bg3); }
-.trail-step a.current { color: var(--accent); background: #818cf815; }
+.trail-step a.current { color: var(--accent); background: #e8c97e15; }
 .trail-arrow { color: var(--border); font-size: 0.8rem; padding: 0 0.2rem; }
 
 /* ── Main ── */
@@ -127,7 +127,7 @@ section { margin-bottom: 4rem; }
   background: var(--bg3); font-family: var(--mono); font-size: 0.65rem;
   text-align: center; line-height: 20px; color: var(--text3); margin-right: 0.4rem;
 }
-.rank-badge.top { background: #818cf820; color: var(--accent); }
+.rank-badge.top { background: #e8c97e20; color: var(--accent); }
 
 /* ── Bar inline ── */
 .bar-wrap { display: flex; align-items: center; gap: 0.6rem; }
@@ -223,7 +223,7 @@ section { margin-bottom: 4rem; }
 
 /* ── Transition callout ── */
 .transition-callout {
-  background: #818cf810; border: 1px solid #818cf830;
+  background: #e8c97e10; border: 1px solid #e8c97e30;
   border-radius: 8px; padding: 1.25rem 1.75rem;
   margin: 2rem 0; display: flex; gap: 1rem; align-items: flex-start;
 }
@@ -243,9 +243,33 @@ section { margin-bottom: 4rem; }
   .hero-stats { grid-template-columns: 1fr 1fr; }
   .lit-grid, .implications-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Nav FNBLab ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,17,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px; display: flex; align-items: center;
+  height: 52px;
+}
+.nav-brand { font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 500; color: var(--accent); margin-right: 32px; text-decoration: none; }
+.nav-links { display: flex; gap: 2px; }
+.nav-links a { font-size: 12px; color: var(--text2); padding: 6px 12px; border-radius: 6px; text-decoration: none; transition: color 0.15s, background 0.15s; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--bg3); }
 </style>
 </head>
 <body>
+
+<nav>
+  <a class="nav-brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="recherche.html">Recherche</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="apropos.html">À propos</a>
+  </div>
+</nav>
 
 <!-- ── Header ── -->
 <header class="site-header">
@@ -382,9 +406,9 @@ section { margin-bottom: 4rem; }
     <div style="margin-top:1rem;display:flex;gap:1.5rem;align-items:center;font-family:var(--mono);font-size:0.65rem;color:var(--text3);">
       <span>Intensité :</span>
       <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#1c2030;border-radius:2px"></span> 1–3</span>
-      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#818cf830;border-radius:2px"></span> 4–7</span>
-      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#818cf870;border-radius:2px"></span> 8–10</span>
-      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#818cf8;border-radius:2px"></span> 11+</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#e8c97e30;border-radius:2px"></span> 4–7</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#e8c97e70;border-radius:2px"></span> 8–10</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#e8c97e;border-radius:2px"></span> 11+</span>
     </div>
   </div>
 
@@ -671,7 +695,7 @@ new Chart(document.getElementById('barChart'), {
       },
       y: {
         grid: { display: false },
-        ticks: { color: '#818cf8', font: { family: 'IBM Plex Mono', size: 11 } },
+        ticks: { color: '#e8c97e', font: { family: 'IBM Plex Mono', size: 11 } },
       }
     }
   }
@@ -679,9 +703,9 @@ new Chart(document.getElementById('barChart'), {
 
 // ── Heatmap ──────────────────────────────────────────────────
 function heatColor(v) {
-  if (v >= 11) return '#818cf8';
-  if (v >= 8)  return '#818cf870';
-  if (v >= 4)  return '#818cf830';
+  if (v >= 11) return '#e8c97e';
+  if (v >= 8)  return '#e8c97e70';
+  if (v >= 4)  return '#e8c97e30';
   return '#1c2030';
 }
 const tbl = document.getElementById('heatmap-table');
