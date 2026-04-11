@@ -21,7 +21,7 @@ jobs:
   scanner:
     name: Scan z-scores + Notifications + Dashboard
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -60,20 +60,23 @@ jobs:
       - name: Generate dashboard
         run: python generate_dashboard.py
 
-      - name: Commit and push dashboard
+      - name: Commit and push
         run: |
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
-          git add index.html scan_results.json
+          git add index.html scan_results.json positions.json trades_log.json || true
           git diff --staged --quiet || git commit -m "Dashboard auto-update $(date -u '+%Y-%m-%d %H:%M') UTC"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
-      - name: Upload scan results
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: scan-results-${{ github.run_id }}
-          path: scan_results.json
+          path: |
+            scan_results.json
+            positions.json
+            trades_log.json
           retention-days: 7
