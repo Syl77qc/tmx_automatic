@@ -271,38 +271,6 @@ def generer_dashboard(rapport, positions=None):
     return True
 
 
-if __name__ == "__main__":
-    # Lire scan_results.json
-    scan_path = Path("scan_results.json")
-    if not scan_path.exists():
-        print("❌ scan_results.json introuvable")
-        exit(1)
-
-    rapport = json.loads(scan_path.read_text(encoding="utf-8"))
-
-    # Lire positions.json si disponible
-    pos_path = Path("positions.json")
-    positions = []
-    if pos_path.exists():
-        try:
-            data = json.loads(pos_path.read_text(encoding="utf-8"))
-            positions = data if isinstance(data, list) else data.get("positions", [])
-        except Exception as e:
-            print(f"⚠️  positions.json illisible : {e}")
-
-    ok = generer_dashboard(rapport, positions)
-
-    # Générer resultats.html
-    now = datetime.now(EASTERN)
-    generer_resultats(
-        trades_log,
-        portefeuille,
-        now.strftime('%Y-%m-%d %H:%M'),
-        str(now.year)
-    )
-
-    exit(0 if ok else 1)
-
 
 # ── Génération de resultats.html ───────────────────────────────────────────────
 
@@ -350,55 +318,48 @@ def generer_trades_html(trades_fermes):
       </tr></thead><tbody>{rows}</tbody></table>'''
 
 
-def generer_resultats(trades_log, portefeuille, scan_at, scan_year):
-    if not TEMPLATE_RESULTATS:
-        print("⚠️  resultats_template.html introuvable — resultats.html non généré")
-        return False
+if __name__ == "__main__":
+    # Lire scan_results.json
+    scan_path = Path("scan_results.json")
+    if not scan_path.exists():
+        print("❌ scan_results.json introuvable")
+        exit(1)
 
-    trades_fermes = [t for t in trades_log if not t.get("partielle", False)]
-    n = len(trades_fermes)
+    rapport = json.loads(scan_path.read_text(encoding="utf-8"))
 
-    hit_rate = "—"; hit_class = ""
-    rendement = "—"; rend_class = ""
-    drawdown = "—"; dd_class = ""
-    pb_trades_pct = min(100, n / 30 * 100)
-    pb_trades_class = "pb-ok" if n >= 30 else "pb-neutral"
-    pb_hr_pct = 0; pb_hr_class = "pb-neutral"
-    pb_dd_pct = 0; pb_dd_class = "pb-neutral"
+    # Lire positions.json si disponible
+    pos_path = Path("positions.json")
+    positions = []
+    portefeuille = {"capital_initial": 100000, "capital_disponible": 100000}
+    if pos_path.exists():
+        try:
+            data = json.loads(pos_path.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and "positions_ouvertes" in data:
+                portefeuille = data
+                positions = list(data.get("positions_ouvertes", {}).values())
+            elif isinstance(data, list):
+                positions = data
+        except Exception as e:
+            print(f"⚠️  positions.json illisible : {e}")
 
-    if trades_fermes:
-        gagnants = [t for t in trades_fermes if t.get("gagnant")]
-        hr = len(gagnants) / n * 100
-        hit_rate = f"{hr:.0f}%"
-        hit_class = "metric-ok" if hr >= 60 else "metric-warn"
-        pb_hr_pct = min(100, hr / 60 * 100)
-        pb_hr_class = "pb-ok" if hr >= 60 else "pb-warn"
-        rends = [t.get("pnl_net_pct", 0) for t in trades_fermes]
-        rend_moy = sum(rends) / n
-        rendement = f"{rend_moy:+.2f}%"
-        rend_class = "metric-ok" if rend_moy >= 1.5 else "metric-warn"
-        capital_i = portefeuille.get("capital_initial", 100000)
-        capital_a = portefeuille.get("capital_disponible", capital_i)
-        dd = (capital_i - capital_a) / capital_i * 100
-        drawdown = f"{dd:.1f}%"
-        dd_class = "metric-ok" if dd < 15 else "metric-warn"
-        pb_dd_pct = min(100, dd / 15 * 100)
-        pb_dd_class = "pb-ok" if dd < 15 else "pb-warn"
+    # Lire trades_log.json si disponible
+    trades_path = Path("trades_log.json")
+    trades_log = []
+    if trades_path.exists():
+        try:
+            trades_log = json.loads(trades_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"⚠️  trades_log.json illisible : {e}")
 
-    html = TEMPLATE_RESULTATS
-    for k, v in {
-        "{SCAN_AT}": scan_at, "{SCAN_YEAR}": scan_year,
-        "{HIT_RATE}": hit_rate, "{HIT_RATE_CLASS}": hit_class,
-        "{RENDEMENT_MOYEN}": rendement, "{RENDEMENT_CLASS}": rend_class,
-        "{DRAWDOWN}": drawdown, "{DRAWDOWN_CLASS}": dd_class,
-        "{N_TRADES}": str(n),
-        "{PB_TRADES_PCT}": f"{pb_trades_pct:.0f}", "{PB_TRADES_CLASS}": pb_trades_class,
-        "{PB_HR_PCT}": f"{pb_hr_pct:.0f}", "{PB_HR_CLASS}": pb_hr_class,
-        "{PB_DD_PCT}": f"{pb_dd_pct:.0f}", "{PB_DD_CLASS}": pb_dd_class,
-        "{TRADES_HTML}": generer_trades_html(trades_fermes),
-    }.items():
-        html = html.replace(k, v)
+    ok = generer_dashboard(rapport, positions)
 
-    Path("resultats.html").write_text(html, encoding="utf-8")
-    print(f"✅ resultats.html généré — {n} trade(s)")
-    return True
+    # Générer resultats.html
+    now = datetime.now(EASTERN)
+    generer_resultats(
+        trades_log,
+        portefeuille,
+        now.strftime("%Y-%m-%d %H:%M"),
+        str(now.year)
+    )
+
+    exit(0 if ok else 1)
