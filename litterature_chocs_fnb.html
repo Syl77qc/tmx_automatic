@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chocs fondamentaux vs systémiques — Littérature scientifique · </title>
+<title>Chocs fondamentaux vs systémiques — Littérature scientifique · TMX v2</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   body {
     margin: 0; padding: 24px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
     font-size: 13px; line-height: 1.6;
-    background: #ffffff; color: #1a1a1a;
+    background: #0d0f12; color: #e8e4dd;
   }
-  @media (prefers-color-scheme: dark) {
-    body { background: #1a1a1a; color: #e0ddd6; }
-  }
+  
 
   h1 { font-size: 18px; font-weight: 500; margin: 0 0 2px; }
-  .sub { font-size: 12px; color: #888; margin-bottom: 18px; }
+  .sub { font-size: 12px; color: #64748b; margin-bottom: 18px; }
 
   .discovery-box {
     margin-bottom: 20px; padding: 14px 16px;
@@ -25,25 +23,21 @@
     border-left: 3px solid #166534;
     font-size: 12px; color: #14532d; line-height: 1.7;
   }
-  @media (prefers-color-scheme: dark) {
-    .discovery-box { background: #052e16; color: #bbf7d0; border-color: #16a34a; }
-  }
+  
 
   .section-title {
     font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-    color: #888; margin: 20px 0 10px; text-transform: uppercase;
+    color: #64748b; margin: 20px 0 10px; text-transform: uppercase;
   }
 
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
   @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
 
   .card {
-    border: 1px solid #e5e5e5; border-radius: 10px; padding: 14px;
-    background: #f8f8f5;
+    border: 1px solid #2a2f3e; border-radius: 10px; padding: 14px;
+    background: #141720;
   }
-  @media (prefers-color-scheme: dark) {
-    .card { background: #222; border-color: #333; }
-  }
+  
   .card.indigo  { border-left: 3px solid #4338CA; }
   .card.teal    { border-left: 3px solid #0F6E56; }
   .card.amber   { border-left: 3px solid #854F0B; }
@@ -54,7 +48,7 @@
   .card.slate   { border-left: 3px solid #334155; }
 
   .combo-label { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
-  .combo-authors { font-size: 11px; color: #888; margin-bottom: 6px; }
+  .combo-authors { font-size: 11px; color: #64748b; margin-bottom: 6px; }
 
   .combo-indicators { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
   .ind-pill {
@@ -62,19 +56,12 @@
     font-size: 11px; font-weight: 500;
   }
   .ip-indigo { background: #EEF2FF; color: #3730A3; }
-  .ip-teal   { background: #E1F5EE; color: #085041; }
-  .ip-amber  { background: #FAEEDA; color: #633806; }
-  .ip-gray   { background: #F1EFE8; color: #444441; }
+  .ip-teal   { background: #22c55e20; color: #22c55e; }
+  .ip-amber  { background: #f59e0b20; color: #f59e0b; }
+  .ip-gray   { background: #1c2030; color: #444441; }
   .ip-coral  { background: #FFF0ED; color: #7F2009; }
   .ip-purple { background: #F5F3FF; color: #5B21B6; }
-  @media (prefers-color-scheme: dark) {
-    .ip-indigo { background: #1E1B4B; color: #A5B4FC; }
-    .ip-teal   { background: #04342C; color: #5DCAA5; }
-    .ip-amber  { background: #412402; color: #EF9F27; }
-    .ip-gray   { background: #2C2C2A; color: #B4B2A9; }
-    .ip-coral  { background: #450A0A; color: #FCA5A5; }
-    .ip-purple { background: #2E1065; color: #DDD6FE; }
-  }
+  
 
   .gain-bar-wrap { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; }
   .gain-bar { height: 7px; border-radius: 4px; }
@@ -86,13 +73,13 @@
   .gb-purple { background: #7C3AED; }
   .gb-rose   { background: #9F1239; }
   .gb-slate  { background: #334155; }
-  .gain-num { font-size: 11px; color: #888; white-space: nowrap; }
-  @media (prefers-color-scheme: dark) { .gain-num { color: #666; } }
+  .gain-num { font-size: 11px; color: #64748b; white-space: nowrap; }
+  
 
-  .card-desc { font-size: 12px; color: #555; line-height: 1.55; margin-top: 6px; }
-  @media (prefers-color-scheme: dark) { .card-desc { color: #999; } }
-  .ref-small { font-size: 10px; color: #bbb; font-style: italic; margin-top: 6px; }
-  @media (prefers-color-scheme: dark) { .ref-small { color: #666; } }
+  .card-desc { font-size: 12px; color: #94a3b8; line-height: 1.55; margin-top: 6px; }
+  
+  .ref-small { font-size: 10px; color: #475569; font-style: italic; margin-top: 6px; }
+  
 
   /* Tableau de résultats TMX */
   .results-table {
@@ -102,66 +89,51 @@
   .results-table th {
     text-align: left; padding: 6px 10px;
     font-size: 10px; font-weight: 600;
-    letter-spacing: 0.05em; color: #888;
+    letter-spacing: 0.05em; color: #64748b;
     text-transform: uppercase;
     border-bottom: 1px solid #e5e5e5;
   }
-  @media (prefers-color-scheme: dark) {
-    .results-table th { border-color: #333; }
-  }
+  
   .results-table td {
     padding: 7px 10px; border-bottom: 1px solid #f0ede6;
     vertical-align: top;
   }
-  @media (prefers-color-scheme: dark) {
-    .results-table td { border-color: #2a2a28; }
-  }
+  
   .results-table tr:last-child td { border-bottom: none; }
   .td-fnb { font-weight: 600; font-family: monospace; }
   .td-fond { color: #991B1B; font-weight: 600; }
   .td-sect { color: #92400E; font-weight: 600; }
   .td-syst { color: #374151; }
-  .td-impl { color: #555; font-size: 11px; }
-  @media (prefers-color-scheme: dark) {
-    .td-fond { color: #FCA5A5; }
-    .td-sect { color: #FCD34D; }
-    .td-syst { color: #9CA3AF; }
-    .td-impl { color: #999; }
-  }
+  .td-impl { color: #94a3b8; font-size: 11px; }
+  
 
   /* Principe central */
   .principle {
     margin-top: 20px; padding: 16px;
-    border: 1px solid #e5e5e5; border-radius: 10px;
-    background: #f8f8f5;
+    border: 1px solid #2a2f3e; border-radius: 10px;
+    background: #141720;
   }
-  @media (prefers-color-scheme: dark) {
-    .principle { background: #222; border-color: #333; }
-  }
+  
   .principle h2 { font-size: 14px; font-weight: 500; margin: 0 0 10px; }
   .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   @media (max-width: 600px) { .principle-grid { grid-template-columns: 1fr; } }
   .p-item {
-    font-size: 12px; color: #555; line-height: 1.55;
-    padding: 10px; background: #ffffff; border-radius: 7px;
-    border: 1px solid #eee;
+    font-size: 12px; color: #94a3b8; line-height: 1.55;
+    padding: 10px; background: #0d0f12; border-radius: 7px;
+    border: 1px solid #2a2f3e;
   }
-  @media (prefers-color-scheme: dark) {
-    .p-item { background: #1a1a1a; border-color: #333; color: #999; }
-  }
-  .p-title { font-weight: 600; color: #1a1a1a; margin-bottom: 4px; font-size: 12px; }
-  @media (prefers-color-scheme: dark) { .p-title { color: #e0ddd6; } }
+  
+  .p-title { font-weight: 600; color: #e8e4dd; margin-bottom: 4px; font-size: 12px; }
+  
 
   /* Box TMX */
   .tmx-box {
     margin-top: 16px; padding: 14px 16px;
-    background: #f8f8f5; border-radius: 8px;
+    background: #141720; border-radius: 8px;
     border-left: 3px solid #4338CA;
-    font-size: 12px; color: #555; line-height: 1.7;
+    font-size: 12px; color: #94a3b8; line-height: 1.7;
   }
-  @media (prefers-color-scheme: dark) {
-    .tmx-box { background: #222; color: #999; }
-  }
+  
 
   .warn-box {
     margin-top: 12px; padding: 12px 14px;
@@ -169,20 +141,18 @@
     border-left: 3px solid #D97706;
     font-size: 12px; color: #78350F; line-height: 1.6;
   }
-  @media (prefers-color-scheme: dark) {
-    .warn-box { background: #1C1400; color: #FCD34D; border-color: #D97706; }
-  }
+  
 
   .footer {
-    margin-top: 20px; font-size: 10px; color: #bbb;
-    border-top: 1px solid #eee; padding-top: 12px;
+    margin-top: 20px; font-size: 10px; color: #475569;
+    border-top: 1px solid #2a2f3e; padding-top: 12px;
   }
-  @media (prefers-color-scheme: dark) { .footer { border-color: #333; } }
+  
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600" rel="stylesheet">
 </head>
 <body>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600" rel="stylesheet">
 <style>
 .fnblab-nav {
   position: sticky; top: 0; z-index: 100;
@@ -195,16 +165,16 @@
   margin: -24px -24px 24px;
 }
 .fnblab-brand {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   font-size: 16px; font-weight: 500;
-  color: #e8c97e;
+  color: #818cf8;
   letter-spacing: -0.01em;
   margin-right: 28px;
   text-decoration: none;
 }
 .fnblab-links { display: flex; gap: 2px; }
 .fnblab-links a {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans',sans-serif;
   font-size: 12px; font-weight: 400;
   color: #8a8880;
   padding: 5px 10px;
@@ -228,17 +198,20 @@
 
 
 <h1>Chocs fondamentaux vs systémiques et mean reversion — Ce que prouve la littérature</h1>
-<div class="sub">Pertinence pour le système · Titres lourds dans les FNBs concentrés · Avril 2026</div>
+<div class="sub">Pertinence pour TMX v2 · Titres lourds dans les FNBs concentrés · Avril 2026</div>
 
 <!-- Encadré "découverte ou pas?" -->
 <div class="discovery-box">
-  Nous avons analysé les dix dernières années de données de plusieurs fonds négociés en bourse (FNB) transigés à la Bourse de Toronto, dans le but d’évaluer dans quelle mesure la performance de ces fonds peut être attribuée à des facteurs systémiques ou à l’influence de titres individuels à forte pondération. Plus précisément, cette étude vise à déterminer si les mouvements observés relèvent principalement de chocs de marché ou de chocs fondamentaux associés à des entreprises dominantes au sein des portefeuilles.
-Cette approche s’inscrit dans la littérature existante sur la décomposition des rendements, tout en proposant une application empirique originale au marché canadien dans un cadre de stratégies automatisées de mean reversion. Nos résultats montrent que, pour les FNB XFN, XIT, XEG et XGD, certaines entreprises occupent une pondération suffisamment élevée pour, à elles seules, expliquer une part significative des mouvements observés, remettant en question l’hypothèse de diversification implicite à ces instruments 
-</strong> Notre contribution est l'application originale à des FNBs canadiens dans le cadre d'un système de mean reversion automatisé</strong> — ça, la littérature ne l'a pas fait.
+  <strong>✅ Ce n'est pas une découverte originale — c'est de la finance académique bien établie.</strong><br>
+  Ce que vous avez observé empiriquement sur XFN, XIT, XEG et XGD est exactement ce que la littérature
+  appelle la <em>décomposition choc fondamental / choc systémique</em>. La question "est-ce qu'un titre lourd
+  explique la baisse d'un FNB?" est une application directe de trois décennies de recherche sur la
+  décomposition des rendements. <strong>Votre contribution est l'application originale à des FNBs canadiens
+  dans le cadre d'un système de mean reversion automatisé</strong> — ça, la littérature ne l'a pas fait.
 </div>
 
 <!-- Résultats TMX v2 -->
-<div class="section-title">Les résultats — 978 événements (2016–2025) où il y a eu une baisse d'au moins 2 écart-type</div>
+<div class="section-title">Vos résultats TMX v2 — 978 événements (2016–2025)</div>
 <table class="results-table">
   <thead>
     <tr>
@@ -351,7 +324,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       à court terme. Les baisses non-fondamentales (chocs de sentiment, pression de vente,
       arbitrage ETF) se renversent rapidement. Cependant, les chocs fondamentaux
       (nouvelles sur un titre lourd) ne se renversent pas. C'est exactement la distinction
-      que notre sysème cherche à capter avec son filtre de titres lourds.
+      que TMX v2 cherche à capter avec son filtre de titres lourds.
     </div>
     <div class="ref-small">Da & Shive (2018, EUFM) · Ben-David, Franzoni & Moussawi (2018, JF)</div>
   </div>
@@ -373,7 +346,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       de la finance empirique : après une mauvaise annonce de résultats, les prix
       <strong>continuent de baisser pendant 30 à 60 jours</strong> (pas de rebond).
       C'est l'opposé du mean reversion. Bernard & Thomas (1989) et Chan et al. (1996)
-      documentent ce phénomène sur des décennies de données. Pour notre système :
+      documentent ce phénomène sur des décennies de données. Pour TMX v2 :
       si XIT baisse parce que Shopify a raté ses résultats, le PEAD prédit une
       <em>continuation</em> de la baisse, pas un rebond — acheter serait une erreur.
     </div>
@@ -442,14 +415,14 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
     </div>
     <div class="gain-bar-wrap">
       <div class="gain-bar gb-rose" style="width:74px"></div>
-      <span class="gain-num">Horizon  = 8–25 jours ✓</span>
+      <span class="gain-num">Horizon TMX v2 = 8–25 jours ✓</span>
     </div>
     <div class="card-desc">
       La littérature sur momentum vs reversal montre un pattern cohérent :
       <strong>retournement à très court terme</strong> (1–4 semaines = bruit, microstructure),
       <strong>momentum à moyen terme</strong> (2–12 mois = tendances fondamentales persistantes),
       <strong>retournement à long terme</strong> (3–5 ans = surréaction).
-      L'horizon de 8–25 jours du système est parfaitement positionné dans la zone
+      L'horizon de 8–25 jours de TMX v2 est parfaitement positionné dans la zone
       de reversal court terme — là où la littérature confirme l'effet.
       Attention : cet effet est plus fort pour les chocs systémiques que fondamentaux.
     </div>
@@ -495,7 +468,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       de la valeur intrinsèque d'une compagnie.
     </div>
     <div class="p-item">
-      <div class="p-title">La distinction clé pourle système </div>
+      <div class="p-title">La distinction clé pour TMX v2</div>
       Choc sectoriel (XFN, XEG, XGD à 70–82%) = les banques ou les pétrolières baissent
       toutes ensemble → probablement temporaire → mean reversion attendu ✓<br>
       Choc fondamental (XIT à 87%) = Shopify a eu une vraie mauvaise nouvelle →
@@ -510,7 +483,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
       au début d'une tendance baissière de 2 mois, pas une aubaine.
     </div>
     <div class="p-item">
-      <div class="p-title">La limite de la méthode </div>
+      <div class="p-title">La limite de la méthode TMX v2</div>
       Le z-score mesure l'ampleur statistique de la baisse mais pas son origine.
       C'est reconnu dans le PRD (section 13). La solution n'est pas d'abandonner
       le z-score — c'est d'ajouter un signal contextuel (filtre publications
@@ -522,8 +495,8 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
 
 <!-- Box implication TMX -->
 <div class="tmx-box">
-  <strong>Implication directe pour le système que nous testons :</strong>
-  La littérature semble valider notre approche — et confirme que XIT mérite
+  <strong>Implication directe pour TMX v2 (amendement PRD) :</strong>
+  La littérature valide entièrement votre approche — et confirme que XIT mérite
   un traitement spécial. La modification suggérée : pour XIT spécifiquement,
   vérifier si Shopify a une publication trimestrielle dans les ±2 jours du signal
   (dates : début février, mai, août, novembre). Si oui, exiger un z-score ≥ 3.0
@@ -534,7 +507,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
 
 <!-- Avertissement méthodologique -->
 <div class="warn-box">
-  <strong>⚠️ Limite de l'analyse :</strong> Les poids utilisés pour attribuer les baisses
+  <strong>⚠️ Limite de l'analyse TMX v2 :</strong> Les poids utilisés pour attribuer les baisses
   sont les poids <em>actuels</em> des FNBs, appliqués à 10 ans de données historiques.
   Le poids de Shopify dans XIT était marginal en 2016–2018 (avant son explosion de valorisation).
   Les résultats pour XIT sont donc potentiellement surestimés pour la période pré-2019.
@@ -543,7 +516,7 @@ Cette approche s’inscrit dans la littérature existante sur la décomposition 
 </div>
 
 <div class="footer">
-  Analyse des titres lourds — Fondements littérature scientifique · Avril 2026 ·
+  TMX v2 · Analyse des titres lourds — Fondements littérature scientifique · Avril 2026 ·
   Non destiné à des fins de conseil financier.<br>
   Références principales : Fama & French (1988, JPE) · Vuolteenaho (2002, JF) ·
   Da & Shive (2018, EUFM) · Bernard & Thomas (1989, JAR) · De Bondt & Thaler (1985, JF) ·

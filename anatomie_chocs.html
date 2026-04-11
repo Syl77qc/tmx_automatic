@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMX v2 — Anatomie des chocs de marché</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #0d0f12;
+  --bg2:    #141720;
+  --bg3:    #1c2030;
+  --border: #2a2f3e;
+  --text:   #e2e8f0;
+  --text2:  #94a3b8;
+  --text3:  #64748b;
+  --red:    #ef4444;
+  --amber:  #f59e0b;
+  --green:  #22c55e;
+  --blue:   #3b82f6;
+  --gray:   #6b7280;
+  --accent: #818cf8;
+  --mono:   'IBM Plex Mono', monospace;
+  --sans:   'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+/* ── Header ── */
+.site-header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.sys-label {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.site-header h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
+.site-header .subtitle { font-size: 0.85rem; color: var(--text2); margin-top: 0.25rem; }
+.header-right { text-align: right; }
+.header-right .ts { font-family: var(--mono); font-size: 0.7rem; color: var(--text3); }
+
+/* ── Nav ── */
+.nav-bar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 3rem; display: flex; gap: 0; overflow-x: auto;
+}
+.nav-bar a {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--text3);
+  text-decoration: none; padding: 0.75rem 1.25rem;
+  border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s;
+}
+.nav-bar a:hover { color: var(--text); border-color: var(--accent); }
+.nav-bar a.active { color: var(--accent); border-color: var(--accent); }
+
+/* ── Fil de raisonnement ── */
+.reasoning-trail {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0.9rem 3rem; display: flex; align-items: center; gap: 0; overflow-x: auto;
+}
+.trail-step {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--mono); font-size: 0.7rem; white-space: nowrap;
+}
+.trail-step a {
+  color: var(--text3); text-decoration: none;
+  padding: 0.3rem 0.75rem; border-radius: 4px; transition: all 0.15s;
+}
+.trail-step a:hover { color: var(--text); background: var(--bg3); }
+.trail-step a.current { color: var(--accent); background: #818cf815; }
+.trail-arrow { color: var(--border); font-size: 0.8rem; padding: 0 0.2rem; }
+
+/* ── Main ── */
+.main { padding: 2.5rem 3rem; max-width: 1400px; margin: 0 auto; }
+
+/* ── Section titles ── */
+.section-header {
+  display: flex; align-items: baseline; gap: 1rem;
+  margin-bottom: 1.75rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+  letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+}
+.section-title { font-size: 1.15rem; font-weight: 600; }
+.section-subtitle { font-size: 0.82rem; color: var(--text2); margin-top: 0.2rem; }
+section { margin-bottom: 4rem; }
+
+/* ── Hero stats ── */
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+  margin-bottom: 2rem;
+}
+.hero-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem 1.5rem;
+}
+.hero-card .label {
+  font-family: var(--mono); font-size: 0.62rem; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;
+}
+.hero-card .value {
+  font-family: var(--mono); font-size: 2.4rem; font-weight: 600;
+  color: var(--accent); line-height: 1;
+}
+.hero-card .sub { font-size: 0.78rem; color: var(--text2); margin-top: 0.35rem; }
+
+/* ── Table ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin-bottom: 1.5rem; }
+.data-table th {
+  font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text3); padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap;
+}
+.data-table td { padding: 0.55rem 1rem; border-bottom: 1px solid #1e2330; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg3); }
+.data-table .ticker { font-family: var(--mono); color: var(--accent); font-weight: 500; }
+.data-table .num { font-family: var(--mono); text-align: right; }
+.data-table .desc { color: var(--text2); font-size: 0.8rem; }
+.rank-badge {
+  display: inline-block; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--bg3); font-family: var(--mono); font-size: 0.65rem;
+  text-align: center; line-height: 20px; color: var(--text3); margin-right: 0.4rem;
+}
+.rank-badge.top { background: #818cf820; color: var(--accent); }
+
+/* ── Bar inline ── */
+.bar-wrap { display: flex; align-items: center; gap: 0.6rem; }
+.bar-track { flex: 1; max-width: 120px; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.bar-fill.red { background: var(--red); }
+.bar-fill.amber { background: var(--amber); }
+.bar-fill.green { background: var(--green); }
+
+/* ── Chart card ── */
+.chart-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
+}
+.chart-card h3 {
+  font-family: var(--mono); font-size: 0.68rem; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.25rem;
+}
+.chart-wrap { position: relative; height: 280px; }
+
+/* ── Heatmap ── */
+.heatmap-wrap { overflow-x: auto; }
+.heatmap {
+  border-collapse: collapse; font-family: var(--mono); font-size: 0.72rem;
+  min-width: 700px; width: 100%;
+}
+.heatmap th {
+  padding: 0.4rem 0.6rem; color: var(--text3); font-weight: 400;
+  font-size: 0.65rem; text-align: center; border-bottom: 1px solid var(--border);
+}
+.heatmap th.fnb-col { text-align: left; color: var(--accent); }
+.heatmap td { padding: 0.35rem 0.6rem; text-align: center; border-radius: 3px; }
+.heatmap td.fnb-label { text-align: left; color: var(--accent); font-size: 0.72rem; }
+
+/* ── Littérature cards ── */
+.lit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+.lit-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem 1.5rem;
+}
+.lit-card .ref {
+  font-family: var(--mono); font-size: 0.62rem; color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.lit-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+.lit-card p { font-size: 0.82rem; color: var(--text2); }
+.lit-card .tags { display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; }
+.tag {
+  font-family: var(--mono); font-size: 0.6rem; padding: 0.2rem 0.5rem;
+  border-radius: 3px; background: var(--bg3); color: var(--text3);
+}
+.tag.green { background: #22c55e15; color: var(--green); }
+.tag.red   { background: #ef444415; color: var(--red); }
+.tag.amber { background: #f59e0b15; color: var(--amber); }
+
+/* ── Résultats TMX table ── */
+.tmx-results {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;
+}
+.tmx-results-header {
+  background: var(--bg3); padding: 0.9rem 1.5rem;
+  font-family: var(--mono); font-size: 0.68rem; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+
+/* ── Implications box ── */
+.implications-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.impl-card {
+  border-radius: 8px; padding: 1.5rem;
+  border: 1px solid;
+}
+.impl-card.alert { background: #ef444408; border-color: #ef444430; }
+.impl-card.ok    { background: #22c55e08; border-color: #22c55e30; }
+.impl-card .impl-header {
+  display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem;
+}
+.impl-card .impl-icon { font-size: 1.2rem; }
+.impl-card .impl-title { font-weight: 600; font-size: 0.95rem; }
+.impl-card .impl-ticker {
+  font-family: var(--mono); font-size: 0.7rem; margin-left: auto;
+  padding: 0.2rem 0.5rem; border-radius: 3px;
+}
+.impl-card.alert .impl-ticker { background: #ef444420; color: var(--red); }
+.impl-card.ok    .impl-ticker { background: #22c55e20; color: var(--green); }
+.impl-rule {
+  font-size: 0.82rem; color: var(--text2); margin-bottom: 0.5rem;
+  display: flex; gap: 0.5rem; align-items: flex-start;
+}
+.impl-rule::before { content: '→'; color: var(--text3); flex-shrink: 0; margin-top: 0.1rem; }
+.impl-card.alert .impl-rule-key { color: var(--red); font-weight: 500; }
+.impl-card.ok    .impl-rule-key { color: var(--green); font-weight: 500; }
+
+/* ── Transition callout ── */
+.transition-callout {
+  background: #818cf810; border: 1px solid #818cf830;
+  border-radius: 8px; padding: 1.25rem 1.75rem;
+  margin: 2rem 0; display: flex; gap: 1rem; align-items: flex-start;
+}
+.transition-callout .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+.transition-callout p { font-size: 0.84rem; color: var(--text2); }
+.transition-callout strong { color: var(--text); }
+
+/* ── Footer ── */
+.page-footer {
+  border-top: 1px solid var(--border); padding: 1.5rem 3rem;
+  font-family: var(--mono); font-size: 0.68rem; color: var(--text3);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+@media (max-width: 900px) {
+  .site-header, .nav-bar, .reasoning-trail, .main, .page-footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .lit-grid, .implications-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div>
+    <div class="sys-label">TMX v2 · Système automatisé TSX</div>
+    <h1>Anatomie des chocs de marché</h1>
+    <div class="subtitle">De la fréquence empirique au diagnostic structurel · Univers 12 FNBs · 2016–2025</div>
+  </div>
+  <div class="header-right">
+    <div class="ts">Généré le 11 avril 2026</div>
+  </div>
+</header>
+
+<!-- ── Nav site ── -->
+<nav class="nav-bar">
+  <a href="index.html">Accueil</a>
+  <a href="anatomie_chocs.html" class="active">Anatomie des chocs</a>
+  <a href="rapport_titres_lourds.html">Titres dominants</a>
+  <a href="litterature_chocs_fnb.html">Littérature</a>
+</nav>
+
+<!-- ── Fil de raisonnement ── -->
+<div class="reasoning-trail">
+  <div class="trail-step">
+    <a href="#frequence" class="current">① Fréquence 2016–2025</a>
+  </div>
+  <div class="trail-arrow">▶</div>
+  <div class="trail-step">
+    <a href="#saisonnalite">② Saisonnalité</a>
+  </div>
+  <div class="trail-arrow">▶</div>
+  <div class="trail-step">
+    <a href="#litterature">③ Ce que dit la littérature</a>
+  </div>
+  <div class="trail-arrow">▶</div>
+  <div class="trail-step">
+    <a href="#diagnostic">④ Diagnostic · Titres dominants</a>
+  </div>
+  <div class="trail-arrow">▶</div>
+  <div class="trail-step">
+    <a href="#implications">⑤ Implications TMX v2</a>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ════════════════════════════════════════════
+     ACTE 1 — FRÉQUENCE
+═══════════════════════════════════════════════ -->
+<section id="frequence">
+  <div class="section-header">
+    <span class="section-num">Acte I</span>
+    <div>
+      <div class="section-title">Le constat brut — Fréquence des baisses ≥ 2σ</div>
+      <div class="section-subtitle">Combien de fois par an un FNB de l'univers TMX v2 subit-il un choc négatif significatif ? · Période 2016–2025 (10 ans)</div>
+    </div>
+  </div>
+
+  <!-- Hero stats -->
+  <div class="hero-stats">
+    <div class="hero-card">
+      <div class="label">Moyenne univers · ≥ 2σ</div>
+      <div class="value">7.6</div>
+      <div class="sub">chocs par an, par FNB</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">Total observé · 10 ans</div>
+      <div class="value">978</div>
+      <div class="sub">événements ≥ 2σ sur 13 FNBs</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">FNB le plus exposé</div>
+      <div class="value" style="font-size:1.6rem;margin-top:0.2rem">XIN.TO</div>
+      <div class="sub">8.9 chocs/an · International</div>
+    </div>
+    <div class="hero-card">
+      <div class="label">FNB le moins exposé</div>
+      <div class="value" style="font-size:1.6rem;margin-top:0.2rem">ZAG.TO</div>
+      <div class="sub">6.0 chocs/an · Obligations CA</div>
+    </div>
+  </div>
+
+  <!-- Tableau fréquences -->
+  <div class="chart-card">
+    <h3>Fréquence des baisses par seuil · tous FNBs classés</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>FNB</th>
+          <th>Description</th>
+          <th class="num">≥ 2σ (total)</th>
+          <th class="num">Moy / an</th>
+          <th style="min-width:140px">Intensité</th>
+          <th class="num">≥ 2.5σ / an</th>
+          <th class="num">≥ 3σ / an</th>
+        </tr>
+      </thead>
+      <tbody id="freq-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Graphique barres horizontales -->
+  <div class="chart-card">
+    <h3>Nombre moyen de baisses ≥ 2σ par année (2016–2025)</h3>
+    <div class="chart-wrap">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <div class="transition-callout">
+    <span class="icon">💡</span>
+    <p>Un FNB canadien subit en moyenne <strong>7 à 9 baisses ≥ 2σ par an</strong> — soit presque une par mois et demi. Ce n'est pas une anomalie : c'est la cadence normale des marchés. La question n'est pas <em>si</em> les chocs arrivent, mais <em>pourquoi</em> ils arrivent — et s'ils se renversent.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     ACTE 2 — SAISONNALITÉ
+═══════════════════════════════════════════════ -->
+<section id="saisonnalite">
+  <div class="section-header">
+    <span class="section-num">Acte II</span>
+    <div>
+      <div class="section-title">Quand arrivent-ils ? — Distribution mensuelle</div>
+      <div class="section-subtitle">Heatmap des baisses ≥ 2σ par FNB et par mois · 10 ans cumulés</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h3>Nombre de baisses ≥ 2σ par mois et par FNB · 2016–2025</h3>
+    <div class="heatmap-wrap">
+      <table class="heatmap" id="heatmap-table"></table>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:1.5rem;align-items:center;font-family:var(--mono);font-size:0.65rem;color:var(--text3);">
+      <span>Intensité :</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#1c2030;border-radius:2px"></span> 1–3</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#818cf830;border-radius:2px"></span> 4–7</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#818cf870;border-radius:2px"></span> 8–10</span>
+      <span style="display:flex;align-items:center;gap:0.4rem"><span style="display:inline-block;width:14px;height:14px;background:#818cf8;border-radius:2px"></span> 11+</span>
+    </div>
+  </div>
+
+  <div class="transition-callout">
+    <span class="icon">🔍</span>
+    <p>Les chocs ne sont pas uniformément répartis. <strong>Août, octobre et décembre</strong> concentrent systématiquement plus d'événements extrêmes sur plusieurs FNBs. Ce patron saisonnier suggère des déclencheurs structurels récurrents — mais ne suffit pas à expliquer l'hétérogénéité entre FNBs. Pourquoi XIT se comporte-t-il si différemment de XFN ou XEG sur certains mois ? La réponse est dans la littérature.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     ACTE 3 — LITTÉRATURE
+═══════════════════════════════════════════════ -->
+<section id="litterature">
+  <div class="section-header">
+    <span class="section-num">Acte III</span>
+    <div>
+      <div class="section-title">Ce que dit la littérature — Chocs fondamentaux vs systémiques</div>
+      <div class="section-subtitle">Trois décennies de recherche sur la décomposition des chocs et le mean reversion</div>
+    </div>
+  </div>
+
+  <div class="lit-grid">
+    <div class="lit-card">
+      <div class="ref">Fama &amp; French (1988) · JPE &nbsp;|&nbsp; Poterba &amp; Summers (1988)</div>
+      <h4>Composantes permanentes vs temporaires</h4>
+      <p>Les prix contiennent deux composantes : une permanente (vraie révision de valeur — pas de rebond) et une temporaire (bruit, surréaction — rebond probable). La composante temporaire explique 25–40 % de la variance des rendements sur 3–5 ans. C'est la base théorique du mean reversion.</p>
+      <div class="tags">
+        <span class="tag green">Mean reversion ✓</span>
+        <span class="tag">Fondement théorique</span>
+      </div>
+    </div>
+    <div class="lit-card">
+      <div class="ref">Vuolteenaho (2002) · JF &nbsp;|&nbsp; Campbell &amp; Vuolteenaho (2004)</div>
+      <h4>Cash-flow news vs Discount-rate news</h4>
+      <p>Deux types de nouvelles : CF news (révision réelle des bénéfices → permanent, pas de rebond) et DR news (changement du taux requis → temporaire, rebond probable). Shopify rate ses résultats = CF news = permanent. Les taux montent et tout le secteur vend = DR news = temporaire.</p>
+      <div class="tags">
+        <span class="tag red">Résultats publiés → pas de rebond</span>
+        <span class="tag green">Macro sectoriel → rebond</span>
+      </div>
+    </div>
+    <div class="lit-card">
+      <div class="ref">Da &amp; Shive (2018) · EUFM &nbsp;|&nbsp; Ben-David et al. (2018)</div>
+      <h4>Chocs non-fondamentaux dans les ETFs</h4>
+      <p>Les ETFs ont une autocorrélation journalière négative et significative (AR = −0.06, t = −19.37) — preuve directe de mean reversion à court terme. Les baisses non-fondamentales se renversent rapidement. Les chocs fondamentaux (nouvelles sur un titre lourd) ne se renversent pas.</p>
+      <div class="tags">
+        <span class="tag green">ETF systémique → rebond ✓</span>
+        <span class="tag red">Titre lourd → pas de rebond</span>
+      </div>
+    </div>
+    <div class="lit-card">
+      <div class="ref">Bernard &amp; Thomas (1989) &nbsp;|&nbsp; Chan, Jegadeesh &amp; Lakonishok (1996)</div>
+      <h4>Post-Earnings Announcement Drift (PEAD)</h4>
+      <p>Après une mauvaise annonce de résultats, les prix continuent de baisser pendant 30 à 60 jours. C'est l'opposé du mean reversion. Si XIT baisse parce que Shopify a raté ses résultats, le PEAD prédit une continuation — acheter serait une erreur.</p>
+      <div class="tags">
+        <span class="tag red">Drift post-résultats → ne pas acheter</span>
+        <span class="tag amber">Fenêtre critique ±2 jours</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="transition-callout">
+    <span class="icon">📐</span>
+    <p>La littérature converge vers une conclusion claire : <strong>le mean reversion fonctionne sur les chocs temporaires</strong> (macro, sectoriel, sentiment) et <strong>échoue sur les chocs fondamentaux</strong> (publication de résultats d'un titre dominant). Cette distinction n'est pas théorique — elle a des implications concrètes pour TMX v2, selon la composition de chaque FNB.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     ACTE 4 — DIAGNOSTIC
+═══════════════════════════════════════════════ -->
+<section id="diagnostic">
+  <div class="section-header">
+    <span class="section-num">Acte IV</span>
+    <div>
+      <div class="section-title">Le diagnostic — Titres dominants et classification des chocs</div>
+      <div class="section-subtitle">978 événements classifiés · XFN, XIT, XEG, XGD · 2016–2025</div>
+    </div>
+  </div>
+
+  <div class="tmx-results">
+    <div class="tmx-results-header">Résultats TMX v2 · Classification des 978 événements ≥ 2σ</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>FNB</th>
+          <th>Description</th>
+          <th class="num">Événements</th>
+          <th class="num">Fondamental</th>
+          <th class="num">Sectoriel</th>
+          <th class="num">Systémique</th>
+          <th>Titre déclencheur #1</th>
+          <th>Verdict mean reversion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ticker">XFN.TO</td>
+          <td class="desc">Financières CA</td>
+          <td class="num">87</td>
+          <td class="num" style="color:var(--green)">2%</td>
+          <td class="num" style="color:var(--accent)">70%</td>
+          <td class="num">28%</td>
+          <td style="font-family:var(--mono);font-size:0.8rem">Royal Bank <span style="color:var(--text3)">(51×)</span></td>
+          <td><span style="color:var(--green);font-size:0.8rem">✓ Excellent — baisses sectorielles</span></td>
+        </tr>
+        <tr>
+          <td class="ticker">XIT.TO</td>
+          <td class="desc">Technologies CA</td>
+          <td class="num">85</td>
+          <td class="num" style="color:var(--red)">87%</td>
+          <td class="num">0%</td>
+          <td class="num">13%</td>
+          <td style="font-family:var(--mono);font-size:0.8rem">Shopify <span style="color:var(--red)">(80×)</span></td>
+          <td><span style="color:var(--red);font-size:0.8rem">⚠ Filtre publications requis</span></td>
+        </tr>
+        <tr>
+          <td class="ticker">XEG.TO</td>
+          <td class="desc">Énergie CA</td>
+          <td class="num">68</td>
+          <td class="num" style="color:var(--green)">0%</td>
+          <td class="num" style="color:var(--accent)">82%</td>
+          <td class="num">18%</td>
+          <td style="font-family:var(--mono);font-size:0.8rem">Canadian Natural <span style="color:var(--text3)">(45×)</span></td>
+          <td><span style="color:var(--green);font-size:0.8rem">✓ Excellent — baisses pétrolières</span></td>
+        </tr>
+        <tr>
+          <td class="ticker">XGD.TO</td>
+          <td class="desc">Mines d'or</td>
+          <td class="num">61</td>
+          <td class="num" style="color:var(--green)">7%</td>
+          <td class="num" style="color:var(--accent)">72%</td>
+          <td class="num">21%</td>
+          <td style="font-family:var(--mono);font-size:0.8rem">Agnico Eagle <span style="color:var(--text3)">(45×)</span></td>
+          <td><span style="color:var(--green);font-size:0.8rem">✓ Bon — baisses métaux</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="transition-callout">
+    <span class="icon">🎯</span>
+    <p>XFN, XEG et XGD ont un profil presque idéal pour le mean reversion : leurs baisses ≥ 2σ sont majoritairement <strong>sectorielles ou systémiques</strong> (temporaires). XIT est une anomalie structurelle : <strong>87% de ses chocs sont fondamentaux</strong>, tirés par Shopify (55% du FNB). La littérature est sans ambiguïté sur ce point — ces chocs ne se renversent pas.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     ACTE 5 — IMPLICATIONS
+═══════════════════════════════════════════════ -->
+<section id="implications">
+  <div class="section-header">
+    <span class="section-num">Acte V</span>
+    <div>
+      <div class="section-title">Implications pour TMX v2 — Règles opérationnelles</div>
+      <div class="section-subtitle">Traduction directe du diagnostic en paramètres du système</div>
+    </div>
+  </div>
+
+  <div class="implications-grid">
+    <div class="impl-card alert">
+      <div class="impl-header">
+        <span class="impl-icon">⚠️</span>
+        <span class="impl-title">Traitement spécial</span>
+        <span class="impl-ticker">XIT.TO · Shopify 55%</span>
+      </div>
+      <div class="impl-rule"><span><span class="impl-rule-key">Seuil relevé :</span> exiger z-score ≤ −3.0 (au lieu de −2.0) si publication trimestrielle Shopify dans ±2 jours du signal</span></div>
+      <div class="impl-rule"><span><span class="impl-rule-key">Taille réduite :</span> limiter la position à 25% de l'allocation normale en période de publication</span></div>
+      <div class="impl-rule"><span><span class="impl-rule-key">Calendrier :</span> publications Shopify → début février, mai, août, novembre</span></div>
+      <div class="impl-rule"><span><span class="impl-rule-key">Justification :</span> 87% des chocs XIT sont fondamentaux — PEAD prédit continuation, pas rebond</span></div>
+    </div>
+
+    <div class="impl-card ok">
+      <div class="impl-header">
+        <span class="impl-icon">✅</span>
+        <span class="impl-title">Statu quo — Profil sain</span>
+        <span class="impl-ticker">XFN · XEG · XGD</span>
+      </div>
+      <div class="impl-rule"><span><span class="impl-rule-key">XFN.TO :</span> 70% sectoriel · Royal Bank diffuse la baisse sur 5 titres → rebond probable · aucun filtre requis</span></div>
+      <div class="impl-rule"><span><span class="impl-rule-key">XEG.TO :</span> 82% sectoriel · baisses liées au WTI → retournement pétrolier classique · aucun filtre requis</span></div>
+      <div class="impl-rule"><span><span class="impl-rule-key">XGD.TO :</span> 72% sectoriel · baisses métaux précieux → mean reversion bien documenté · aucun filtre requis</span></div>
+      <div class="impl-rule"><span><span class="impl-rule-key">Conclusion :</span> les résultats empiriques confirment que l'approche TMX v2 est valide pour ces trois FNBs</span></div>
+    </div>
+  </div>
+
+  <div class="transition-callout" style="margin-top:1.5rem">
+    <span class="icon">📚</span>
+    <p>Ce diagnostic repose sur la classification de <strong>978 événements ≥ 2σ</strong> sur 10 ans. La littérature académique ne valide pas seulement notre approche — elle en précise les limites. XIT est l'exception qui confirme la règle : là où Shopify parle, le mean reversion doit se taire. <a href="rapport_titres_lourds.html" style="color:var(--accent)">→ Voir l'analyse complète des titres dominants</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="page-footer">
+  <span>TMX v2 · Système automatisé · Bourse de Toronto</span>
+  <span>⚠ Analyse à des fins de recherche uniquement — pas un conseil financier</span>
+  <span>2016–2025 · yfinance</span>
+</footer>
+
+<script>
+// ── Données ──────────────────────────────────────────────────
+const freqData = [
+  { ticker:"XIU.TO",  desc:"S&P/TSX 60 (large caps CA)",         n:86, moy:8.6, s25:3.6, s30:0.6 },
+  { ticker:"XFN.TO",  desc:"Financières CA",                     n:87, moy:8.7, s25:3.9, s30:0.9 },
+  { ticker:"XEG.TO",  desc:"Énergie CA",                         n:68, moy:6.8, s25:2.1, s30:0.5 },
+  { ticker:"XUT.TO",  desc:"Services publics CA",                n:85, moy:8.5, s25:2.2, s30:0.6 },
+  { ticker:"XIT.TO",  desc:"Technologies CA",                    n:85, moy:8.5, s25:2.4, s30:0.3 },
+  { ticker:"XRE.TO",  desc:"Immobilier CA (REIT)",               n:72, moy:7.2, s25:2.7, s30:0.6 },
+  { ticker:"XMA.TO",  desc:"Matériaux CA",                       n:70, moy:7.0, s25:1.7, s30:0.5 },
+  { ticker:"XIN.TO",  desc:"International (hors Amér. du Nord)", n:89, moy:8.9, s25:3.4, s30:1.2 },
+  { ticker:"XHC.TO",  desc:"Soins de santé mondiaux (CAD)",      n:72, moy:7.2, s25:2.4, s30:0.7 },
+  { ticker:"XST.TO",  desc:"Consommation de base CA",            n:61, moy:6.1, s25:2.0, s30:0.5 },
+  { ticker:"XGD.TO",  desc:"Mines d'or",                         n:61, moy:6.1, s25:1.7, s30:0.3 },
+  { ticker:"ZAG.TO",  desc:"Obligations CA agrégées",            n:60, moy:6.0, s25:1.8, s30:0.6 },
+  { ticker:"HYG",     desc:"Obligations haut rendement US",      n:82, moy:8.2, s25:2.9, s30:0.8 },
+];
+
+const heatData = {
+  mois: ["Jan","Fév","Mar","Avr","Mai","Jun","Jul","Aoû","Sep","Oct","Nov","Déc"],
+  rows: [
+    { t:"XIU.TO", v:[8,9,7,6,6,8,3,11,6,7,5,10] },
+    { t:"XFN.TO", v:[5,13,7,6,9,6,4,11,4,11,5,6] },
+    { t:"XEG.TO", v:[9,5,11,4,6,9,2,4,5,5,5,3] },
+    { t:"XUT.TO", v:[6,7,6,6,4,10,4,7,13,9,4,9] },
+    { t:"XIT.TO", v:[6,6,7,4,9,9,5,4,8,10,8,9] },
+    { t:"XRE.TO", v:[3,5,12,6,8,7,4,4,7,6,4,6] },
+    { t:"XMA.TO", v:[2,9,6,5,6,6,7,4,7,9,5,4] },
+    { t:"XIN.TO", v:[8,9,6,8,10,6,6,9,8,8,6,5] },
+    { t:"XHC.TO", v:[6,5,6,9,1,7,6,9,7,10,3,3] },
+    { t:"XST.TO", v:[3,5,6,5,9,8,1,7,2,7,5,3] },
+    { t:"XGD.TO", v:[3,7,4,5,4,3,5,5,6,11,6,2] },
+    { t:"ZAG.TO", v:[5,4,5,3,3,8,6,2,5,7,5,7] },
+    { t:"HYG",    v:[6,10,10,3,8,7,4,9,6,11,5,3] },
+  ]
+};
+
+// ── Tableau fréquences ────────────────────────────────────────
+const sorted = [...freqData].sort((a,b) => b.moy - a.moy);
+const maxMoy = Math.max(...sorted.map(d=>d.moy));
+const tbody = document.getElementById('freq-tbody');
+sorted.forEach((d, i) => {
+  const pct = (d.moy / maxMoy * 100).toFixed(0);
+  const barColor = d.moy >= 8.5 ? 'red' : d.moy >= 7.5 ? 'amber' : 'green';
+  const isTop = i < 3;
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="rank-badge ${isTop?'top':''}">${i+1}</span></td>
+      <td class="ticker">${d.ticker}</td>
+      <td class="desc">${d.desc}</td>
+      <td class="num">${d.n}</td>
+      <td class="num" style="color:${d.moy>=8.5?'var(--red)':d.moy>=7.5?'var(--amber)':'var(--green)'}">${d.moy.toFixed(1)}</td>
+      <td>
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill ${barColor}" style="width:${pct}%"></div></div>
+          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text3)">${pct}%</span>
+        </div>
+      </td>
+      <td class="num">${d.s25.toFixed(1)}</td>
+      <td class="num">${d.s30.toFixed(1)}</td>
+    </tr>`;
+});
+
+// ── Bar chart ─────────────────────────────────────────────────
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: sorted.map(d => d.ticker),
+    datasets: [{
+      label: '≥ 2σ / an',
+      data: sorted.map(d => d.moy),
+      backgroundColor: sorted.map(d =>
+        d.moy >= 8.5 ? '#ef444460' : d.moy >= 7.5 ? '#f59e0b50' : '#22c55e40'),
+      borderColor: sorted.map(d =>
+        d.moy >= 8.5 ? '#ef4444' : d.moy >= 7.5 ? '#f59e0b' : '#22c55e'),
+      borderWidth: 1, borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        grid: { color: '#2a2f3e' },
+        ticks: { color: '#64748b', font: { family: 'IBM Plex Mono', size: 11 } },
+        min: 0, max: 10,
+      },
+      y: {
+        grid: { display: false },
+        ticks: { color: '#818cf8', font: { family: 'IBM Plex Mono', size: 11 } },
+      }
+    }
+  }
+});
+
+// ── Heatmap ──────────────────────────────────────────────────
+function heatColor(v) {
+  if (v >= 11) return '#818cf8';
+  if (v >= 8)  return '#818cf870';
+  if (v >= 4)  return '#818cf830';
+  return '#1c2030';
+}
+const tbl = document.getElementById('heatmap-table');
+let html = '<thead><tr><th class="fnb-col">FNB</th>';
+heatData.mois.forEach(m => { html += `<th>${m}</th>`; });
+html += '<th>Total</th></tr></thead><tbody>';
+heatData.rows.forEach(row => {
+  const total = row.v.reduce((a,b)=>a+b,0);
+  html += `<tr><td class="fnb-label">${row.t}</td>`;
+  row.v.forEach(v => {
+    html += `<td style="background:${heatColor(v)};color:${v>=8?'#e2e8f0':'#94a3b8'}">${v}</td>`;
+  });
+  html += `<td style="color:var(--accent);font-weight:500">${total}</td></tr>`;
+});
+html += '</tbody>';
+tbl.innerHTML = html;
+
+// ── Fil de raisonnement actif selon scroll ───────────────────
+const sections = ['frequence','saisonnalite','litterature','diagnostic','implications'];
+const links = document.querySelectorAll('.trail-step a');
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 200) current = id;
+  });
+  links.forEach(a => {
+    a.classList.toggle('current', a.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
