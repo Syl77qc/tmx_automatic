@@ -4,8 +4,7 @@
 
 # Données personnelles
 questrade_capabilities.json
-positions.json
-trades_log.json
+
 
 # Python
 __pycache__/
