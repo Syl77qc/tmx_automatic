@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-04-11T08:53:39.135939-04:00",
+  "scan_at": "2026-04-11T10:11:34.817331-04:00",
   "source_donnees": "Questrade API / yfinance (fallback)",
   "heures_marche": false,
   "regime_marche": {
