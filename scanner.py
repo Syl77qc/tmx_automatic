@@ -29,6 +29,7 @@ import argparse
 import warnings
 import urllib.request
 import urllib.error
+import urllib.parse
 import base64
 from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
