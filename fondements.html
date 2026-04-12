@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FNBLab — Résultats</title>
+<title>FNBLab — Fondements théoriques</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -87,43 +87,47 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
   <div class="nav-links">
     <a href="index.html">Dashboard</a>
     <a href="systeme.html">Système</a>
-    <a href="fondements.html">Fondements théoriques</a>
+    <a href="fondements.html" class="active">Fondements théoriques</a>
     <a href="analyses.html">Analyses quantitatives</a>
-    <a href="resultats.html" class="active">Résultats</a>
+    <a href="resultats.html">Résultats</a>
     <a href="apropos.html">À propos</a>
   </div>
 </nav>
+
 <div class="page">
-  <div class="hero" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
-    <div>
-      <div class="hero-title">Résultats<br><span>Paper trading</span></div>
-    </div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;line-height:2">
-      Mis à jour : 2026-04-11 10:11<br>Capital virtuel : 100 000 $ CAD<br>Phase 1 en cours
-    </div>
+  <div class="hero">
+    <div class="hero-title">Fondements <span>théoriques</span></div>
+    <div class="hero-sub">Ancrage académique du système TMX v2 · Mean reversion sur FNBs canadiens (TSX)</div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
-    <div class="stat-card"><div class="stat-label">Hit rate</div><div class="stat-value">—</div><div class="stat-sub">Cible : ≥ 60%</div></div>
-    <div class="stat-card"><div class="stat-label">Rendement moyen</div><div class="stat-value">—</div><div class="stat-sub">Cible : ≥ +1.5% / trade</div></div>
-    <div class="stat-card"><div class="stat-label">Drawdown max</div><div class="stat-value">—</div><div class="stat-sub">Limite : &lt; 15%</div></div>
-    <div class="stat-card"><div class="stat-label">Trades complétés</div><div class="stat-value">0</div><div class="stat-sub">Cible : ≥ 30</div></div>
+  <div class="callout">
+    <span class="icon">📚</span>
+    <p>Chaque décision de conception de TMX v2 est justifiée par la littérature empirique. Ces quatre documents établissent les fondements théoriques du système — pourquoi les baisses rebondissent, dans quelles conditions, et comment combiner les signaux de façon optimale.</p>
   </div>
-  <div class="chart-card">
-    <div class="chart-title">Progression vers les critères go-live (Section 9.3 PRD)</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px">
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Trades complétés</span><span style="font-family:var(--mono)">0 / 30</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Hit rate</span><span style="font-family:var(--mono)">— / 60%</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Drawdown (limite 15%)</span><span style="font-family:var(--mono)">—</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-    </div>
-  </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px">
-    <div style="padding:48px;text-align:center;color:var(--text3)">
-      <div style="font-family:var(--mono);font-size:24px;opacity:.2;margin-bottom:12px">[ ]</div>
-      <div>Aucun trade complété pour le moment.<br>Les résultats apparaîtront ici dès la première position fermée.</div>
-    </div>
-  </div>
-  <div style="padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);font-size:11px;color:var(--text3);line-height:1.7">
-    <strong style="color:var(--text2)">Avis important</strong> — Résultats de paper trading (simulation). Aucune transaction réelle. Ce site ne constitue pas un conseil financier.
+  <div class="cards-grid">
+    <a class="card-link" href="litterature_chocs_fnb.html">
+      <div class="card-tag">Théorie · Fondamental</div>
+      <div class="card-title">Chocs fondamentaux vs systémiques</div>
+      <div class="card-desc">Pourquoi certaines baisses rebondissent et d'autres non. Décomposition cash-flow news vs discount-rate news. Base théorique du classificateur Groq.</div>
+      <div class="card-meta">Fama & French 1988 · Vuolteenaho 2002 · Bernard & Thomas 1989</div>
+    </a>
+    <a class="card-link" href="litterature_fnb_specifique.html">
+      <div class="card-tag">FNBs · Microstructure</div>
+      <div class="card-title">Littérature spécifique aux FNBs</div>
+      <div class="card-desc">5 domaines : arbitrage NAV, liquidité, volume, VIX, concentration et microstructure intraday. Pourquoi les FNBs mean-revertent mieux que les actions individuelles.</div>
+      <div class="card-meta">Da & Shive 2018 · Ben-David 2018 · Pan & Zeng 2019</div>
+    </a>
+    <a class="card-link" href="combinaisons_indicateurs_litterature.html">
+      <div class="card-tag">Signaux · Combinaisons</div>
+      <div class="card-title">Combinaisons d'indicateurs</div>
+      <div class="card-desc">Les synergies documentées empiriquement. Pourquoi les combinaisons orthogonales battent les indicateurs individuels hors-échantillon. Le principe de Timmermann.</div>
+      <div class="card-meta">Rapach, Strauss & Zhou 2010 · Timmermann 2006</div>
+    </a>
+    <a class="card-link" href="indicateurs_poids_litterature_scientifique.html">
+      <div class="card-tag">Indicateurs · Pondération</div>
+      <div class="card-title">Poids des indicateurs selon la littérature</div>
+      <div class="card-desc">Classement des indicateurs par robustesse académique. Quel poids accorder à chaque signal selon les preuves empiriques disponibles. Du VIX au momentum.</div>
+      <div class="card-meta">VIX · Z-score · SMA · Volume · Momentum</div>
+    </a>
   </div>
 </div>
 <footer>

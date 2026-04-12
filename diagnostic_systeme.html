@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNBLab — Diagnostic du système</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0f11;--bg2:#131619;--bg3:#1a1e22;--bg4:#21262d;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#e8e4dd;--text2:#8a8880;--text3:#555250;
+  --accent:#e8c97e;
+  --green:#4ade80;--amber:#f59e0b;--red:#f87171;--blue:#60a5fa;
+  --mono:'DM Mono',monospace;--display:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;gap:0;}
+.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;white-space:nowrap;}
+.nav-links{display:flex;gap:2px;overflow-x:auto;}
+.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color .15s,background .15s;white-space:nowrap;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
+.page{max-width:1200px;margin:0 auto;padding:40px 32px 80px;}
+.hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;line-height:1.2;margin-bottom:6px;}
+.hero-title span{color:var(--accent);font-style:normal;font-weight:500;}
+.hero-sub{font-size:13px;color:var(--text3);}
+section{margin-bottom:48px;}
+.section-label{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.section-title{font-family:var(--display);font-size:17px;font-weight:400;color:var(--text);margin-bottom:4px;}
+.section-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.chart-title{font-family:var(--mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.chart-desc{font-size:12px;color:var(--text3);margin-bottom:20px;}
+.chart-wrap{position:relative;}
+.interp{margin-top:0;padding:14px 18px;background:var(--bg3);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
+.interp strong{color:var(--text);}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.stat-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.stat-value{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:4px;}
+.stat-sub{font-size:11px;color:var(--text3);}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.card-link{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:border-color .15s,background .15s;display:block;}
+.card-link:hover{border-color:var(--border2);background:var(--bg3);}
+.card-tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
+.card-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.card-desc{font-size:12px;color:var(--text3);line-height:1.55;}
+.card-meta{margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--text3);}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;}
+.data-table th.r{text-align:right;}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,.02);}
+.data-table .r{text-align:right;}
+.ticker{font-family:var(--mono);color:var(--accent);font-weight:500;}
+.num{font-family:var(--mono);font-size:11px;}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;}
+.badge-green{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2);}
+.badge-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);}
+.badge-blue{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
+.callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
+.callout .icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
+.callout strong{color:var(--text);}
+.conclusion{margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.85;}
+.conclusion h3{font-family:var(--display);font-size:15px;font-weight:400;color:var(--text);margin-bottom:12px;}
+.conclusion p{margin-bottom:10px;}
+.conclusion p:last-child{margin-bottom:0;}
+.conclusion strong{color:var(--text);}
+footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
+.footer-brand{font-family:var(--display);font-size:14px;color:var(--accent);font-style:italic;}
+@media(max-width:900px){
+  .page{padding:24px 16px 60px;}
+  nav{padding:0 16px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .cards-grid{grid-template-columns:1fr;}
+}
+</style>
+
+</head>
+<body>
+<nav>
+  <a class="nav-brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="fondements.html">Fondements théoriques</a>
+    <a href="analyses.html" class="active">Analyses quantitatives</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="apropos.html">À propos</a>
+  </div>
+</nav>
+<div class="page">
+  <div class="hero">
+    <div class="hero-title">Diagnostic du <span>système</span></div>
+    <div class="hero-sub">Titres dominants par FNB · Conformité TMX v2 à la littérature · Analyse systématique</div>
+  </div>
+
+  <section>
+    <div class="section-label">Partie 1 — Titres dominants</div>
+    <div class="section-title">Classification de 978 événements ≥ 2σ</div>
+    <div class="section-sub">XFN, XIT, XEG, XGD · 2016–2025 · Voir analyse complète : <a href="rapport_titres_lourds.html" style="color:var(--accent)">Rapport titres lourds →</a></div>
+    <div class="chart-card" style="padding:0;overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>FNB</th><th>Événements</th><th class="r">Fondamental</th><th class="r">Sectoriel</th><th class="r">Systémique</th><th>Titre #1</th><th>Implication mean reversion</th></tr></thead>
+        <tbody>
+          <tr><td class="ticker">XFN.TO</td><td class="num">87</td><td class="r num" style="color:var(--green)">2%</td><td class="r num" style="color:var(--accent)">70%</td><td class="r num">28%</td><td style="font-family:var(--mono);font-size:11px">Royal Bank (51×)</td><td><span class="badge badge-green">✓ Excellent candidat</span></td></tr>
+          <tr><td class="ticker">XIT.TO</td><td class="num">85</td><td class="r num" style="color:var(--red)">87%</td><td class="r num">0%</td><td class="r num">13%</td><td style="font-family:var(--mono);font-size:11px">Shopify (80×)</td><td><span class="badge badge-red">⚠ Filtre publications requis</span></td></tr>
+          <tr><td class="ticker">XEG.TO</td><td class="num">68</td><td class="r num" style="color:var(--green)">0%</td><td class="r num" style="color:var(--accent)">82%</td><td class="r num">18%</td><td style="font-family:var(--mono);font-size:11px">Canadian Natural (45×)</td><td><span class="badge badge-green">✓ Excellent — lié au WTI</span></td></tr>
+          <tr><td class="ticker">XGD.TO</td><td class="num">61</td><td class="r num" style="color:var(--green)">7%</td><td class="r num" style="color:var(--accent)">72%</td><td class="r num">21%</td><td style="font-family:var(--mono);font-size:11px">Agnico Eagle (45×)</td><td><span class="badge badge-green">✓ Bon — secteur métaux</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="interp">
+      <strong>Comment lire ce tableau.</strong> La colonne Fondamental indique la part des baisses ≥ 2σ causées par le titre dominant du FNB (chocs CF news — permanents, pas de rebond attendu). Sectoriel = baisses diffuses à travers le secteur (chocs DR news — temporaires, rebond probable). <strong>XIT est l'anomalie critique :</strong> 87% de ses chocs sont fondamentaux et attribuables à Shopify. XFN, XEG et XGD montrent des profils sains dominés par les chocs sectoriels — exactement ce dont TMX v2 a besoin.
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">Partie 2 — Conformité à la littérature</div>
+    <div class="section-title">Évaluation critique de TMX v2</div>
+    <div class="section-sub">12 dimensions évaluées · Voir analyse détaillée : <a href="conformite_litterature.html" style="color:var(--accent)">Rapport de conformité →</a></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+      <div class="stat-card" style="text-align:center">
+        <div class="stat-label">Conformes</div>
+        <div class="stat-value" style="color:var(--green)">8</div>
+        <div class="stat-sub">sur 12 dimensions</div>
+      </div>
+      <div class="stat-card" style="text-align:center">
+        <div class="stat-label">Partiellement conformes</div>
+        <div class="stat-value" style="color:var(--amber)">3</div>
+        <div class="stat-sub">améliorations identifiées</div>
+      </div>
+      <div class="stat-card" style="text-align:center">
+        <div class="stat-label">Lacune</div>
+        <div class="stat-value" style="color:var(--red)">1</div>
+        <div class="stat-sub">traitement ZAG à revoir</div>
+      </div>
+    </div>
+    <div class="chart-card" style="padding:0;overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Dimension</th><th>Statut</th><th>Résumé</th></tr></thead>
+        <tbody>
+          <tr><td class="num" style="color:var(--text3)">01</td><td>Fondement mean reversion</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Z-score comme mesure d'écart — cohérent avec Fama & French 1988</td></tr>
+          <tr><td class="num" style="color:var(--text3)">02</td><td>Signal z-score et seuils</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Seuil 2σ aligné avec la littérature sur le short-term reversal</td></tr>
+          <tr><td class="num" style="color:var(--text3)">03</td><td>Multi-horizon z20+z60</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Cohérent avec l'approche multi-horizon de Fama & French</td></tr>
+          <tr><td class="num" style="color:var(--text3)">04</td><td>Régime VIX</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Pause risk-off justifiée par Johnson 2017 et NY Fed 2015</td></tr>
+          <tr><td class="num" style="color:var(--text3)">05</td><td>Filtre SMA50</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Protection tendance baissière — Neely et al. 2014</td></tr>
+          <tr><td class="num" style="color:var(--text3)">06</td><td>Filtre volume</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Volume élevé = capitulation = meilleure qualité de signal</td></tr>
+          <tr><td class="num" style="color:var(--text3)">07</td><td>Filtre cluster</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">Protection contre les chocs systémiques généralisés</td></tr>
+          <tr><td class="num" style="color:var(--text3)">08</td><td>Filtre H (XIT/Shopify)</td><td><span class="badge badge-green">✓ Conforme</span></td><td style="color:var(--text2);font-size:11px">PEAD — Bernard & Thomas 1989 — justifie le filtre publications</td></tr>
+          <tr><td class="num" style="color:var(--text3)">09</td><td>Combination forecast</td><td><span class="badge badge-amber">◐ Partiel</span></td><td style="color:var(--text2);font-size:11px">Score composite présent mais indicateurs partiellement redondants</td></tr>
+          <tr><td class="num" style="color:var(--text3)">10</td><td>Momentum / volatilité</td><td><span class="badge badge-amber">◐ Partiel</span></td><td style="color:var(--text2);font-size:11px">Momentum présent sans normalisation par vol réalisée (Barroso 2015)</td></tr>
+          <tr><td class="num" style="color:var(--text3)">11</td><td>Term spread</td><td><span class="badge badge-amber">◐ Partiel</span></td><td style="color:var(--text2);font-size:11px">TNX présent mais TNX-IRX non calculé (Park 2023)</td></tr>
+          <tr><td class="num" style="color:var(--text3)">12</td><td>Traitement ZAG</td><td><span class="badge badge-red">✗ Lacune</span></td><td style="color:var(--text2);font-size:11px">ZAG (obligations) suit une dynamique différente — traitement à revoir</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="interp">
+      <strong>Comment lire ce tableau.</strong> Chaque dimension évalue si une décision de conception de TMX v2 est justifiée par la littérature empirique. <strong>8 dimensions sur 12 sont pleinement conformes</strong> — c'est un score solide pour un système en phase de développement. Les 3 dimensions partielles représentent des améliorations identifiées pour une future version (v3). La lacune ZAG est connue : les obligations réagissent différemment aux chocs de taux et méritent un traitement séparé.
+    </div>
+    <div class="conclusion">
+      <h3>Verdict global</h3>
+      <p>TMX v2 est <strong>bien ancré dans la littérature académique</strong> sur les dimensions critiques : le fondement théorique, le signal z-score, les filtres de sécurité et le traitement spécial XIT sont tous justifiés par des recherches empiriques solides. Le score 8/12 est honnête — il reflète un système fonctionnel avec des marges d'amélioration clairement identifiées plutôt qu'un système surajusté qui prétend une conformité parfaite.</p>
+      <p>Les trois dimensions partielles (combination forecast, momentum/vol, term spread) représentent des raffinements méthodologiques qui pourraient améliorer le signal sans changer l'architecture fondamentale du système.</p>
+    </div>
+  </section>
+</div>
+<footer>
+  <span class="footer-brand">FNBLab</span>
+  <span>TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
+  <span>Ce site ne constitue pas un conseil financier</span>
+</footer>
+</body>
+</html>

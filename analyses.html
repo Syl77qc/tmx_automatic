@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FNBLab — Résultats</title>
+<title>FNBLab — Analyses quantitatives</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -88,42 +88,52 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
     <a href="index.html">Dashboard</a>
     <a href="systeme.html">Système</a>
     <a href="fondements.html">Fondements théoriques</a>
-    <a href="analyses.html">Analyses quantitatives</a>
-    <a href="resultats.html" class="active">Résultats</a>
+    <a href="analyses.html" class="active">Analyses quantitatives</a>
+    <a href="resultats.html">Résultats</a>
     <a href="apropos.html">À propos</a>
   </div>
 </nav>
+
 <div class="page">
-  <div class="hero" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
-    <div>
-      <div class="hero-title">Résultats<br><span>Paper trading</span></div>
-    </div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;line-height:2">
-      Mis à jour : 2026-04-11 10:11<br>Capital virtuel : 100 000 $ CAD<br>Phase 1 en cours
-    </div>
+  <div class="hero">
+    <div class="hero-title">Analyses <span>quantitatives</span></div>
+    <div class="hero-sub">Résultats empiriques sur 25 ans de données · 2001–2026 · 13 FNBs canadiens (TSX)</div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
-    <div class="stat-card"><div class="stat-label">Hit rate</div><div class="stat-value">—</div><div class="stat-sub">Cible : ≥ 60%</div></div>
-    <div class="stat-card"><div class="stat-label">Rendement moyen</div><div class="stat-value">—</div><div class="stat-sub">Cible : ≥ +1.5% / trade</div></div>
-    <div class="stat-card"><div class="stat-label">Drawdown max</div><div class="stat-value">—</div><div class="stat-sub">Limite : &lt; 15%</div></div>
-    <div class="stat-card"><div class="stat-label">Trades complétés</div><div class="stat-value">0</div><div class="stat-sub">Cible : ≥ 30</div></div>
+  <div class="callout">
+    <span class="icon">📊</span>
+    <p>Ces cinq analyses transforment la théorie en données concrètes. Elles documentent comment le mean reversion se manifeste sur l'univers TMX v2, quel est le profil réel d'un trade, et comment optimiser les seuils de déclenchement par FNB.</p>
   </div>
-  <div class="chart-card">
-    <div class="chart-title">Progression vers les critères go-live (Section 9.3 PRD)</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px">
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Trades complétés</span><span style="font-family:var(--mono)">0 / 30</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Hit rate</span><span style="font-family:var(--mono)">— / 60%</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Drawdown (limite 15%)</span><span style="font-family:var(--mono)">—</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-    </div>
-  </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px">
-    <div style="padding:48px;text-align:center;color:var(--text3)">
-      <div style="font-family:var(--mono);font-size:24px;opacity:.2;margin-bottom:12px">[ ]</div>
-      <div>Aucun trade complété pour le moment.<br>Les résultats apparaîtront ici dès la première position fermée.</div>
-    </div>
-  </div>
-  <div style="padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);font-size:11px;color:var(--text3);line-height:1.7">
-    <strong style="color:var(--text2)">Avis important</strong> — Résultats de paper trading (simulation). Aucune transaction réelle. Ce site ne constitue pas un conseil financier.
+  <div class="cards-grid">
+    <a class="card-link" href="mean_reversion_25ans.html">
+      <div class="card-tag">Visualisation · 25 ans</div>
+      <div class="card-title">Mean reversion sur 25 ans</div>
+      <div class="card-desc">Évolution de chaque FNB de 2001 à 2026 avec tous les signaux ≥ 2σ marqués. Prix, z-score et distribution des rendements post-signal. La preuve visuelle du mean reversion.</div>
+      <div class="card-meta">2001–2026 · 13 FNBs · 1 800+ événements</div>
+    </a>
+    <a class="card-link" href="anatomie_chocs.html">
+      <div class="card-tag">Analyse · 2001–2026</div>
+      <div class="card-title">Anatomie des chocs de marché</div>
+      <div class="card-desc">Du constat brut (fréquence ≥ 2σ sur 25 ans) au diagnostic structurel. Saisonnalité, littérature et classification des événements. Fondement de l'amendement PRD v2.2.</div>
+      <div class="card-meta">7.5 chocs/an · XIN 7.3 · ZAG 4.0 · XIT traitement spécial</div>
+    </a>
+    <a class="card-link" href="profil_trade.html">
+      <div class="card-tag">Analyse · 1 800+ trades</div>
+      <div class="card-title">Profil de trade — Du signal au profit</div>
+      <div class="card-desc">Baisse à absorber, courbe de récupération J+1→J+30, heatmap rendement et % de trades positifs. Si j'achète au signal, combien je gagne et quand ?</div>
+      <div class="card-meta">Break-even médian 2j · Sweet spot J+20 · Frais 0$ chez Disnat</div>
+    </a>
+    <a class="card-link" href="seuils_optimaux.html">
+      <div class="card-tag">Optimisation · Seuils</div>
+      <div class="card-title">Seuils de déclenchement optimaux</div>
+      <div class="card-desc">Comparaison 2σ / 2.5σ / 3σ par FNB sur 25 ans. Robustesse COVID et GFC 2008. Recommandations finales pour le PRD v2.2 avec justification statistique.</div>
+      <div class="card-meta">XGD 2.5σ · XIU 2.5σ · XEG 2.5σ · 10 FNBs à 2σ</div>
+    </a>
+    <a class="card-link" href="diagnostic_systeme.html">
+      <div class="card-tag">Diagnostic · Système</div>
+      <div class="card-title">Diagnostic du système</div>
+      <div class="card-desc">Titres dominants par FNB (978 événements classifiés) et conformité de TMX v2 à la littérature scientifique. Score 8/12 conformes, 3 partiels, 1 lacune.</div>
+      <div class="card-meta">XIT 87% fondamental · XEG 0% · 8 conformes · 3 partiels</div>
+    </a>
   </div>
 </div>
 <footer>

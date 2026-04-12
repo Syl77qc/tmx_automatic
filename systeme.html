@@ -10,60 +10,76 @@
   --bg:#0d0f11;--bg2:#131619;--bg3:#1a1e22;--bg4:#21262d;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
   --text:#e8e4dd;--text2:#8a8880;--text3:#555250;
-  --green:#4ade80;--amber:#f59e0b;--red:#f87171;--blue:#60a5fa;
   --accent:#e8c97e;
+  --green:#4ade80;--amber:#f59e0b;--red:#f87171;--blue:#60a5fa;
   --mono:'DM Mono',monospace;--display:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
-nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;}
-.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;}
-.nav-links{display:flex;gap:2px;}
-.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color 0.15s,background 0.15s;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;gap:0;}
+.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;white-space:nowrap;}
+.nav-links{display:flex;gap:2px;overflow-x:auto;}
+.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color .15s,background .15s;white-space:nowrap;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
-.page{max-width:1100px;margin:0 auto;padding:40px 32px 80px;}
-.hero{margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid var(--border);}
-.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;color:var(--text);line-height:1.2;margin-bottom:8px;}
+.page{max-width:1200px;margin:0 auto;padding:40px 32px 80px;}
+.hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;line-height:1.2;margin-bottom:6px;}
 .hero-title span{color:var(--accent);font-style:normal;font-weight:500;}
 .hero-sub{font-size:13px;color:var(--text3);}
-.section{margin-bottom:40px;}
-.section-title{font-family:var(--display);font-size:18px;font-weight:400;color:var(--text);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-.maillons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
-@media(max-width:700px){.maillons{grid-template-columns:1fr 1fr;}}
-.maillon{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative;overflow:hidden;}
-.maillon::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.m1::before{background:#60a5fa;}
-.m2::before{background:#f59e0b;}
-.m3::before{background:#4ade80;}
-.m4::before{background:#e8c97e;}
-.maillon-num{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.1em;margin-bottom:6px;}
-.maillon-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;}
-.maillon-desc{font-size:11px;color:var(--text3);line-height:1.55;}
-.flux{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:28px;padding:20px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;}
-.flux-item{font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg3);border:1px solid var(--border2);padding:6px 12px;border-radius:6px;}
-.flux-arrow{color:var(--text3);font-size:14px;}
-.filtres{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px;}
-@media(max-width:700px){.filtres{grid-template-columns:1fr 1fr;}}
-.filtre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
-.filtre-label{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--accent);margin-bottom:4px;}
-.filtre-desc{font-size:11px;color:var(--text3);line-height:1.5;}
-.univers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-@media(max-width:700px){.univers{grid-template-columns:repeat(2,1fr);}}
-.fnb-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
-.fnb-ticker{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px;}
-.fnb-secteur{font-size:10px;color:var(--text3);margin-bottom:6px;}
-.fnb-tags{display:flex;flex-wrap:wrap;gap:3px;}
-.tag{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;}
-.t-rapide{background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.2);}
-.t-moyen{background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.2);}
-.t-lent{background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);}
-.t-seuil{background:var(--bg4);color:var(--text3);border:1px solid var(--border);}
-.info-box{padding:16px 20px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:20px;}
-.info-box strong{color:var(--text2);}
-.disclaimer{margin-top:48px;padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);font-size:11px;color:var(--text3);line-height:1.7;}
-footer{max-width:1100px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
+section{margin-bottom:48px;}
+.section-label{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.section-title{font-family:var(--display);font-size:17px;font-weight:400;color:var(--text);margin-bottom:4px;}
+.section-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.chart-title{font-family:var(--mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.chart-desc{font-size:12px;color:var(--text3);margin-bottom:20px;}
+.chart-wrap{position:relative;}
+.interp{margin-top:0;padding:14px 18px;background:var(--bg3);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
+.interp strong{color:var(--text);}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.stat-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.stat-value{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:4px;}
+.stat-sub{font-size:11px;color:var(--text3);}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.card-link{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:border-color .15s,background .15s;display:block;}
+.card-link:hover{border-color:var(--border2);background:var(--bg3);}
+.card-tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
+.card-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.card-desc{font-size:12px;color:var(--text3);line-height:1.55;}
+.card-meta{margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--text3);}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;}
+.data-table th.r{text-align:right;}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,.02);}
+.data-table .r{text-align:right;}
+.ticker{font-family:var(--mono);color:var(--accent);font-weight:500;}
+.num{font-family:var(--mono);font-size:11px;}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;}
+.badge-green{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2);}
+.badge-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);}
+.badge-blue{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
+.callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
+.callout .icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
+.callout strong{color:var(--text);}
+.conclusion{margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.85;}
+.conclusion h3{font-family:var(--display);font-size:15px;font-weight:400;color:var(--text);margin-bottom:12px;}
+.conclusion p{margin-bottom:10px;}
+.conclusion p:last-child{margin-bottom:0;}
+.conclusion strong{color:var(--text);}
+footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
 .footer-brand{font-family:var(--display);font-size:14px;color:var(--accent);font-style:italic;}
+@media(max-width:900px){
+  .page{padding:24px 16px 60px;}
+  nav{padding:0 16px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .cards-grid{grid-template-columns:1fr;}
+}
 </style>
+
 </head>
 <body>
 <nav>
@@ -71,194 +87,136 @@ footer{max-width:1100px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
   <div class="nav-links">
     <a href="index.html">Dashboard</a>
     <a href="systeme.html" class="active">Système</a>
-    <a href="recherche.html">Recherche</a>
+    <a href="fondements.html">Fondements théoriques</a>
+    <a href="analyses.html">Analyses quantitatives</a>
     <a href="resultats.html">Résultats</a>
     <a href="apropos.html">À propos</a>
   </div>
 </nav>
-
 <div class="page">
   <div class="hero">
     <div class="hero-title">Architecture du <span>système TMX v2</span></div>
     <div class="hero-sub">Mean reversion sur 12 FNBs canadiens (TSX) · Paper trading · Phase 1 en cours</div>
   </div>
 
-  <div class="section">
+  <div class="callout">
+    <span class="icon">⚙️</span>
+    <p><strong>Principe fondamental :</strong> Le système détecte, analyse et notifie — la décision finale et l'exécution restent humaines. Le scanner tourne automatiquement toutes les 5 minutes pendant les heures de marché (9h25–17h05 HE, lundi–vendredi) via GitHub Actions.</p>
+  </div>
+
+  <section>
+    <div class="section-label">Vue d'ensemble</div>
     <div class="section-title">Flux de décision</div>
-    <div class="flux">
-      <span class="flux-item">yfinance / Questrade</span>
-      <span class="flux-arrow">→</span>
-      <span class="flux-item">Scanner z-scores</span>
-      <span class="flux-arrow">→</span>
-      <span class="flux-item">Agent Groq</span>
-      <span class="flux-arrow">→</span>
-      <span class="flux-item">Verdict</span>
-      <span class="flux-arrow">→</span>
-      <span class="flux-item">Gmail + SMS</span>
-      <span class="flux-arrow">→</span>
-      <span class="flux-item">Décision humaine</span>
-      <span class="flux-arrow">→</span>
-      <span class="flux-item">Disnat (manuel)</span>
+    <div class="chart-card" style="text-align:center;padding:32px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:12px">
+        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">yfinance / Questrade</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="background:var(--bg3);border:1px solid var(--accent);padding:8px 14px;border-radius:6px;color:var(--accent)">Scanner z-scores</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">Agent Groq</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">Verdict</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">Gmail + SMS</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="background:var(--bg3);border:1px solid var(--green);padding:8px 14px;border-radius:6px;color:var(--green)">Décision humaine</span>
+        <span style="color:var(--text3)">→</span>
+        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">Disnat (manuel)</span>
+      </div>
     </div>
-    <div class="info-box">
-      <strong>Principe fondamental :</strong> Le système détecte, analyse et notifie — la décision finale et l'exécution restent humaines. Le scanner tourne automatiquement toutes les 5 minutes pendant les heures de marché (9h25–17h05 HE, lundi–vendredi) via GitHub Actions.
-    </div>
-  </div>
+  </section>
 
-  <div class="section">
+  <section>
+    <div class="section-label">Signal</div>
     <div class="section-title">Les 4 maillons du signal</div>
-    <div class="maillons">
-      <div class="maillon m1">
-        <div class="maillon-num">MAILLON 1</div>
-        <div class="maillon-title">Régime VIX</div>
-        <div class="maillon-desc">VIX &lt; 16 : Risk-on — taille normale<br>VIX 16–25 : Neutre — taille ÷2<br>VIX &gt; 25 : Risk-off — pause</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div class="chart-card" style="margin-bottom:0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 1</div>
+        <div style="font-weight:600;margin-bottom:8px">Régime VIX</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          VIX &lt; 16 : Risk-on · taille normale<br>
+          VIX 16–25 : Neutre · taille ÷2<br>
+          VIX &gt; 25 : Risk-off · pause
+        </div>
       </div>
-      <div class="maillon m2">
-        <div class="maillon-num">MAILLON 2</div>
-        <div class="maillon-title">Signal z-score</div>
-        <div class="maillon-desc">Z20 ≤ −2.0 é.-t. pour déclencher<br>Z60 confirme ou ajuste la taille<br>Calculé sur prix de clôture quotidiens</div>
+      <div class="chart-card" style="margin-bottom:0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 2</div>
+        <div style="font-weight:600;margin-bottom:8px">Signal z-score</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          Z20 ≤ seuil FNB pour déclencher<br>
+          Z60 confirme ou ajuste la taille<br>
+          Calculé sur clôtures quotidiennes
+        </div>
       </div>
-      <div class="maillon m3">
-        <div class="maillon-num">MAILLON 3</div>
-        <div class="maillon-title">Filtres A–H</div>
-        <div class="maillon-desc">7 filtres de sécurité + Filtre H (XIT)<br>Cluster, régime, profil, SMA50,<br>volume, BdC, corrélation, publications</div>
+      <div class="chart-card" style="margin-bottom:0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 3</div>
+        <div style="font-weight:600;margin-bottom:8px">Filtres A–H</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          7 filtres de sécurité + Filtre H (XIT)<br>
+          Cluster, régime, profil, SMA50<br>
+          Volume, BdC, corrélation, publications
+        </div>
       </div>
-      <div class="maillon m4">
-        <div class="maillon-num">MAILLON 4</div>
-        <div class="maillon-title">Exécution & sortie</div>
-        <div class="maillon-desc">Sortie partielle à 50% du rebond<br>Trailing stop 1.5%<br>Horizon max selon profil FNB</div>
+      <div class="chart-card" style="margin-bottom:0">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 4</div>
+        <div style="font-weight:600;margin-bottom:8px">Exécution & sortie</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          Sortie partielle à 50% du rebond<br>
+          Trailing stop 1,5%<br>
+          Horizon max selon profil FNB
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="section">
+  <section>
+    <div class="section-label">Sécurité</div>
     <div class="section-title">Filtres de sécurité (Maillon 3)</div>
-    <div class="filtres">
-      <div class="filtre">
-        <div class="filtre-label">Filtre A — Cluster</div>
-        <div class="filtre-desc">4–6 signaux simultanés → taille ÷2. 7+ signaux → bloquer tout.</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre B — Régime</div>
-        <div class="filtre-desc">Risk-off (VIX &gt; 25) → bloquer sauf signaux extrêmes sur défensifs.</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre C — Profil</div>
-        <div class="filtre-desc">Z-score doit dépasser le seuil effectif du profil FNB (2.0 à 3.0).</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre D — XIU</div>
-        <div class="filtre-desc">XIU stable = correction sectorielle isolée → seuil +0.5, taille ÷1.5.</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre E — Volume</div>
-        <div class="filtre-desc">Volume élevé lors de la baisse = capitulation = signal de meilleure qualité.</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre F — SMA50</div>
-        <div class="filtre-desc">Sous SMA50 → taille ÷2. Protège contre les tendances baissières structurelles.</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre G — Blocs</div>
-        <div class="filtre-desc">Max 1 position par bloc corrélé (marché large, métaux, taux).</div>
-      </div>
-      <div class="filtre">
-        <div class="filtre-label">Filtre H — Publications</div>
-        <div class="filtre-desc">XIT uniquement : seuil 3.0 ±2j Shopify, bloquer le jour J. (PRD v2.2)</div>
-      </div>
+    <div class="chart-card" style="padding:0;overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Filtre</th><th>Nom</th><th>Règle</th></tr></thead>
+        <tbody>
+          <tr><td class="ticker">A</td><td>Cluster</td><td style="color:var(--text2);font-size:12px">4–6 signaux simultanés → taille ÷2. 7+ signaux → bloquer tout.</td></tr>
+          <tr><td class="ticker">B</td><td>Régime</td><td style="color:var(--text2);font-size:12px">Risk-off (VIX &gt; 25) → bloquer sauf signaux extrêmes sur défensifs.</td></tr>
+          <tr><td class="ticker">C</td><td>Profil</td><td style="color:var(--text2);font-size:12px">Z-score doit dépasser le seuil effectif du profil FNB (2,0σ à 2,5σ).</td></tr>
+          <tr><td class="ticker">D</td><td>XIU</td><td style="color:var(--text2);font-size:12px">XIU stable = correction sectorielle isolée → seuil +0,5, taille ÷1,5.</td></tr>
+          <tr><td class="ticker">E</td><td>Volume</td><td style="color:var(--text2);font-size:12px">Volume élevé lors de la baisse = capitulation = signal de meilleure qualité.</td></tr>
+          <tr><td class="ticker">F</td><td>SMA50</td><td style="color:var(--text2);font-size:12px">Sous SMA50 → taille ÷2. Protège contre les tendances baissières structurelles.</td></tr>
+          <tr><td class="ticker">G</td><td>Blocs</td><td style="color:var(--text2);font-size:12px">Max 1 position par bloc corrélé (marché large, métaux, taux).</td></tr>
+          <tr><td class="ticker">H</td><td>Publications</td><td style="color:var(--text2);font-size:12px">XIT uniquement : seuil 3,0σ dans ±2j publications Shopify, bloquer le jour J.</td></tr>
+        </tbody>
+      </table>
     </div>
-  </div>
+  </section>
 
-  <div class="section">
-    <div class="section-title">Univers — 12 FNBs canadiens (TSX)</div>
-    <div class="univers">
-      <div class="fnb-card">
-        <div class="fnb-ticker">XIU.TO</div>
-        <div class="fnb-secteur">iShares S&P/TSX 60</div>
-        <div class="fnb-tags"><span class="tag t-rapide">Rapide</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">10j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XFN.TO</div>
-        <div class="fnb-secteur">Financières canadiennes</div>
-        <div class="fnb-tags"><span class="tag t-moyen">Moyen</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">15j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XEG.TO</div>
-        <div class="fnb-secteur">Énergie canadienne</div>
-        <div class="fnb-tags"><span class="tag t-lent">Lent</span><span class="tag t-seuil">2.5 é.-t.</span><span class="tag t-seuil">25j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XUT.TO</div>
-        <div class="fnb-secteur">Services publics</div>
-        <div class="fnb-tags"><span class="tag t-rapide">Rapide</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">10j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XIT.TO</div>
-        <div class="fnb-secteur">Technologies ⚠️</div>
-        <div class="fnb-tags"><span class="tag t-rapide">Rapide</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">Filtre H</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XRE.TO</div>
-        <div class="fnb-secteur">FPI canadiens</div>
-        <div class="fnb-tags"><span class="tag t-lent">Lent</span><span class="tag t-seuil">2.5 é.-t.</span><span class="tag t-seuil">25j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XMA.TO</div>
-        <div class="fnb-secteur">Matériaux</div>
-        <div class="fnb-tags"><span class="tag t-moyen">Moyen</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">15j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XIN.TO</div>
-        <div class="fnb-secteur">International EAFE</div>
-        <div class="fnb-tags"><span class="tag t-rapide">Rapide</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">10j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XHC.TO</div>
-        <div class="fnb-secteur">Santé mondiale</div>
-        <div class="fnb-tags"><span class="tag t-moyen">Moyen</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">15j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XST.TO</div>
-        <div class="fnb-secteur">Consommation de base</div>
-        <div class="fnb-tags"><span class="tag t-rapide">Rapide</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">10j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">XGD.TO</div>
-        <div class="fnb-secteur">Mines d'or mondiales</div>
-        <div class="fnb-tags"><span class="tag t-moyen">Moyen</span><span class="tag t-seuil">2.0 é.-t.</span><span class="tag t-seuil">15j</span></div>
-      </div>
-      <div class="fnb-card">
-        <div class="fnb-ticker">ZAG.TO</div>
-        <div class="fnb-secteur">Obligations canadiennes</div>
-        <div class="fnb-tags"><span class="tag t-lent">Lent</span><span class="tag t-seuil">2.5 é.-t.</span><span class="tag t-seuil">25j</span></div>
-      </div>
+  <section>
+    <div class="section-label">Univers</div>
+    <div class="section-title">Les 12 FNBs canadiens (TSX)</div>
+    <div class="chart-card" style="padding:0;overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Ticker</th><th>Nom</th><th class="r">Profil</th><th class="r">Seuil z</th><th class="r">Horizon</th></tr></thead>
+        <tbody>
+          <tr><td class="ticker">XIU.TO</td><td style="color:var(--text2)">iShares S&P/TSX 60</td><td class="r"><span class="badge badge-blue">Modéré</span></td><td class="r num">2,5σ</td><td class="r num">10j</td></tr>
+          <tr><td class="ticker">XFN.TO</td><td style="color:var(--text2)">Financières canadiennes</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
+          <tr><td class="ticker">XEG.TO</td><td style="color:var(--text2)">Énergie canadienne</td><td class="r"><span class="badge badge-amber">Lent</span></td><td class="r num">2,5σ</td><td class="r num">25j</td></tr>
+          <tr><td class="ticker">XIT.TO</td><td style="color:var(--text2)">Technologies canadiennes</td><td class="r"><span class="badge badge-red">Spécial</span></td><td class="r num">2,0σ / 3,0σ*</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XGD.TO</td><td style="color:var(--text2)">Mines d'or</td><td class="r"><span class="badge badge-amber">Lent</span></td><td class="r num">2,5σ</td><td class="r num">25j</td></tr>
+          <tr><td class="ticker">XRE.TO</td><td style="color:var(--text2)">Immobilier CA (REIT)</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XMA.TO</td><td style="color:var(--text2)">Matériaux canadiens</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XIN.TO</td><td style="color:var(--text2)">International (hors Amér.)</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
+          <tr><td class="ticker">XHC.TO</td><td style="color:var(--text2)">Soins de santé mondiaux</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XST.TO</td><td style="color:var(--text2)">Consommation de base CA</td><td class="r"><span class="badge badge-green">Rapide</span></td><td class="r num">2,0σ</td><td class="r num">10j</td></tr>
+          <tr><td class="ticker">XUT.TO</td><td style="color:var(--text2)">Services publics CA</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
+          <tr><td class="ticker">ZAG.TO</td><td style="color:var(--text2)">Obligations CA agrégées</td><td class="r"><span class="badge badge-blue">Défensif</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+        </tbody>
+      </table>
     </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Infrastructure technique</div>
-    <div class="info-box" style="margin-bottom:12px;">
-      <strong>Données de marché :</strong> yfinance (source principale) avec Questrade API comme source temps réel quand disponible. VIX via yfinance (^VIX).
-    </div>
-    <div class="info-box" style="margin-bottom:12px;">
-      <strong>Agent contextuel :</strong> Groq llama-3.3-70b analyse les actualités RSS (Yahoo Finance + Google News) pour chaque signal et classifie la baisse en SECTORIEL / FONDAMENTAL / SYSTÉMIQUE.
-    </div>
-    <div class="info-box" style="margin-bottom:12px;">
-      <strong>Automatisation :</strong> GitHub Actions (cron toutes les 5 min, 9h25–17h05 HE). Notifications Gmail HTML + SMS via adresse email opérateur.
-    </div>
-    <div class="info-box">
-      <strong>Paper trading :</strong> Simulateur JSON interne. Capital virtuel 100 000 $ CAD. Modèle de coûts réaliste : spread 0.05%/côté + commission 4.95$ + slippage 0.05%.
-    </div>
-  </div>
-
-  <div class="disclaimer">
-    <strong>Avis important</strong> — Ce site ne constitue pas un conseil financier. FNBLab est un projet de recherche personnel. Toutes les positions sont du paper trading (simulation). Les performances passées ne garantissent pas les performances futures.
-  </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;padding:0 4px">* XIT : seuil 3,0σ dans ±2 jours d'une publication trimestrielle Shopify (filtre H). HYG utilisé comme indicateur macro, non tradé directement.</div>
+  </section>
 </div>
-
 <footer>
   <span class="footer-brand">FNBLab</span>
-  <span>TMX v2 · Système · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
+  <span>TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
   <span>Ce site ne constitue pas un conseil financier</span>
 </footer>
 </body>
