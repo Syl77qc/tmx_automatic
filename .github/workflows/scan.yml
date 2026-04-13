@@ -26,11 +26,13 @@ jobs:
       contents: write
 
     steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_PAT }}
 
+      # ── 2. Python ────────────────────────────────────────────────────────────
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -41,6 +43,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # ── 3. Scanner ───────────────────────────────────────────────────────────
       - name: Run scanner
         env:
           GMAIL_USER:               ${{ secrets.GMAIL_USER }}
@@ -57,19 +60,41 @@ jobs:
           MODE=${{ github.event.inputs.mode || 'live' }}
           python scanner.py --mode $MODE --output scan_results.json
 
+      # ── 4. Dashboard ─────────────────────────────────────────────────────────
       - name: Generate dashboard
         run: python generate_dashboard.py
 
-      - name: Commit and push
+      # ── 5. Commit données JSON (à chaque run) ────────────────────────────────
+      # scan_results.json, positions.json, trades_log.json sont toujours poussés
+      # car ils servent à la continuité du paper trading entre les runs.
+      - name: Commit scan data
         run: |
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
-          git add index.html resultats.html scan_results.json positions.json trades_log.json || true
-          git diff --staged --quiet || git commit -m "Dashboard auto-update $(date -u '+%Y-%m-%d %H:%M') UTC"
+          git add scan_results.json positions.json trades_log.json || true
+          git diff --staged --quiet || git commit -m "Scan data $(date -u '+%Y-%m-%d %H:%M') UTC"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
+      # ── 6. Commit dashboard HTML (seulement si changement réel) ──────────────
+      # index.html et resultats.html ne sont poussés QUE s'ils ont changé.
+      # Sans cette séparation, chaque push déclenche un workflow
+      # "pages build and deployment" qui fait throttler le schedule par GitHub.
+      - name: Commit dashboard (signal changes only)
+        run: |
+          git add index.html resultats.html || true
+          if git diff --staged --quiet; then
+            echo "Aucun changement dans le dashboard — push ignoré."
+          else
+            git commit -m "Dashboard update $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git push
+            echo "Dashboard mis à jour et poussé."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
+      # ── 7. Artifacts (toujours) ───────────────────────────────────────────────
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
