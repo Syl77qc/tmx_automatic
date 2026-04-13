@@ -3,83 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FNBLab — Résultats</title>
+<title>FNBLab — Résultats paper trading</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0d0f11;--bg2:#131619;--bg3:#1a1e22;--bg4:#21262d;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
   --text:#e8e4dd;--text2:#8a8880;--text3:#555250;
+  --green:#4ade80;--amber:#f59e0b;--red:#f87171;
   --accent:#e8c97e;
-  --green:#4ade80;--amber:#f59e0b;--red:#f87171;--blue:#60a5fa;
   --mono:'DM Mono',monospace;--display:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
-nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;gap:0;}
-.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;white-space:nowrap;}
-.nav-links{display:flex;gap:2px;overflow-x:auto;}
-.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color .15s,background .15s;white-space:nowrap;}
+nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;}
+.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;}
+.nav-links{display:flex;gap:2px;}
+.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color 0.15s,background 0.15s;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
-.page{max-width:1200px;margin:0 auto;padding:40px 32px 80px;}
-.hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);}
-.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;line-height:1.2;margin-bottom:6px;}
+.page{max-width:1100px;margin:0 auto;padding:40px 32px 80px;}
+.hero{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
+.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;color:var(--text);line-height:1.2;}
 .hero-title span{color:var(--accent);font-style:normal;font-weight:500;}
-.hero-sub{font-size:13px;color:var(--text3);}
-section{margin-bottom:48px;}
-.section-label{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
-.section-title{font-family:var(--display);font-size:17px;font-weight:400;color:var(--text);margin-bottom:4px;}
-.section-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
-.chart-title{font-family:var(--mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-.chart-desc{font-size:12px;color:var(--text3);margin-bottom:20px;}
-.chart-wrap{position:relative;}
-.interp{margin-top:0;padding:14px 18px;background:var(--bg3);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
-.interp strong{color:var(--text);}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
-.stat-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.stat-value{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:4px;}
-.stat-sub{font-size:11px;color:var(--text3);}
-.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
-.card-link{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:border-color .15s,background .15s;display:block;}
-.card-link:hover{border-color:var(--border2);background:var(--bg3);}
-.card-tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
-.card-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.3;}
-.card-desc{font-size:12px;color:var(--text3);line-height:1.55;}
-.card-meta{margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--text3);}
-.data-table{width:100%;border-collapse:collapse;font-size:12px;}
-.data-table th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;}
-.data-table th.r{text-align:right;}
-.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.data-table tr:last-child td{border-bottom:none;}
-.data-table tr:hover td{background:rgba(255,255,255,.02);}
-.data-table .r{text-align:right;}
-.ticker{font-family:var(--mono);color:var(--accent);font-weight:500;}
-.num{font-family:var(--mono);font-size:11px;}
-.badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;}
-.badge-green{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2);}
-.badge-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
-.badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);}
-.badge-blue{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
-.callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
-.callout .icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
-.callout strong{color:var(--text);}
-.conclusion{margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.85;}
-.conclusion h3{font-family:var(--display);font-size:15px;font-weight:400;color:var(--text);margin-bottom:12px;}
-.conclusion p{margin-bottom:10px;}
-.conclusion p:last-child{margin-bottom:0;}
-.conclusion strong{color:var(--text);}
-footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
+.hero-meta{font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;line-height:2;}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0.3;}
+.metric-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.metric-value{font-family:var(--mono);font-size:26px;font-weight:500;color:var(--text);line-height:1;margin-bottom:4px;}
+.metric-sub{font-size:11px;color:var(--text3);}
+.metric-ok .metric-value{color:var(--green);}
+.metric-warn .metric-value{color:var(--amber);}
+.section-header{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;}
+.section-title-text{font-family:var(--display);font-size:16px;font-weight:400;color:var(--text);}
+.section-sub{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{border-bottom:1px solid var(--border);}
+thead th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;padding:10px 14px;text-align:left;background:var(--bg3);}
+thead th.r{text-align:right;}
+tbody tr{border-bottom:1px solid var(--border);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,0.02);}
+td{padding:10px 14px;color:var(--text);vertical-align:middle;}
+td.r{text-align:right;}
+.win{color:var(--green);font-family:var(--mono);}
+.loss{color:var(--red);font-family:var(--mono);}
+.neutral{color:var(--text3);font-family:var(--mono);}
+.badge-win{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;}
+.badge-loss{background:rgba(248,113,113,0.1);color:var(--red);border:1px solid rgba(248,113,113,0.2);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;}
+.empty-state{padding:48px;text-align:center;color:var(--text3);}
+.empty-state .big{font-family:var(--mono);font-size:24px;opacity:0.2;margin-bottom:12px;}
+.progress-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:28px;}
+.progress-title{font-size:12px;color:var(--text2);margin-bottom:16px;}
+.progress-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:600px){.progress-bars{grid-template-columns:1fr;}}
+.progress-item{}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px;}
+.progress-label span:last-child{font-family:var(--mono);}
+.progress-bar-bg{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:3px;transition:width 0.3s;}
+.pb-ok{background:var(--green);}
+.pb-warn{background:var(--amber);}
+.pb-neutral{background:var(--text3);}
+.disclaimer{margin-top:48px;padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);font-size:11px;color:var(--text3);line-height:1.7;}
+footer{max-width:1100px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
 .footer-brand{font-family:var(--display);font-size:14px;color:var(--accent);font-style:italic;}
-@media(max-width:900px){
-  .page{padding:24px 16px 60px;}
-  nav{padding:0 16px;}
-  .stats-row{grid-template-columns:1fr 1fr;}
-  .cards-grid{grid-template-columns:1fr;}
-}
 </style>
-
 </head>
 <body>
 <nav>
@@ -93,42 +83,81 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
     <a href="apropos.html">À propos</a>
   </div>
 </nav>
+
 <div class="page">
-  <div class="hero" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px">
+  <div class="hero">
     <div>
       <div class="hero-title">Résultats<br><span>Paper trading</span></div>
     </div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--text3);text-align:right;line-height:2">
-      Mis à jour : 2026-04-11 10:11<br>Capital virtuel : 100 000 $ CAD<br>Phase 1 en cours
+    <div class="hero-meta">
+      Mis à jour : 2026-04-13 10:34<br>
+      Capital virtuel : 100 000 $ CAD<br>
+      Phase 1 en cours
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
-    <div class="stat-card"><div class="stat-label">Hit rate</div><div class="stat-value">—</div><div class="stat-sub">Cible : ≥ 60%</div></div>
-    <div class="stat-card"><div class="stat-label">Rendement moyen</div><div class="stat-value">—</div><div class="stat-sub">Cible : ≥ +1.5% / trade</div></div>
-    <div class="stat-card"><div class="stat-label">Drawdown max</div><div class="stat-value">—</div><div class="stat-sub">Limite : &lt; 15%</div></div>
-    <div class="stat-card"><div class="stat-label">Trades complétés</div><div class="stat-value">0</div><div class="stat-sub">Cible : ≥ 30</div></div>
-  </div>
-  <div class="chart-card">
-    <div class="chart-title">Progression vers les critères go-live (Section 9.3 PRD)</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px">
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Trades complétés</span><span style="font-family:var(--mono)">0 / 30</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Hit rate</span><span style="font-family:var(--mono)">— / 60%</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
-      <div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>Drawdown (limite 15%)</span><span style="font-family:var(--mono)">—</span></div><div style="height:6px;background:var(--bg4);border-radius:3px"></div></div>
+
+  <div class="metrics">
+    <div class="metric ">
+      <div class="metric-label">Hit rate</div>
+      <div class="metric-value">—</div>
+      <div class="metric-sub">Cible : ≥ 60%</div>
+    </div>
+    <div class="metric ">
+      <div class="metric-label">Rendement moyen</div>
+      <div class="metric-value">—</div>
+      <div class="metric-sub">Cible : ≥ +1.5% / trade</div>
+    </div>
+    <div class="metric ">
+      <div class="metric-label">Drawdown max</div>
+      <div class="metric-value">—</div>
+      <div class="metric-sub">Limite : &lt; 15%</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Trades complétés</div>
+      <div class="metric-value">0</div>
+      <div class="metric-sub">Cible : ≥ 30</div>
     </div>
   </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px">
-    <div style="padding:48px;text-align:center;color:var(--text3)">
-      <div style="font-family:var(--mono);font-size:24px;opacity:.2;margin-bottom:12px">[ ]</div>
-      <div>Aucun trade complété pour le moment.<br>Les résultats apparaîtront ici dès la première position fermée.</div>
+
+  <div class="progress-wrap">
+    <div class="progress-title">Progression vers les critères go-live (Section 9.3 PRD)</div>
+    <div class="progress-bars">
+      <div class="progress-item">
+        <div class="progress-label"><span>Trades complétés</span><span>0 / 30</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Hit rate</span><span>— / 60%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Drawdown (limite 15%)</span><span>—</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+      </div>
     </div>
   </div>
-  <div style="padding:20px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);font-size:11px;color:var(--text3);line-height:1.7">
-    <strong style="color:var(--text2)">Avis important</strong> — Résultats de paper trading (simulation). Aucune transaction réelle. Ce site ne constitue pas un conseil financier.
+
+  <div class="section-header">
+    <div class="section-title-text">Historique des trades</div>
+    <div class="section-sub">0 trade(s) complété(s)</div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="empty-state">
+          <div class="big">[ ]</div>
+          <div>Aucun trade complété pour le moment.<br>
+          Les résultats apparaîtront ici dès la première position fermée.</div>
+        </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Avis important</strong> — Résultats de paper trading (simulation). Aucune transaction réelle. Ce site ne constitue pas un conseil financier.
   </div>
 </div>
+
 <footer>
   <span class="footer-brand">FNBLab</span>
-  <span>TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
+  <span>TMX v2 · Résultats · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
   <span>Ce site ne constitue pas un conseil financier</span>
 </footer>
 </body>
