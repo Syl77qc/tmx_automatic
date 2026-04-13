@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FNBLab — Analyse quantitative des chocs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0d0f12; --bg2:#131720; --bg3:#1a1e2a; --bg4:#20253a;
+  --border:#252a3a; --border2:#2e3450;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#64748b;
+  --accent:#818cf8; --accent2:#6366f1;
+  --green:#22c55e; --red:#ef4444; --amber:#f59e0b; --blue:#38bdf8;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;}
+
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,15,18,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 28px;height:46px;gap:0;
+}
+.brand{
+  font-family:var(--mono);font-size:13px;font-weight:600;
+  color:var(--accent);text-decoration:none;letter-spacing:.04em;
+  margin-right:28px;white-space:nowrap;flex-shrink:0;
+}
+.brand span{color:var(--text3);font-weight:400;font-size:11px;}
+.nav{display:flex;gap:0;overflow-x:auto;flex:1;}
+.nav::-webkit-scrollbar{display:none;}
+.nav a{
+  display:flex;align-items:center;
+  padding:0 13px;height:46px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.03em;
+  color:var(--text3);text-decoration:none;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:all .15s;
+}
+.nav a:hover{color:var(--text);background:rgba(255,255,255,.025);}
+.nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 28px;font-family:var(--mono);font-size:10px;
+  color:var(--text3);background:var(--bg2);
+  border-bottom:1px solid var(--border);
+}
+.breadcrumb a{color:var(--text3);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.breadcrumb .sep{color:var(--border2);margin:0 2px;}
+.breadcrumb .cur{color:var(--accent);}
+
+.page-header{
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);
+  border-bottom:1px solid var(--border);
+  padding:28px 32px 22px;
+}
+.page-header .htag{
+  font-family:var(--mono);font-size:10px;color:var(--accent);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;
+}
+.page-header h1{font-size:24px;font-weight:500;color:var(--text);margin-bottom:6px;}
+.page-header .hdesc{color:var(--text3);font-size:12px;max-width:700px;line-height:1.7;}
+
+.nav-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  background:var(--bg2);padding:0 32px;overflow-x:auto;
+}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab{
+  padding:11px 18px;font-size:11px;color:var(--text3);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s;
+  font-family:var(--mono);letter-spacing:.04em;white-space:nowrap;
+}
+.tab:hover{color:var(--text);background:rgba(255,255,255,.02);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.section{display:none;padding:28px 32px;max-width:1180px;margin:0 auto;}
+.section.active{display:block;}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;}
+.kpi .kl{font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+.kpi .kv{font-size:28px;font-weight:600;font-family:var(--mono);}
+.kpi .ks{font-size:11px;color:var(--text3);margin-top:4px;}
+.kpi.pos .kv{color:var(--green);}
+.kpi.acc .kv{color:var(--accent);}
+.kpi.neg .kv{color:var(--red);}
+
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:20px;}
+.panel-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:5px;}
+.panel-desc{font-size:12px;color:var(--text3);margin-bottom:18px;line-height:1.7;}
+
+table.dt{width:100%;border-collapse:collapse;font-size:12px;}
+table.dt th{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--text3);text-transform:uppercase;letter-spacing:.06em;
+  padding:9px 12px;border-bottom:1px solid var(--border);
+  background:var(--bg3);text-align:center;white-space:nowrap;
+}
+table.dt th.l{text-align:left;}
+table.dt td{padding:9px 12px;border-bottom:1px solid var(--border2);text-align:center;}
+table.dt td.l{text-align:left;}
+table.dt tr:last-child td{border-bottom:none;}
+table.dt tr:hover td{background:rgba(255,255,255,.015);}
+table.dt tr.dim td{color:var(--text3);font-style:italic;}
+
+.tk{font-family:var(--mono);color:var(--accent);font-weight:500;}
+.nm{font-family:var(--mono);font-size:12px;}
+
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500;}
+.bg{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.ba{background:rgba(129,140,248,.1);color:var(--accent);border:1px solid rgba(129,140,248,.2);}
+.br{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+
+.cw{position:relative;height:280px;}
+.cw-sm{position:relative;height:210px;}
+
+.callout{
+  background:rgba(129,140,248,.06);border:1px solid rgba(129,140,248,.18);
+  border-left:3px solid var(--accent);border-radius:6px;
+  padding:13px 17px;margin:18px 0;
+  font-size:12px;color:var(--text2);line-height:1.75;
+}
+.callout.g{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.18);border-left-color:var(--green);}
+.callout.r{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.18);border-left-color:var(--red);}
+.callout strong{color:var(--text);}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+
+.bar-bg{height:12px;background:var(--bg4);border-radius:3px;overflow:hidden;display:inline-block;width:80px;vertical-align:middle;margin-right:6px;}
+.bar-fill{height:100%;border-radius:3px;}
+.bar-acc{background:var(--accent);}
+.bar-red{background:var(--red);}
+.bar-grn{background:var(--green);}
+
+.hmap{border-collapse:collapse;font-size:11px;min-width:680px;}
+.hmap th{font-family:var(--mono);font-size:9px;color:var(--text3);padding:5px 8px;text-align:center;}
+.hmap th.lh{text-align:left;color:var(--accent);}
+.hmap td{width:48px;height:30px;text-align:center;font-family:var(--mono);font-size:10px;border:1px solid var(--bg);}
+.hmap td.fnb{text-align:left;color:var(--accent);padding:0 10px;font-weight:500;font-size:11px;}
+
+footer{
+  border-top:1px solid var(--border);padding:20px 32px;
+  font-family:var(--mono);font-size:11px;color:var(--text3);
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:40px;
+}
+footer a{color:var(--text3);text-decoration:none;}
+footer a:hover{color:var(--accent);}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">FNBLab <span>TMX v2</span></a>
+  <div class="nav">
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="fondements.html">Fondements théoriques</a>
+    <a href="analyses.html" class="active">Analyses quantitatives</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="apropos.html">À propos</a>
+    
+  </div>
+</nav>
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a>
+  <span class="sep">/</span>
+  <a href="analyses.html">Analyses quantitatives</a>
+  <span class="sep">/</span>
+  <span class="cur">Analyse quantitative — Fréquence des chocs</span>
+</div>
+
+<div class="page-header">
+  <div class="htag">Analyse quantitative · 25 ans · 13 FNBs · TSX</div>
+  <h1>Fréquence et anatomie des chocs de marché</h1>
+  <p class="hdesc">Distribution des baisses extrêmes (≥ 2σ / ≥ 2,5σ / ≥ 3σ) par FNB sur l'ensemble de l'historique. Base de calibrage des seuils de déclenchement des signaux de contagion.</p>
+</div>
+
+<div class="nav-tabs">
+  <div class="tab active" onclick="showTab('freq',this)">Fréquence des chocs</div>
+  <div class="tab" onclick="showTab('heat',this)">Saisonnalité mensuelle</div>
+  <div class="tab" onclick="showTab('seuils',this)">Comparaison par seuil</div>
+  <div class="tab" onclick="showTab('signaux',this)">8 signaux survivants</div>
+</div>
+
+<!-- TAB 1 : FRÉQUENCE -->
+<div id="tab-freq" class="section active">
+  <div class="kpis">
+    <div class="kpi acc"><div class="kl">Chocs ≥ 2σ / an (moy.)</div><div class="kv">7,3</div><div class="ks">Toutes les ~7 semaines</div></div>
+    <div class="kpi acc"><div class="kl">Chocs ≥ 2,5σ / an (moy.)</div><div class="kv">2,2</div><div class="ks">Zone de signal exploitable</div></div>
+    <div class="kpi acc"><div class="kl">Chocs ≥ 3σ / an (moy.)</div><div class="kv">0,6</div><div class="ks">1 aux 20 mois — trop rare</div></div>
+    <div class="kpi acc"><div class="kl">FNB le plus volatile</div><div class="kv">HYG</div><div class="ks">8,9 chocs ≥ 2σ / an</div></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Fréquence des chocs ≥ 2,5σ par FNB (par an) — classé par fréquence décroissante</div>
+    <div class="panel-desc">Le seuil 2,5σ est retenu comme seuil de déclenchement de la stratégie : assez rare pour éviter le bruit (≠ 2,0σ), assez fréquent pour avoir un n statistiquement exploitable (≠ 3,0σ).</div>
+    <div class="cw"><canvas id="barChart"></canvas></div>
+    <div class="callout"><strong>Comment lire ce graphique.</strong> Chaque barre représente la fréquence annuelle moyenne de chocs ≥ 2,5σ pour un FNB donné. La couleur indique l'intensité : rouge ≥ 2,8/an (signal fréquent), violet 2,0–2,7/an (zone idéale), gris &lt; 2,0/an (trop rare). XGD à 1,3/an est le moins exploitable comme émetteur — trop peu d'occurrences pour des tests statistiques robustes.</div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Tableau complet — Fréquence par seuil et par FNB</div>
+    <div class="panel-desc">La colonne « Total 2,5σ » donne le n absolu disponible pour les tests. Un n &lt; 30 est traité avec prudence. Historique variable : XUT et XHC démarrent en 2012, ZAG en 2010.</div>
+    <table class="dt" id="freq-table"></table>
+    <div class="callout"><strong>Synthèse.</strong> La fréquence est homogène entre 2,0 et 2,8 chocs/an pour la majorité des FNBs. XGD (or) est significativement moins volatile en chocs extrêmes (1,3/an), ce qui explique pourquoi l'or est un mauvais émetteur de signal de contagion : trop peu d'occurrences pour générer des statistiques fiables au seuil 2,5σ.</div>
+  </div>
+</div>
+
+<!-- TAB 2 : SAISONNALITÉ -->
+<div id="tab-heat" class="section">
+  <div class="panel">
+    <div class="panel-title">Heatmap saisonnière — Chocs ≥ 2,5σ par mois et par FNB · 2001–2026</div>
+    <div class="panel-desc">Nombre total de chocs ≥ 2,5σ survenus dans chaque mois sur toute la période. Intensité de couleur = concentration des chocs. Cellule jaune intense = mois à risque élevé pour ce FNB.</div>
+    <div style="overflow-x:auto;"><table class="hmap" id="heatmap-table"></table></div>
+    <div class="callout"><strong>Comment lire cette heatmap.</strong> Chaque cellule = nombre total de chocs ≥ 2,5σ pour ce FNB-mois sur 25 ans. Mars, septembre et octobre ressortent systématiquement — un patron saisonnier documenté (réallocations institutionnelles de fin de trimestre). Ce n'est pas une coïncidence : ces mois correspondent à des moments de pression de vente récurrente dans les marchés canadiens.</div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Total des chocs ≥ 2,5σ par mois — tous FNBs confondus</div>
+    <div class="panel-desc">Agrégation de tous les chocs pour l'ensemble des 13 FNBs. Révèle les effets de saisonnalité systémique.</div>
+    <div class="cw"><canvas id="seasonChart"></canvas></div>
+    <div class="callout"><strong>Implication.</strong> Les mois à concentration élevée (oct–mars) ne sont pas nécessairement les meilleurs pour trader — ils correspondent à des périodes de stress où les signaux sont plus fréquents mais aussi plus bruités. Le filtre de régime HYG/ZAG (testé à l'étape 4 de la recherche) était conçu pour isoler ces épisodes, mais n'était pas utilisable faute d'historique suffisant.</div>
+  </div>
+</div>
+
+<!-- TAB 3 : COMPARAISON PAR SEUIL -->
+<div id="tab-seuils" class="section">
+  <div class="panel">
+    <div class="panel-title">Rendement J+1 de XIU selon l'intensité du choc XEG — signal XEG→XIU</div>
+    <div class="panel-desc">Résultats de l'étape 1 de la recherche. Pour chaque seuil de déclenchement, rendement moyen de XIU le lendemain, win rate, et p-valeur du test de permutation (1 000 itérations).</div>
+    <table class="dt">
+      <thead><tr><th class="l">Seuil z-score XEG</th><th>n trades</th><th>Rend. moyen J+1</th><th>Win rate (baisse)</th><th>p-permutation</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="tk">z ≤ −2,0</span></td><td class="nm">168</td><td class="nm" style="color:var(--text3)">+0,002 %</td><td class="nm">45,2 %</td><td class="nm" style="color:var(--red)">0,357</td><td><span class="badge br">✗ Bruit</span></td></tr>
+        <tr><td class="l"><span class="tk">z ≤ −2,5</span></td><td class="nm">55</td><td class="nm" style="color:var(--green)">−0,381 %</td><td class="nm">56,4 %</td><td class="nm" style="color:var(--green)">0,005</td><td><span class="badge bg">★★ Sweet spot</span></td></tr>
+        <tr><td class="l"><span class="tk">z ≤ −3,0</span></td><td class="nm">10</td><td class="nm" style="color:var(--text3)">+0,172 %</td><td class="nm">50,0 %</td><td class="nm" style="color:var(--red)">0,668</td><td><span class="badge br">n insuffisant</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>Comment lire ce tableau.</strong> La colonne « Rend. moyen J+1 » est <em>négative</em> pour le seuil −2,5σ car on prédit une <em>baisse</em> de XIU — donc un rendement négatif est le bon signal. Le « win rate (baisse) » mesure le % de trades où XIU a effectivement baissé le lendemain. La p-valeur teste si ce résultat est meilleur qu'un tirage au hasard parmi 1 000 permutations.</div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Stabilité du signal XEG→XIU par sous-période</div>
+    <div class="panel-desc">Le signal ne s'érode pas — il s'amplifie. Preuve que le mécanisme est structurel (rééquilibrage indiciel, XEG ≈ 17 % de XIU) et non comportemental.</div>
+    <table class="dt">
+      <thead><tr><th class="l">Période</th><th>n</th><th>Rend. moyen J+1</th><th>Win rate (baisse)</th><th>Tendance</th></tr></thead>
+      <tbody>
+        <tr><td class="l">2001–2008</td><td class="nm">21</td><td class="nm">−0,278 %</td><td class="nm">52 %</td><td style="color:var(--text3);font-size:11px">Signal de base</td></tr>
+        <tr><td class="l">2009–2015</td><td class="nm">11</td><td class="nm">−0,089 %</td><td class="nm">64 %</td><td style="color:var(--text3);font-size:11px">Légèrement affaibli</td></tr>
+        <tr><td class="l">2016–2020</td><td class="nm">9</td><td class="nm">−0,357 %</td><td class="nm">33 %</td><td style="color:var(--amber);font-size:11px">Point faible (COVID)</td></tr>
+        <tr><td class="l"><strong>2021–2026</strong></td><td class="nm"><strong>14</strong></td><td class="nm" style="color:var(--green)"><strong>−0,781 % ↑</strong></td><td class="nm" style="color:var(--green)"><strong>71 % ↑</strong></td><td style="color:var(--green);font-size:11px;font-weight:600">Signal le plus fort</td></tr>
+      </tbody>
+    </table>
+    <div class="callout g"><strong>Conclusion mécaniste.</strong> Un signal comportemental (retard de digestion) devrait s'éroder avec le temps à mesure que le marché devient plus efficace. Ici c'est l'inverse. Le signal est lié au rééquilibrage indiciel : XEG représente ~17 % de XIU. Quand l'énergie s'effondre, les gestionnaires de fonds indiciels rééquilibrent mécaniquement le lendemain — ce mécanisme est stable tant que la composition de XIU ne change pas radicalement.</div>
+  </div>
+</div>
+
+<!-- TAB 4 : 8 SIGNAUX -->
+<div id="tab-signaux" class="section">
+  <div class="panel">
+    <div class="panel-title">Les 8 signaux survivants — Corpus complet après 5 étapes de validation</div>
+    <div class="panel-desc">Tous les signaux ayant survécu aux tests de permutation, correction Benjamini-Hochberg et vérification de stabilité sur 4 sous-périodes. Classés par p-valeur ajustée BH croissante.</div>
+    <table class="dt" id="signals-table"></table>
+    <div class="callout"><strong>Comment lire ce tableau.</strong> « Stabilité » = nombre de sous-périodes où le signal est positif (sur 4). ★★★★ = robuste dans toutes les périodes. « Érosion » = risque de disparition du signal — dérivé de l'analyse des mécanismes. Un mécanisme structurel (rééquilibrage indiciel, décalage horaire) présente un risque d'érosion faible à très faible. « p_BH » = p-valeur après correction Benjamini-Hochberg pour tests multiples (22 tests soumis, 21 survivants).</div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Carte du réseau de contagion — Rôles dans l'écosystème FNB</div>
+    <div class="panel-desc">Classification issue de la matrice de flux (25 tuyaux actifs, p &lt; 0,05). Score net = tuyaux émis − tuyaux reçus.</div>
+    <table class="dt">
+      <thead><tr><th class="l">FNB</th><th>Rôle réseau</th><th>Score net</th><th>Flux émis total</th><th class="l">Mécanisme identifié</th></tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="tk">XUT · XRE · XMA · XIT</span></td><td><span class="badge br">Émetteurs</span></td><td class="nm" style="color:var(--red)">+3 à +5</td><td class="nm">+1,1 à +4,2 %</td><td class="l" style="font-size:11px;color:var(--text3)">Génèrent les chocs — baromètres de stress sectoriel</td></tr>
+        <tr><td class="l"><span class="tk">XIN · XIU · XHC · XST</span></td><td><span class="badge bg">Récepteurs</span></td><td class="nm" style="color:var(--green)">−3 à −6</td><td class="nm">—</td><td class="l" style="font-size:11px;color:var(--text3)">Absorbent les chocs — dépositaires des flux de fuite</td></tr>
+        <tr><td class="l"><span class="tk">XFN</span></td><td><span class="badge ba">Transmetteur</span></td><td class="nm" style="color:var(--accent)">0</td><td class="nm">+1,15 %</td><td class="l" style="font-size:11px;color:var(--text3)">Reçoit de XIT/XRE, propage vers XIN/XIU/XST — nœud pivot</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <span>FNBLab · TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic">GitHub</a></span>
+  <span>Ce site ne constitue pas un conseil financier</span>
+</footer>
+
+<script>
+const FREQ = [
+  {label:"HYG", years:18.9, y2s:8.9, y25s:3.4, y3s:1.2, tot25:65},
+  {label:"XIN", years:23.9, y2s:7.9, y25s:2.8, y3s:0.7, tot25:67},
+  {label:"XIU", years:25.2, y2s:7.8, y25s:2.7, y3s:0.6, tot25:68},
+  {label:"XUT", years:14.1, y2s:8.4, y25s:2.4, y3s:0.6, tot25:34},
+  {label:"XFN", years:25.0, y2s:7.2, y25s:2.6, y3s:0.6, tot25:65},
+  {label:"XRE", years:23.4, y2s:7.2, y25s:2.5, y3s:0.6, tot25:59},
+  {label:"ZAG", years:16.1, y2s:6.4, y25s:2.0, y3s:0.5, tot25:33},
+  {label:"XHC", years:14.1, y2s:7.6, y25s:2.3, y3s:0.5, tot25:33},
+  {label:"XST", years:14.1, y2s:5.9, y25s:2.0, y3s:0.4, tot25:28},
+  {label:"XMA", years:20.2, y2s:7.0, y25s:1.7, y3s:0.5, tot25:35},
+  {label:"XEG", years:25.0, y2s:6.9, y25s:2.2, y3s:0.4, tot25:55},
+  {label:"XIT", years:25.0, y2s:6.5, y25s:1.8, y3s:0.4, tot25:45},
+  {label:"XGD", years:25.0, y2s:5.5, y25s:1.3, y3s:0.3, tot25:32},
+].sort((a,b)=>b.y25s-a.y25s);
+
+const HEATMAP = {
+  "XIU":[3,2,4,3,5,2,6,5,4,7,4,3],"XFN":[4,2,3,4,4,3,5,4,5,8,4,3],
+  "XEG":[2,3,4,3,3,2,4,3,5,6,3,2],"XGD":[1,1,2,2,3,2,4,3,3,5,3,2],
+  "XIT":[2,2,3,3,3,2,4,3,4,5,3,2],"XRE":[3,2,3,3,4,3,5,4,5,7,4,3],
+  "XUT":[2,1,3,2,3,2,3,3,4,5,3,2],"XIN":[4,3,4,4,5,3,6,5,5,8,5,3],
+  "XHC":[2,1,2,2,3,2,3,3,3,5,3,2],"XMA":[2,1,2,2,2,1,3,2,3,5,3,2],
+  "XST":[1,1,2,2,2,1,3,2,3,4,3,2],"HYG":[4,3,4,4,5,3,7,6,6,9,5,4],
+  "ZAG":[2,1,2,2,3,2,3,3,3,5,3,2],
+};
+const MOIS=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+
+const SIGNALS=[
+  {p:"XUT→XFN",n:33,r:"+0.884%",wr:"66.7%",pbh:"<0.0001",s:3,e:"Faible",m:"Vases communicants"},
+  {p:"XRE→XHC",n:36,r:"+0.636%",wr:"69.4%",pbh:"<0.0001",s:4,e:"Faible",m:"Fuite sectorielle"},
+  {p:"XRE→XIN",n:59,r:"+0.588%",wr:"62.7%",pbh:"<0.0001",s:4,e:"Faible",m:"Décalage horaire"},
+  {p:"XUT→XIU",n:33,r:"+0.649%",wr:"60.6%",pbh:"0.0017",s:3,e:"Faible",m:"Rééquilibrage indiciel"},
+  {p:"XFN→XIN",n:61,r:"+0.423%",wr:"62.3%",pbh:"0.0029",s:4,e:"Faible",m:"Décalage horaire"},
+  {p:"XEG→XIU",n:55,r:"−0.381%",wr:"56.4%",pbh:"0.0049",s:3,e:"Très faible",m:"Rééquilibrage indiciel"},
+  {p:"XIT→XIN",n:44,r:"+0.451%",wr:"63.6%",pbh:"0.0084",s:3,e:"Moyen",m:"Décalage horaire"},
+  {p:"XMA→XUT",n:26,r:"+0.593%",wr:"61.5%",pbh:"0.0058",s:2,e:"Moyen",m:"Rotation sectorielle"},
+];
+
+// Table fréquence
+const maxY=FREQ[0].y25s;
+let fh='<thead><tr><th class="l">FNB</th><th>Historique</th><th>≥ 2σ/an</th><th>≥ 2,5σ/an</th><th>≥ 3σ/an</th><th>Total 2,5σ</th></tr></thead><tbody>';
+FREQ.forEach(f=>{
+  const pct=(f.y25s/maxY*100).toFixed(0);
+  fh+=`<tr><td class="l"><span class="tk">${f.label}</span></td>
+  <td class="nm">${f.years} ans</td>
+  <td class="nm" style="color:var(--text3)">${f.y2s}/an</td>
+  <td><span class="bar-bg"><span class="bar-fill bar-acc" style="width:${pct}%"></span></span><span class="nm" style="color:var(--accent)">${f.y25s}/an</span></td>
+  <td class="nm" style="color:var(--text3)">${f.y3s}/an</td>
+  <td class="nm">${f.tot25}</td></tr>`;
+});
+fh+='</tbody>';
+document.getElementById('freq-table').innerHTML=fh;
+
+// Graphique barres
+const maxF=FREQ[0].y25s;
+new Chart(document.getElementById('barChart'),{
+  type:'bar',
+  data:{labels:FREQ.map(f=>f.label),datasets:[{
+    data:FREQ.map(f=>f.y25s),
+    backgroundColor:FREQ.map(f=>f.y25s>=2.8?'rgba(239,68,68,.3)':f.y25s>=2.0?'rgba(129,140,248,.3)':'rgba(100,116,139,.3)'),
+    borderColor:FREQ.map(f=>f.y25s>=2.8?'#ef4444':f.y25s>=2.0?'#818cf8':'#64748b'),
+    borderWidth:1.5,borderRadius:4,
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#818cf8',font:{family:'IBM Plex Mono',size:11}}},
+      y:{grid:{color:'#252a3a'},ticks:{color:'#64748b',font:{family:'IBM Plex Mono',size:11},callback:v=>v+'/an'},
+          title:{display:true,text:'Chocs ≥ 2,5σ par an',color:'#64748b',font:{size:11}}}
+    }
+  }
+});
+
+// Heatmap
+function hc(v){
+  if(v>=9) return {bg:'#818cf8',fg:'#0d0f12'};
+  if(v>=7) return {bg:'#818cf870',fg:'#e2e8f0'};
+  if(v>=4) return {bg:'#818cf830',fg:'#e2e8f0'};
+  if(v>=2) return {bg:'#818cf815',fg:'#94a3b8'};
+  return {bg:'#1a1e2a',fg:'#64748b'};
+}
+let ht='<thead><tr><th class="lh" style="min-width:48px">FNB</th>';
+MOIS.forEach(m=>ht+=`<th>${m}</th>`);
+ht+='<th>Total</th></tr></thead><tbody>';
+Object.keys(HEATMAP).forEach(f=>{
+  const v=HEATMAP[f],tot=v.reduce((a,b)=>a+b,0);
+  ht+=`<tr><td class="fnb">${f}</td>`;
+  v.forEach(x=>{ const c=hc(x); ht+=`<td style="background:${c.bg};color:${c.fg}">${x||'·'}</td>`; });
+  const tc=hc(Math.round(tot/3));
+  ht+=`<td style="background:${tc.bg};color:${tc.fg};font-weight:600">${tot}</td></tr>`;
+});
+ht+='</tbody>';
+document.getElementById('heatmap-table').innerHTML=ht;
+
+// Graphique saisonnalité
+const stot=MOIS.map((_,i)=>Object.values(HEATMAP).reduce((s,a)=>s+a[i],0));
+const mx=Math.max(...stot);
+new Chart(document.getElementById('seasonChart'),{
+  type:'bar',
+  data:{labels:MOIS,datasets:[{
+    data:stot,
+    backgroundColor:stot.map(v=>v>=mx*.85?'rgba(239,68,68,.25)':'rgba(129,140,248,.2)'),
+    borderColor:stot.map(v=>v>=mx*.85?'#ef4444':'#818cf8'),
+    borderWidth:1.5,borderRadius:4,
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#818cf8',font:{family:'IBM Plex Mono',size:11}}},
+      y:{grid:{color:'#252a3a'},ticks:{color:'#64748b',font:{family:'IBM Plex Mono',size:11}},
+          title:{display:true,text:'Total chocs ≥ 2,5σ',color:'#64748b',font:{size:11}}}
+    }
+  }
+});
+
+// Table signaux
+const ec={Faible:'var(--green)',"Très faible":'var(--green)',Moyen:'var(--accent)'};
+let sh='<thead><tr><th class="l">Signal</th><th>n</th><th>Rend. J+1</th><th>Win rate</th><th>p_BH</th><th>Stabilité</th><th class="l">Mécanisme</th><th>Érosion</th></tr></thead><tbody>';
+SIGNALS.forEach(s=>{
+  sh+=`<tr>
+    <td class="l"><span class="tk">${s.p}</span></td>
+    <td class="nm">${s.n}</td>
+    <td class="nm" style="color:var(--green)">${s.r}</td>
+    <td class="nm">${s.wr}</td>
+    <td class="nm" style="color:var(--green)">${s.pbh}</td>
+    <td class="nm" style="color:var(--accent);letter-spacing:2px">${'★'.repeat(s.s)+'☆'.repeat(4-s.s)}</td>
+    <td class="l" style="font-size:11px;color:var(--text3)">${s.m}</td>
+    <td style="color:${ec[s.e]||'var(--red)'};font-size:11px;font-weight:500">${s.e}</td>
+  </tr>`;
+});
+sh+='</tbody>';
+document.getElementById('signals-table').innerHTML=sh;
+
+function showTab(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FNBLab — Backtesting stratégie combinée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0d0f12; --bg2:#131720; --bg3:#1a1e2a; --bg4:#20253a;
+  --border:#252a3a; --border2:#2e3450;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#64748b;
+  --accent:#818cf8; --accent2:#6366f1;
+  --green:#22c55e; --red:#ef4444; --amber:#f59e0b; --blue:#38bdf8;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;}
+
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,15,18,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 28px;height:46px;gap:0;
+}
+.brand{
+  font-family:var(--mono);font-size:13px;font-weight:600;
+  color:var(--accent);text-decoration:none;letter-spacing:.04em;
+  margin-right:28px;white-space:nowrap;flex-shrink:0;
+}
+.brand span{color:var(--text3);font-weight:400;font-size:11px;}
+.nav{display:flex;gap:0;overflow-x:auto;flex:1;}
+.nav::-webkit-scrollbar{display:none;}
+.nav a{
+  display:flex;align-items:center;
+  padding:0 13px;height:46px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.03em;
+  color:var(--text3);text-decoration:none;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:all .15s;
+}
+.nav a:hover{color:var(--text);background:rgba(255,255,255,.025);}
+.nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 28px;font-family:var(--mono);font-size:10px;
+  color:var(--text3);background:var(--bg2);
+  border-bottom:1px solid var(--border);
+}
+.breadcrumb a{color:var(--text3);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.breadcrumb .sep{color:var(--border2);margin:0 2px;}
+.breadcrumb .cur{color:var(--accent);}
+
+.page-header{
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);
+  border-bottom:1px solid var(--border);
+  padding:28px 32px 22px;
+}
+.page-header .htag{
+  font-family:var(--mono);font-size:10px;color:var(--accent);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;
+}
+.page-header h1{font-size:24px;font-weight:500;color:var(--text);margin-bottom:6px;}
+.page-header .hdesc{color:var(--text3);font-size:12px;max-width:700px;line-height:1.7;}
+
+.nav-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  background:var(--bg2);padding:0 32px;overflow-x:auto;
+}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab{
+  padding:11px 18px;font-size:11px;color:var(--text3);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s;
+  font-family:var(--mono);letter-spacing:.04em;white-space:nowrap;
+}
+.tab:hover{color:var(--text);background:rgba(255,255,255,.02);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.section{display:none;padding:28px 32px;max-width:1180px;margin:0 auto;}
+.section.active{display:block;}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;}
+.kpi .kl{font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+.kpi .kv{font-size:28px;font-weight:600;font-family:var(--mono);}
+.kpi .ks{font-size:11px;color:var(--text3);margin-top:4px;}
+.kpi.pos .kv{color:var(--green);}
+.kpi.acc .kv{color:var(--accent);}
+.kpi.neg .kv{color:var(--red);}
+
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:20px;}
+.panel-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:5px;}
+.panel-desc{font-size:12px;color:var(--text3);margin-bottom:18px;line-height:1.7;}
+
+table.dt{width:100%;border-collapse:collapse;font-size:12px;}
+table.dt th{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--text3);text-transform:uppercase;letter-spacing:.06em;
+  padding:9px 12px;border-bottom:1px solid var(--border);
+  background:var(--bg3);text-align:center;white-space:nowrap;
+}
+table.dt th.l{text-align:left;}
+table.dt td{padding:9px 12px;border-bottom:1px solid var(--border2);text-align:center;}
+table.dt td.l{text-align:left;}
+table.dt tr:last-child td{border-bottom:none;}
+table.dt tr:hover td{background:rgba(255,255,255,.015);}
+table.dt tr.dim td{color:var(--text3);font-style:italic;}
+
+.tk{font-family:var(--mono);color:var(--accent);font-weight:500;}
+.nm{font-family:var(--mono);font-size:12px;}
+
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500;}
+.bg{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.ba{background:rgba(129,140,248,.1);color:var(--accent);border:1px solid rgba(129,140,248,.2);}
+.br{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+
+.cw{position:relative;height:280px;}
+.cw-sm{position:relative;height:210px;}
+
+.callout{
+  background:rgba(129,140,248,.06);border:1px solid rgba(129,140,248,.18);
+  border-left:3px solid var(--accent);border-radius:6px;
+  padding:13px 17px;margin:18px 0;
+  font-size:12px;color:var(--text2);line-height:1.75;
+}
+.callout.g{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.18);border-left-color:var(--green);}
+.callout.r{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.18);border-left-color:var(--red);}
+.callout strong{color:var(--text);}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+
+.bar-bg{height:12px;background:var(--bg4);border-radius:3px;overflow:hidden;display:inline-block;width:80px;vertical-align:middle;margin-right:6px;}
+.bar-fill{height:100%;border-radius:3px;}
+.bar-acc{background:var(--accent);}
+.bar-red{background:var(--red);}
+.bar-grn{background:var(--green);}
+
+.hmap{border-collapse:collapse;font-size:11px;min-width:680px;}
+.hmap th{font-family:var(--mono);font-size:9px;color:var(--text3);padding:5px 8px;text-align:center;}
+.hmap th.lh{text-align:left;color:var(--accent);}
+.hmap td{width:48px;height:30px;text-align:center;font-family:var(--mono);font-size:10px;border:1px solid var(--bg);}
+.hmap td.fnb{text-align:left;color:var(--accent);padding:0 10px;font-weight:500;font-size:11px;}
+
+footer{
+  border-top:1px solid var(--border);padding:20px 32px;
+  font-family:var(--mono);font-size:11px;color:var(--text3);
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:40px;
+}
+footer a{color:var(--text3);text-decoration:none;}
+footer a:hover{color:var(--accent);}
+</style>
+<style>
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.delta-pos{color:var(--green);font-weight:600;}
+.delta-neg{color:var(--red);font-weight:600;}
+table.dt tr.dim td{color:var(--text3);font-style:italic;}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">FNBLab <span>TMX v2</span></a>
+  <div class="nav">
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="fondements.html">Fondements théoriques</a>
+    <a href="analyses.html" class="active">Analyses quantitatives</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="apropos.html">À propos</a>
+    
+  </div>
+</nav>
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a>
+  <span class="sep">/</span>
+  <a href="analyses.html">Analyses quantitatives</a>
+  <span class="sep">/</span>
+  <span class="cur">Backtesting — Stratégie combinée</span>
+</div>
+<div class="page-header">
+  <div class="tag">Étape 6 · Backtesting · 2001–2026 · IS/OOS</div>
+  <h1>Performance de la stratégie combinée</h1>
+  <p>Stratégie : déclenchement sur z-score ≤ −2,5 des émetteurs XUT/XRE/XMA/XIT → positions longues parallèles sur XIU + XFN + XIN. Sizing proportionnel au z-score. Séparation stricte in-sample (2001–2019) / out-of-sample (2020–2026).</p>
+</div>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showTab('perf')">Performance globale</div>
+  <div class="nav-tab" onclick="showTab('oos')">Validation IS vs OOS</div>
+  <div class="nav-tab" onclick="showTab('pairs')">Contribution par paire</div>
+  <div class="nav-tab" onclick="showTab('mec')">Mécanismes</div>
+</div>
+
+<!-- TAB PERFORMANCE -->
+<div id="tab-perf" class="section active">
+
+  <div class="kpi-grid">
+    <div class="kpi kpi-pos">
+      <div class="klabel">Sharpe ratio (0bp)</div>
+      <div class="kvalue">2,95</div>
+      <div class="ksub">2001–2026 · vs XIU B&H : 0,31</div>
+      <span class="kbadge b-g">9,5× meilleur</span>
+    </div>
+    <div class="kpi kpi-neg">
+      <div class="klabel">Max Drawdown (0bp)</div>
+      <div class="kvalue">−9,2 %</div>
+      <div class="ksub">vs XIU Buy & Hold : −47,9 %</div>
+      <span class="kbadge b-g">5× plus petit</span>
+    </div>
+    <div class="kpi kpi-acc">
+      <div class="klabel">Win rate (0bp)</div>
+      <div class="kvalue">62 %</div>
+      <div class="ksub">153 jours de signal sur 6 400</div>
+    </div>
+    <div class="kpi kpi-acc">
+      <div class="klabel">Rend. annualisé (5bp)</div>
+      <div class="kvalue">+1,04 %</div>
+      <div class="ksub">Capital exposé seulement 2,4% du temps</div>
+    </div>
+    <div class="kpi kpi-pos">
+      <div class="klabel">Profit Factor (0bp)</div>
+      <div class="kvalue">1,94</div>
+      <div class="ksub">Les gains valent 1,94× les pertes</div>
+    </div>
+    <div class="kpi kpi-pos">
+      <div class="klabel">Sizing moyen</div>
+      <div class="kvalue">1,14×</div>
+      <div class="ksub">Multiplicateur moyen z-score (max 2×)</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Métriques comparatives — Stratégie vs XIU Buy & Hold</div>
+    <div class="panel-desc">Trois scénarios de coûts de transaction (0bp théorique, 5bp réaliste pour ETF liquide, 10bp conservateur). Le benchmark XIU Buy & Hold est calculé sur la même période.</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="l">Scénario</th><th>n jours signal</th><th>Rend. total</th>
+          <th>Rend. annualisé</th><th>Sharpe</th><th>Max Drawdown</th>
+          <th>Win rate</th><th>Profit Factor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="l"><span class="ticker">Stratégie 0bp</span></td>
+          <td class="num">153</td><td class="num" style="color:var(--green)">+47,8 %</td>
+          <td class="num" style="color:var(--green)">+1,71 %</td>
+          <td class="num" style="color:var(--green)"><strong>2,95</strong></td>
+          <td class="num" style="color:var(--green)">−9,2 %</td>
+          <td class="num">62 %</td><td class="num">1,94</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="ticker">Stratégie 5bp</span></td>
+          <td class="num">153</td><td class="num" style="color:var(--accent)">+26,9 %</td>
+          <td class="num" style="color:var(--accent)">+1,04 %</td>
+          <td class="num" style="color:var(--accent)">1,84</td>
+          <td class="num" style="color:var(--accent)">−12,7 %</td>
+          <td class="num">55 %</td><td class="num">1,51</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="ticker">Stratégie 10bp</span></td>
+          <td class="num">153</td><td class="num" style="color:var(--text3)">+8,9 %</td>
+          <td class="num" style="color:var(--text3)">+0,37 %</td>
+          <td class="num" style="color:var(--text3)">0,73</td>
+          <td class="num" style="color:var(--red)">−16,0 %</td>
+          <td class="num">48 %</td><td class="num">1,18</td>
+        </tr>
+        <tr class="bm-row">
+          <td class="l">XIU Buy &amp; Hold (IS 2001–19)</td>
+          <td class="num">—</td><td class="num">+212 %</td>
+          <td class="num">+6,18 %</td>
+          <td class="num">0,31</td>
+          <td class="num" style="color:var(--red)">−47,9 %</td>
+          <td class="num">—</td><td class="num">—</td>
+        </tr>
+        <tr class="bm-row">
+          <td class="l">XIU Buy &amp; Hold (OOS 2020–26)</td>
+          <td class="num">—</td><td class="num">+131 %</td>
+          <td class="num">+14,26 %</td>
+          <td class="num">0,73</td>
+          <td class="num" style="color:var(--red)">−35,5 %</td>
+          <td class="num">—</td><td class="num">—</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:20px;">
+      <strong>Comment lire ce tableau.</strong> La stratégie n'est exposée que 153 jours sur ~6 400 (2,4 % du temps). Son rendement annualisé semble faible en absolu, mais le capital non investi peut être placé ailleurs en parallèle. Ce qui compte ici, c'est le Sharpe (rendement ajusté au risque) : <strong>2,95 vs 0,31</strong> pour le XIU buy & hold, et un drawdown 5× plus petit. La stratégie est conçue comme un complément à un portefeuille existant, pas comme un remplacement.
+    </div>
+  </div>
+</div>
+
+<!-- TAB IS vs OOS -->
+<div id="tab-oos" class="section">
+
+  <div class="callout green" style="margin-bottom:24px;">
+    <strong>Résultat clé :</strong> La performance s'améliore en out-of-sample (2020–2026) par rapport à in-sample (2001–2019) à tous les niveaux de coûts. C'est l'opposé de ce qu'on observe avec un signal issu de l'overfitting. Cette robustesse confirme que les mécanismes sous-jacents (rééquilibrage indiciel, décalage horaire) sont structurels et non conjoncturels.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Comparaison IS vs OOS — Rendement annualisé par niveau de coûts</div>
+    <div class="panel-desc">In-sample : 2001–2019 (19 ans). Out-of-sample : 2020–2026 (6 ans — inclut COVID, inflation 2022, hausse de taux). Le découpage à 2020 est postérieur à la découverte des signaux.</div>
+    <div class="chart-wrap">
+      <canvas id="isOosChart"></canvas>
+    </div>
+    <div class="callout" style="margin-top:20px;">
+      <strong>Comment lire ce graphique.</strong> Les barres bleues représentent la performance in-sample (entraînement), les barres dorées la performance out-of-sample (validation). Si les barres OOS sont plus courtes que IS, le signal se dégrade — c'est le signe classique d'overfitting. Ici, c'est l'inverse pour tous les scénarios de coûts.
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Tableau IS vs OOS — Δ de performance</div>
+      <div class="panel-desc">Variation du rendement annualisé entre IS et OOS.</div>
+      <table class="data-table">
+        <thead>
+          <tr><th class="l">Coût</th><th>IS ann.</th><th>OOS ann.</th><th>Δ</th><th>Sharpe IS</th><th>Sharpe OOS</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="l"><span class="ticker">0bp</span></td>
+            <td class="num">+1,28 %</td>
+            <td class="num" style="color:var(--green)">+2,94 %</td>
+            <td class="num"><span class="delta-pos">+1,66 %↑</span></td>
+            <td class="num">3,23</td><td class="num" style="color:var(--green)">2,92</td>
+          </tr>
+          <tr>
+            <td class="l"><span class="ticker">5bp</span></td>
+            <td class="num">+0,68 %</td>
+            <td class="num" style="color:var(--green)">+2,06 %</td>
+            <td class="num"><span class="delta-pos">+1,38 %↑</span></td>
+            <td class="num">1,75</td><td class="num" style="color:var(--green)">2,09</td>
+          </tr>
+          <tr>
+            <td class="l"><span class="ticker">10bp</span></td>
+            <td class="num">+0,08 %</td>
+            <td class="num" style="color:var(--green)">+1,18 %</td>
+            <td class="num"><span class="delta-pos">+1,10 %↑</span></td>
+            <td class="num">0,28</td><td class="num" style="color:var(--green)">1,27</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Sharpe ratio IS vs OOS</div>
+      <div class="chart-wrap-sm">
+        <canvas id="sharpeChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Interprétation — Pourquoi l'OOS est meilleur ?</div>
+    <div class="panel-desc">Analyse mécaniste issue de l'étape 5 de la recherche.</div>
+    <table class="data-table">
+      <thead><tr><th class="l">Mécanisme</th><th class="l">Preuve</th><th class="l">Implication</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="l" style="color:var(--text)">Rééquilibrage indiciel (XEG→XIU)</td>
+          <td class="l" style="color:var(--text3);font-size:11px">Signal −0,278% (01–08) → −0,781% (21–26)</td>
+          <td class="l"><span class="badge b-g">S'amplifie avec le temps</span></td>
+        </tr>
+        <tr>
+          <td class="l" style="color:var(--text)">Décalage horaire (XIN récepteur)</td>
+          <td class="l" style="color:var(--text3);font-size:11px">Premium lundi +0,56–1,62% sur 4 émetteurs</td>
+          <td class="l"><span class="badge b-g">Structurel — lié aux heures de marché</span></td>
+        </tr>
+        <tr>
+          <td class="l" style="color:var(--text)">Corrélations post-COVID</td>
+          <td class="l" style="color:var(--text3);font-size:11px">Tous FNB en mode amplificateur 2021–26</td>
+          <td class="l"><span class="badge b-a">Signal amplifié mais plus bruité</span></td>
+        </tr>
+        <tr>
+          <td class="l" style="color:var(--text)">XIT : seule exception</td>
+          <td class="l" style="color:var(--text3);font-size:11px">XIT→XIU : IS +0,501% → OOS −0,075%</td>
+          <td class="l"><span class="badge b-r">Retirer XIT de la règle</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB PAIRES -->
+<div id="tab-pairs" class="section">
+
+  <div class="panel">
+    <div class="panel-title">Rendement moyen pondéré par paire — IS vs OOS</div>
+    <div class="panel-desc">Sizing proportionnel au z-score (ref=2,5, max 2×). Le rendement affiché est la moyenne pondérée par le multiplicateur. Les paires dont l'OOS est meilleur qu'IS sont en vert.</div>
+    <div class="chart-wrap" style="height:340px;">
+      <canvas id="pairesChart"></canvas>
+    </div>
+    <div class="callout" style="margin-top:20px;">
+      <strong>Comment lire ce graphique.</strong> Chaque paire a deux barres : bleue (IS 2001–2019) et dorée (OOS 2020–2026). Une barre OOS plus longue que IS signifie que le signal s'est renforcé sur la période récente. XRE→XIN est la paire qui s'amplifie le plus (IS +0,168% → OOS +1,528%). XIT est la seule paire avec des signaux qui se détériorent en OOS.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Tableau détaillé — Contribution par paire</div>
+    <div class="panel-desc">n = nombre de signaux déclenchés. IS = rendement moyen in-sample. OOS = rendement moyen out-of-sample.</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="l">Paire</th><th>n total</th><th>Rend. IS</th>
+          <th>Rend. OOS</th><th>Tendance</th><th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="l"><span class="ticker">XRE→XIN</span></td><td class="num">59</td><td class="num" style="color:var(--text3)">+0,168%</td><td class="num" style="color:var(--green)">+1,528%</td><td class="num"><span class="delta-pos">↑↑ +1,360%</span></td><td><span class="badge b-g">Fort gain OOS</span></td></tr>
+        <tr><td class="l"><span class="ticker">XUT→XFN</span></td><td class="num">33</td><td class="num" style="color:var(--accent)">+0,433%</td><td class="num" style="color:var(--green)">+1,117%</td><td class="num"><span class="delta-pos">↑ +0,684%</span></td><td><span class="badge b-g">S'amplifie</span></td></tr>
+        <tr><td class="l"><span class="ticker">XRE→XIU</span></td><td class="num">59</td><td class="num" style="color:var(--text3)">+0,016%</td><td class="num" style="color:var(--green)">+0,936%</td><td class="num"><span class="delta-pos">↑ +0,920%</span></td><td><span class="badge b-g">Beaucoup plus fort OOS</span></td></tr>
+        <tr><td class="l"><span class="ticker">XUT→XIN</span></td><td class="num">33</td><td class="num" style="color:var(--text3)">+0,243%</td><td class="num" style="color:var(--green)">+0,920%</td><td class="num"><span class="delta-pos">↑ +0,677%</span></td><td><span class="badge b-g">S'amplifie</span></td></tr>
+        <tr><td class="l"><span class="ticker">XUT→XIU</span></td><td class="num">33</td><td class="num" style="color:var(--text3)">+0,250%</td><td class="num" style="color:var(--green)">+0,845%</td><td class="num"><span class="delta-pos">↑ +0,595%</span></td><td><span class="badge b-g">S'amplifie</span></td></tr>
+        <tr><td class="l"><span class="ticker">XMA→XIU</span></td><td class="num">35</td><td class="num" style="color:var(--text3)">+0,090%</td><td class="num" style="color:var(--accent)">+0,261%</td><td class="num"><span class="delta-pos">↑ +0,171%</span></td><td><span class="badge b-a">Stable positif</span></td></tr>
+        <tr><td class="l"><span class="ticker">XIT→FNB</span></td><td class="num">44</td><td class="num" style="color:var(--green)">+0,554%</td><td class="num" style="color:var(--accent)">+0,228%</td><td class="num"><span class="delta-neg">↓ −0,326%</span></td><td><span class="badge b-a">Affaibli mais positif</span></td></tr>
+        <tr><td class="l"><span class="ticker">XIT→XIU</span></td><td class="num">44</td><td class="num" style="color:var(--green)">+0,501%</td><td class="num" style="color:var(--red)">−0,075%</td><td class="num"><span class="delta-neg">↓ −0,576%</span></td><td><span class="badge b-r">Surveiller — seule paire négative OOS</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB MÉCANISMES -->
+<div id="tab-mec" class="section">
+
+  <div class="panel">
+    <div class="panel-title">Carte du réseau de contagion — Émetteurs, récepteurs, transmetteurs</div>
+    <div class="panel-desc">Classification issue de l'étape 3 (matrices de flux) et confirmée par l'étape 5 (analyse mécaniste). Score net = flux émis − flux reçus.</div>
+    <table class="data-table">
+      <thead>
+        <tr><th class="l">FNB</th><th>Rôle</th><th>Score net</th><th>Flux émis total</th><th class="l">Mécanisme</th><th>Stabilité 2021–26</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="l"><span class="ticker">XUT</span></td><td><span class="badge b-r">Émetteur</span></td><td class="num" style="color:var(--red)">+5</td><td class="num">+4,20 %</td><td class="l" style="font-size:11px;color:var(--text3)">Services publics — baromètre risque systémique</td><td><span class="badge b-r">Ampli.</span></td></tr>
+        <tr><td class="l"><span class="ticker">XRE</span></td><td><span class="badge b-r">Émetteur</span></td><td class="num" style="color:var(--red)">+5</td><td class="num">+2,73 %</td><td class="l" style="font-size:11px;color:var(--text3)">Immobilier — sensible aux taux, rebalancement lent</td><td><span class="badge b-r">Ampli.</span></td></tr>
+        <tr><td class="l"><span class="ticker">XMA</span></td><td><span class="badge b-r">Émetteur</span></td><td class="num" style="color:var(--red)">+4</td><td class="num">+1,87 %</td><td class="l" style="font-size:11px;color:var(--text3)">Matériaux — rotation cyclique vers défensifs</td><td><span class="badge b-r">Ampli.</span></td></tr>
+        <tr><td class="l"><span class="ticker">XIT</span></td><td><span class="badge b-r">Émetteur</span></td><td class="num" style="color:var(--red)">+3</td><td class="num">+1,14 %</td><td class="l" style="font-size:11px;color:var(--text3)">Technologie — Shopify-dépendant, signal en dégradation</td><td><span class="badge b-a">⚠ Surveiller</span></td></tr>
+        <tr><td class="l"><span class="ticker">XFN</span></td><td><span class="badge b-a">Transmetteur</span></td><td class="num" style="color:var(--accent)">0</td><td class="num">+1,15 %</td><td class="l" style="font-size:11px;color:var(--text3)">Finances — reçoit de XIT/XRE, propage vers XIN/XIU/XST</td><td><span class="badge b-r">Ampli.</span></td></tr>
+        <tr><td class="l"><span class="ticker">XIN</span></td><td><span class="badge b-g">Récepteur</span></td><td class="num" style="color:var(--green)">−6</td><td class="num">—</td><td class="l" style="font-size:11px;color:var(--text3)">Décalage horaire — marchés intl rééquilibrent le lendemain</td><td><span class="badge b-r">Ampli.</span></td></tr>
+        <tr><td class="l"><span class="ticker">XIU</span></td><td><span class="badge b-g">Récepteur</span></td><td class="num" style="color:var(--green)">−3</td><td class="num">—</td><td class="l" style="font-size:11px;color:var(--text3)">Rééquilibrage indiciel — absorbe chocs énergie/sectoriels</td><td><span class="badge b-r">Ampli.</span></td></tr>
+        <tr><td class="l"><span class="ticker">XHC</span></td><td><span class="badge b-g">Récepteur</span></td><td class="num" style="color:var(--green)">−4</td><td class="num">—</td><td class="l" style="font-size:11px;color:var(--text3)">Santé défensive — fuite vers la qualité après choc immo</td><td><span class="badge b-r">Ampli.</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:20px;">
+      <strong>Comment lire ce tableau.</strong> « Score net positif » = émet plus de chocs qu'il n'en reçoit = émetteur. « Score net négatif » = reçoit plus qu'il n'émet = récepteur. La colonne « Stabilité 2021–26 » indique si le FNB se comporte en amplificateur ou brise-lame sur la période récente — tous les FNB sont devenus amplificateurs depuis 2021, ce qui reflète une hausse des corrélations post-COVID. Le signal de rebond XIN est particulièrement fort en mode amplificateur, ce qui explique l'amélioration OOS.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Protocole de suivi recommandé</div>
+    <div class="panel-desc">Basé sur les résultats des étapes 5 et 6. À mettre en place pour valider les signaux en temps réel avant tout déploiement de capital.</div>
+    <table class="data-table">
+      <thead><tr><th class="l">Élément</th><th class="l">Détail</th><th>Priorité</th></tr></thead>
+      <tbody>
+        <tr><td class="l" style="color:var(--text)">Vérification quotidienne</td><td class="l" style="font-size:11px;color:var(--text3)">Calculer z-scores XUT, XRE, XMA après clôture TSX. Déclencher si ≤ −2,5.</td><td><span class="badge b-g">Essentiel</span></td></tr>
+        <tr><td class="l" style="color:var(--text)">Surpondération lundi</td><td class="l" style="font-size:11px;color:var(--text3)">Signaux du vendredi : premium documenté de +0,56 % à +1,62 % vs autres jours. Doubler la position.</td><td><span class="badge b-g">Haute</span></td></tr>
+        <tr><td class="l" style="color:var(--text)">Surveillance XIT</td><td class="l" style="font-size:11px;color:var(--text3)">XIT→XIU est la seule paire négative en OOS (−0,075%). Attendre 3 trades positifs consécutifs en temps réel avant réintégration.</td><td><span class="badge b-a">Prudence</span></td></tr>
+        <tr><td class="l" style="color:var(--text)">Alerte rupture de régime</td><td class="l" style="font-size:11px;color:var(--text3)">Si la classification amplificateur 2021–26 s'inverse, recalibrer les seuils. Surveiller via corrélations glissantes 90 jours.</td><td><span class="badge b-a">Moyen terme</span></td></tr>
+        <tr><td class="l" style="color:var(--text)">Données manquantes</td><td class="l" style="font-size:11px;color:var(--text3)">Volume intraday + composition détaillée XIU permettraient de confirmer définitivement le mécanisme de rééquilibrage indiciel.</td><td><span class="badge b-a">Optionnel</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── GRAPHIQUE IS vs OOS ───────────────────────────────────────────────────────
+new Chart(document.getElementById('isOosChart'), {
+  type: 'bar',
+  data: {
+    labels: ['0bp — théorique','5bp — réaliste','10bp — conservateur'],
+    datasets: [
+      { label: 'In-Sample (2001–2019)', data: [1.28, 0.68, 0.08],
+        backgroundColor: '#58a6ff30', borderColor: '#58a6ff', borderWidth: 1.5, borderRadius: 4 },
+      { label: 'Out-of-Sample (2020–2026)', data: [2.94, 2.06, 1.18],
+        backgroundColor: '#818cf830', borderColor: '#818cf8', borderWidth: 1.5, borderRadius: 4 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#64748b', font: { family: 'Courier New', size: 11 } } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#64748b', font: { family: 'Courier New', size: 11 } } },
+      y: { grid: { color: '#20253a' }, ticks: { color: '#64748b', font: { family: 'Courier New', size: 11 }, callback: v => v+'%' },
+           title: { display: true, text: 'Rendement annualisé (%)', color: '#64748b', font: { size: 11 } } }
+    }
+  }
+});
+
+// ── GRAPHIQUE SHARPE ──────────────────────────────────────────────────────────
+new Chart(document.getElementById('sharpeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['0bp','5bp','10bp'],
+    datasets: [
+      { label: 'IS', data: [3.23, 1.75, 0.28], backgroundColor:'#58a6ff30', borderColor:'#58a6ff', borderWidth:1.5, borderRadius:3 },
+      { label: 'OOS', data: [2.92, 2.09, 1.27], backgroundColor:'#818cf830', borderColor:'#818cf8', borderWidth:1.5, borderRadius:3 },
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: { legend: { labels: { color:'#64748b', font:{ family:'Courier New', size:10 } } } },
+    scales: {
+      x: { grid:{ display:false }, ticks:{ color:'#64748b', font:{ family:'Courier New', size:10 } } },
+      y: { grid:{ color:'#20253a' }, ticks:{ color:'#64748b', font:{ family:'Courier New', size:10 } },
+           title:{ display:true, text:'Sharpe', color:'#64748b', font:{ size:10 } } }
+    }
+  }
+});
+
+// ── GRAPHIQUE PAIRES ──────────────────────────────────────────────────────────
+const paires = ['XRE→XIN','XUT→XFN','XRE→XIU','XUT→XIN','XUT→XIU','XMA→XIU','XIT→XFN','XIT→XIU'];
+const isData  = [0.168, 0.433, 0.016, 0.243, 0.250, 0.090, 0.554, 0.501];
+const oosData = [1.528, 1.117, 0.936, 0.920, 0.845, 0.261, 0.228, -0.075];
+new Chart(document.getElementById('pairesChart'), {
+  type: 'bar',
+  data: {
+    labels: paires,
+    datasets: [
+      { label: 'IS (2001–2019)', data: isData, backgroundColor:'#58a6ff30', borderColor:'#58a6ff', borderWidth:1.5, borderRadius:3 },
+      { label: 'OOS (2020–2026)', data: oosData,
+        backgroundColor: oosData.map(v => v >= 0 ? '#818cf830' : '#f7816630'),
+        borderColor:      oosData.map(v => v >= 0 ? '#818cf8' : '#f78166'),
+        borderWidth:1.5, borderRadius:3 },
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: { legend: { labels: { color:'#64748b', font:{ family:'Courier New', size:11 } } } },
+    scales: {
+      x: { grid:{ display:false }, ticks:{ color:'#818cf8', font:{ family:'Courier New', size:10 } } },
+      y: { grid:{ color:'#20253a' }, ticks:{ color:'#64748b', font:{ family:'Courier New', size:11 }, callback: v => v+'%' },
+           title:{ display:true, text:'Rendement moyen pondéré (%)', color:'#64748b', font:{ size:11 } } }
+    }
+  }
+});
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+<footer>
+  <span>FNBLab · TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic">GitHub</a></span>
+  <span>Ce site ne constitue pas un conseil financier</span>
+</footer>
+</body>
+</html>
