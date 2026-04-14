@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guide pratique — TMX v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f12;--bg2:#131720;--bg3:#1a1e2a;--bg4:#20253a;
+  --border:#252a3a;--border2:#2e3450;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --accent:#818cf8;--accent2:#6366f1;
+  --green:#22c55e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:#0d0f12ee;backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 32px;height:48px;
+}
+.topbar-brand{
+  font-family:var(--mono);font-size:13px;font-weight:600;
+  color:var(--accent);letter-spacing:.05em;
+  margin-right:32px;white-space:nowrap;text-decoration:none;
+}
+.topbar-brand span{color:var(--text3);font-weight:400;}
+.nav-links{display:flex;gap:0;flex:1;overflow-x:auto;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-link{
+  display:flex;align-items:center;gap:6px;
+  padding:0 14px;height:48px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+  color:var(--text3);text-decoration:none;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:all .15s;
+}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.03);}
+.nav-link.active{color:var(--accent);border-bottom-color:var(--accent);}
+.nav-link .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.6;}
+.nav-sep{width:1px;background:var(--border);height:20px;margin:0 4px;align-self:center;}
+
+/* BREADCRUMB */
+.breadcrumb{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 32px;
+  font-family:var(--mono);font-size:10px;color:var(--text3);
+  border-bottom:1px solid var(--border);background:var(--bg2);
+}
+.breadcrumb a{color:var(--text3);text-decoration:none;}
+.breadcrumb a:hover{color:var(--accent);}
+.breadcrumb .sep{color:var(--border2);}
+.breadcrumb .current{color:var(--accent);}
+
+/* LAYOUT */
+.page-wrap{max-width:1100px;margin:0 auto;padding:40px 32px 80px;}
+
+/* HERO */
+.hero{margin-bottom:48px;}
+.hero-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:12px;
+}
+.hero h1{
+  font-size:28px;font-weight:600;line-height:1.3;
+  color:var(--text);margin-bottom:16px;
+}
+.hero p{
+  font-size:15px;color:var(--text2);line-height:1.7;
+  max-width:720px;
+}
+.hero-stats{
+  display:flex;gap:24px;margin-top:24px;flex-wrap:wrap;
+}
+.stat-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:6px;padding:8px 16px;
+  font-family:var(--mono);font-size:11px;
+}
+.stat-pill .val{color:var(--accent);font-weight:600;}
+.stat-pill .lbl{color:var(--text3);}
+
+/* SECTION TITLES */
+.section-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text3);
+  margin:48px 0 20px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* SIGNAL TABLE */
+.signal-table-wrap{overflow-x:auto;margin-bottom:8px;}
+.signal-table{
+  width:100%;border-collapse:collapse;
+  font-family:var(--mono);font-size:12px;
+}
+.signal-table th{
+  background:var(--bg3);color:var(--text3);
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--border2);white-space:nowrap;
+}
+.signal-table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+.signal-table tr:last-child td{border-bottom:none;}
+.signal-table tr:hover td{background:rgba(129,140,248,.04);}
+.ticker-badge{
+  display:inline-block;
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:4px;padding:3px 8px;
+  font-family:var(--mono);font-size:12px;font-weight:600;
+  color:var(--accent);white-space:nowrap;
+}
+.ticker-name{color:var(--text3);font-size:11px;margin-top:3px;}
+.arrow-cell{color:var(--border2);font-size:16px;text-align:center;}
+.winrate{
+  font-weight:600;color:var(--green);font-size:13px;
+}
+.gain-pos{font-weight:600;color:var(--green);}
+.gain-neg{font-weight:600;color:var(--red);}
+.timing-cell{color:var(--text2);font-size:11px;line-height:1.5;}
+.timing-cell .highlight{color:var(--amber);font-weight:600;}
+
+/* VENDREDI ROW */
+.vendredi-header td{
+  background:rgba(129,140,248,.08);
+  border-top:1px solid var(--accent2);
+  border-bottom:1px solid var(--border);
+  padding:10px 14px;
+}
+.vendredi-header .section-badge{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  color:var(--accent);letter-spacing:.05em;
+}
+.vendredi-row td{background:rgba(129,140,248,.04);}
+
+/* WARNING BOX */
+.warning-box{
+  display:flex;gap:16px;
+  background:rgba(239,68,68,.07);
+  border:1px solid rgba(239,68,68,.25);
+  border-left:3px solid var(--red);
+  border-radius:6px;padding:16px 20px;
+  margin-top:12px;margin-bottom:32px;
+}
+.warning-box .icon{font-size:18px;flex-shrink:0;margin-top:2px;}
+.warning-box .body{color:var(--text2);font-size:13px;line-height:1.7;}
+.warning-box strong{color:var(--text);}
+
+/* HOW-TO CARDS */
+.howto-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;margin-bottom:16px;
+}
+.howto-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:20px 24px;
+}
+.howto-card .step-num{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  color:var(--accent);letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.howto-card h3{
+  font-size:14px;font-weight:600;color:var(--text);
+  margin-bottom:8px;
+}
+.howto-card p{font-size:13px;color:var(--text2);line-height:1.65;}
+.howto-card .code-hint{
+  font-family:var(--mono);font-size:11px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:4px;padding:6px 10px;margin-top:10px;
+  color:var(--accent);
+}
+
+/* RULE CARDS */
+.rules-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;margin-bottom:32px;
+}
+.rule-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:16px 20px;
+  border-left:3px solid var(--border2);
+}
+.rule-card.green{border-left-color:var(--green);}
+.rule-card.amber{border-left-color:var(--amber);}
+.rule-card.red{border-left-color:var(--red);}
+.rule-card.blue{border-left-color:var(--blue);}
+.rule-card .rule-title{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  color:var(--text);margin-bottom:6px;
+}
+.rule-card p{font-size:12px;color:var(--text2);line-height:1.6;}
+
+/* COMPARISON TABLE */
+.compare-wrap{overflow-x:auto;margin-bottom:24px;}
+.compare-table{
+  width:100%;border-collapse:collapse;
+  font-size:13px;
+}
+.compare-table th{
+  background:var(--bg3);color:var(--text3);
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 16px;text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+.compare-table td{
+  padding:12px 16px;border-bottom:1px solid var(--border);
+  color:var(--text2);
+}
+.compare-table .metric{color:var(--text);font-weight:500;}
+.compare-table .good{color:var(--green);font-weight:600;}
+.compare-table .bad{color:var(--red);}
+.compare-table .neutral{color:var(--amber);}
+
+/* INFO BOX */
+.info-box{
+  display:flex;gap:14px;
+  background:rgba(56,189,248,.06);
+  border:1px solid rgba(56,189,248,.2);
+  border-left:3px solid var(--blue);
+  border-radius:6px;padding:16px 20px;margin-bottom:32px;
+}
+.info-box .icon{font-size:16px;flex-shrink:0;margin-top:2px;}
+.info-box .body{font-size:13px;color:var(--text2);line-height:1.7;}
+.info-box strong{color:var(--text);}
+
+/* GREEN BOX */
+.green-box{
+  display:flex;gap:14px;
+  background:rgba(34,197,94,.06);
+  border:1px solid rgba(34,197,94,.2);
+  border-left:3px solid var(--green);
+  border-radius:6px;padding:16px 20px;margin-bottom:32px;
+}
+.green-box .icon{font-size:16px;flex-shrink:0;margin-top:2px;}
+.green-box .body{font-size:13px;color:var(--text2);line-height:1.7;}
+.green-box strong{color:var(--text);}
+
+/* DISCLAIMER */
+.disclaimer{
+  font-family:var(--mono);font-size:10px;color:var(--text3);
+  text-align:center;margin-top:64px;padding-top:24px;
+  border-top:1px solid var(--border);line-height:1.8;
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a class="topbar-brand" href="index.html">TMX<span> v2</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html"><span class="dot"></span>Dashboard</a>
+    <a class="nav-link" href="systeme.html">Système</a>
+    <a class="nav-link" href="resultats.html">Résultats</a>
+    <div class="nav-sep"></div>
+    <a class="nav-link" href="recherche.html">Recherche</a>
+    <a class="nav-link" href="anatomie_chocs.html">Anatomie chocs</a>
+    <a class="nav-link" href="profil_trade.html">Profil trade</a>
+    <div class="nav-sep"></div>
+    <a class="nav-link" href="analyse_quantitative_chocs.html">Analyse quant.</a>
+    <a class="nav-link" href="backtest_performance.html">Backtesting</a>
+    <a class="nav-link active" href="guide_pratique.html">Guide pratique</a>
+    <div class="nav-sep"></div>
+    <a class="nav-link" href="apropos.html">À propos</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="index.html">TMX v2</a>
+  <span class="sep">›</span>
+  <a href="recherche.html">Recherche</a>
+  <span class="sep">›</span>
+  <span class="current">Guide pratique</span>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Guide pratique · Avril 2026</div>
+    <h1>Les 8 signaux — Ce qu'il faut faire et quand</h1>
+    <p>Tout ce que tu as besoin de savoir pour agir. Pas de statistiques, pas de p-values. Seulement les règles, les exemples concrets et les mises en garde. La recherche complète est dans les autres pages — ici, c'est la cuisine.</p>
+    <div class="hero-stats">
+      <div class="stat-pill"><span class="val">8</span><span class="lbl">signaux validés</span></div>
+      <div class="stat-pill"><span class="val">25 ans</span><span class="lbl">de données</span></div>
+      <div class="stat-pill"><span class="val">62–69 %</span><span class="lbl">win rate moyen</span></div>
+      <div class="stat-pill"><span class="val">J+1</span><span class="lbl">fenêtre d'exploitation</span></div>
+      <div class="stat-pill"><span class="val">0 $</span><span class="lbl">frais Disnat</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — TABLE DES 8 SIGNAUX -->
+  <div class="section-title">Les 8 signaux — Recette complète</div>
+
+  <div class="signal-table-wrap">
+    <table class="signal-table">
+      <thead>
+        <tr>
+          <th>Si ce FNB chute fortement…</th>
+          <th></th>
+          <th></th>
+          <th>…achète ce FNB</th>
+          <th></th>
+          <th>Achète à</th>
+          <th>Vends à</th>
+          <th>Win rate</th>
+          <th>Gain moyen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ticker-badge">XUT</div><div class="ticker-name">Services publics</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XFN</div><div class="ticker-name">Banques canadiennes</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">66,7 %</td>
+          <td class="gain-pos">+0,884 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge">XRE</div><div class="ticker-name">Immobilier</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XHC</div><div class="ticker-name">Santé</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">69,4 %</td>
+          <td class="gain-pos">+0,636 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge">XRE</div><div class="ticker-name">Immobilier</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XIN</div><div class="ticker-name">Marchés internationaux</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">62,7 %</td>
+          <td class="gain-pos">+0,588 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge">XUT</div><div class="ticker-name">Services publics</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XIU</div><div class="ticker-name">Grand indice canadien (top 60)</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">60,6 %</td>
+          <td class="gain-pos">+0,649 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge">XFN</div><div class="ticker-name">Banques canadiennes</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XIN</div><div class="ticker-name">Marchés internationaux</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">62,3 %</td>
+          <td class="gain-pos">+0,423 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge">XIT</div><div class="ticker-name">Technologies</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XIN</div><div class="ticker-name">Marchés internationaux</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">63,6 %</td>
+          <td class="gain-pos">+0,451 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge">XMA</div><div class="ticker-name">Matériaux de base</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge">XUT</div><div class="ticker-name">Services publics</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td class="winrate">61,5 %</td>
+          <td class="gain-pos">+0,593 %</td>
+        </tr>
+        <tr>
+          <td><div class="ticker-badge" style="border-color:rgba(239,68,68,.4);color:var(--red)">XEG</div><div class="ticker-name">Énergie ⚠</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div class="ticker-badge" style="border-color:rgba(239,68,68,.4);color:var(--red)">XIU</div><div class="ticker-name">Grand indice canadien</div></td>
+          <td></td>
+          <td class="timing-cell">Clôture J</td>
+          <td class="timing-cell">Clôture J+1</td>
+          <td style="color:var(--amber);font-weight:600">56,4 %</td>
+          <td class="gain-neg">−0,381 % ⚠</td>
+        </tr>
+        <!-- VENDREDI HEADER -->
+        <tr class="vendredi-header">
+          <td colspan="9">
+            <span class="section-badge">📅&nbsp; Règle spéciale — Signal un vendredi</span>
+          </td>
+        </tr>
+        <tr class="vendredi-row">
+          <td><div style="font-family:var(--mono);font-size:11px;color:var(--text2)">Tout émetteur du tableau ci-dessus</div></td>
+          <td class="arrow-cell">→</td>
+          <td></td>
+          <td><div style="font-family:var(--mono);font-size:11px;color:var(--text2)">Même récepteur associé</div></td>
+          <td></td>
+          <td class="timing-cell"><span class="highlight">Clôture vendredi</span></td>
+          <td class="timing-cell"><span class="highlight">Lundi clôture</span></td>
+          <td class="winrate">+3 à +10 %</td>
+          <td class="gain-pos">Prime week-end</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- WARNING XEG -->
+  <div class="warning-box">
+    <div class="icon">⚠️</div>
+    <div class="body">
+      <strong>Note sur XEG→XIU :</strong> ce signal est une exception. Contrairement aux 7 autres paires où le récepteur rebondit, ici XIU tend à <em>baisser</em> après un choc sur XEG. Le gain moyen est négatif (−0,381 %). C'est un signal de contagion négative, pas un rebond. En pratique : ne pas acheter XIU le lendemain d'un choc XEG. Utiliser plutôt ce signal comme alerte pour protéger une position existante sur XIU.
+    </div>
+  </div>
+
+  <!-- SECTION 2 — COMMENT ÇA MARCHE -->
+  <div class="section-title">Comment ça marche — En 4 étapes</div>
+
+  <div class="howto-grid">
+    <div class="howto-card">
+      <div class="step-num">Étape 1 · Surveiller</div>
+      <h3>Chaque soir à 16h05</h3>
+      <p>Après la clôture du TSX, vérifier les z-scores des 4 émetteurs : XUT, XRE, XFN, XMA. Un z-score mesure à quel point la journée a été anormalement mauvaise.</p>
+      <div class="code-hint">z ≤ −2,5 → signal actif</div>
+    </div>
+    <div class="howto-card">
+      <div class="step-num">Étape 2 · Décider</div>
+      <h3>Consulter le tableau ci-dessus</h3>
+      <p>Si l'émetteur a déclenché (z ≤ −2,5), trouver le ou les récepteurs associés dans le tableau. C'est le FNB à acheter — pas l'émetteur lui-même.</p>
+      <div class="code-hint">XUT déclenche → acheter XFN + XIU</div>
+    </div>
+    <div class="howto-card">
+      <div class="step-num">Étape 3 · Acheter</div>
+      <h3>À la clôture du jour J</h3>
+      <p>Passer l'ordre d'achat sur le ou les récepteurs identifiés. Chez Disnat, les FNBs sont à 0 $ de commission. La mise est proportionnelle à la force du choc.</p>
+      <div class="code-hint">z = −3,0 → mise 1,2× la normale</div>
+    </div>
+    <div class="howto-card">
+      <div class="step-num">Étape 4 · Vendre</div>
+      <h3>À la clôture du J+1</h3>
+      <p>Vendre le lendemain à la clôture, sans exception. Attendre J+2 est une erreur — les prix repassent statistiquement en territoire négatif après J+1.</p>
+      <div class="code-hint">Vendredi → tenir jusqu'à lundi</div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — RÈGLES D'OR -->
+  <div class="section-title">Les règles d'or</div>
+
+  <div class="rules-grid">
+    <div class="rule-card green">
+      <div class="rule-title">✅ Surveiller les 4 émetteurs</div>
+      <p>Seulement XUT, XRE, XFN et XMA déclenchent des signaux valides. Ignorer les autres FNBs comme émetteurs.</p>
+    </div>
+    <div class="rule-card green">
+      <div class="rule-title">✅ Acheter le récepteur, pas l'émetteur</div>
+      <p>C'est contre-intuitif mais c'est la règle. XUT chute → acheter XFN. Ne pas acheter XUT.</p>
+    </div>
+    <div class="rule-card amber">
+      <div class="rule-title">📅 Doubler la mise le vendredi</div>
+      <p>Un signal du vendredi génère un rebond 3× plus fort. Surpondérer et tenir jusqu'au lundi.</p>
+    </div>
+    <div class="rule-card amber">
+      <div class="rule-title">⏱ Vendre impérativement à J+1</div>
+      <p>La fenêtre est étroite. J+2 revient négatif. Pas d'exception, pas d'espoir de continuer à monter.</p>
+    </div>
+    <div class="rule-card red">
+      <div class="rule-title">⚠️ XIT — à surveiller seulement</div>
+      <p>XIT montre des signes de dégradation récente. L'utiliser en observation pendant 3 signaux supplémentaires avant de parier dessus.</p>
+    </div>
+    <div class="rule-card blue">
+      <div class="rule-title">🔵 XIN est le récepteur universel</div>
+      <p>XIN apparaît dans 6 des 8 signaux. C'est le FNB le plus prévisible du portefeuille après un choc.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — POURQUOI ÇA FONCTIONNE -->
+  <div class="section-title">Pourquoi ça fonctionne — Les deux mécanismes</div>
+
+  <div class="info-box">
+    <div class="icon">🕐</div>
+    <div class="body">
+      <strong>Mécanisme 1 — Décalage horaire (explique XIN) :</strong> quand un choc se produit au Canada en journée, les bourses européennes et asiatiques sont déjà fermées. XIN, dont la valeur dépend de ces marchés, ne peut pas réagir immédiatement. Le lendemain matin, quand Tokyo et Londres rouvrent, ils digèrent le choc — et XIN rebondit. Ce mécanisme est structurel : il ne disparaîtra pas tant que les fuseaux horaires existent.
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="icon">⚖️</div>
+    <div class="body">
+      <strong>Mécanisme 2 — Rééquilibrage indiciel (explique XEG→XIU) :</strong> XEG représente environ 17 % du poids de XIU. Quand XEG s'effondre, les gestionnaires de fonds indiciels sont <em>obligés</em> de vendre XIU le lendemain pour rééquilibrer leurs portefeuilles. C'est une règle mécanique, pas une décision humaine. Elle est prévisible, répétable, et s'amplifie depuis 2021.
+    </div>
+  </div>
+
+  <!-- SECTION 5 — LA STRATÉGIE EN CHIFFRES -->
+  <div class="section-title">La stratégie en chiffres — Comparaison concrète</div>
+
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Métrique</th>
+          <th>Stratégie (0 $ frais)</th>
+          <th>Stratégie (5 bp frais)</th>
+          <th>XIU — Achat & conservation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="metric">Rendement total (25 ans)</td>
+          <td class="good">+47,8 %</td>
+          <td class="good">+26,9 %</td>
+          <td class="neutral">+212 %</td>
+        </tr>
+        <tr>
+          <td class="metric">Sharpe ratio</td>
+          <td class="good">2,95</td>
+          <td class="good">1,84</td>
+          <td class="bad">0,31</td>
+        </tr>
+        <tr>
+          <td class="metric">Perte maximale</td>
+          <td class="good">−9,2 %</td>
+          <td class="good">−12,7 %</td>
+          <td class="bad">−47,9 %</td>
+        </tr>
+        <tr>
+          <td class="metric">Jours exposé au marché</td>
+          <td>153 jours sur 6 400</td>
+          <td>153 jours sur 6 400</td>
+          <td>6 400 jours</td>
+        </tr>
+        <tr>
+          <td class="metric">Win rate</td>
+          <td class="good">62 %</td>
+          <td class="good">55 %</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="green-box">
+    <div class="icon">✅</div>
+    <div class="body">
+      <strong>Comment lire ce tableau :</strong> la stratégie ne bat pas XIU en rendement brut — c'est normal, elle est exposée moins de 2,5 % du temps. Son avantage est ailleurs : un Sharpe de 2,95 contre 0,31 pour XIU signifie qu'elle génère <strong>9 fois plus de rendement par unité de risque pris</strong>. Et une perte maximale de −9,2 % vs −47,9 % signifie qu'en cas de crise majeure, tu perds 5× moins. C'est une stratégie de qualité de rendement, pas de quantité.
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    Ce document présente des résultats de recherche exploratoire. Il ne constitue en aucun cas un conseil de placement.<br>
+    Les performances passées ne garantissent pas les résultats futurs · TMX v2 · Avril 2026
+  </div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>
