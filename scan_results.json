@@ -1,11 +1,11 @@
 {
-  "scan_at": "2026-04-15T14:16:42.926166-04:00",
+  "scan_at": "2026-04-15T15:44:04.282594-04:00",
   "source_donnees": "Questrade API / yfinance (fallback)",
   "heures_marche": true,
   "regime_marche": {
-    "vix": 18.26,
+    "vix": 17.99,
     "regime": "neutre",
-    "description": "VIX 18.3 entre 16.0-25.0 — tailles réduites",
+    "description": "VIX 18.0 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
@@ -270,27 +270,8 @@
     },
     {
       "ticker": "XGD.TO",
-      "profil": "moyen",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.5,
-      "horizon_j": 15,
-      "bloc": "metaux",
-      "prix_cloture": 61.65999984741211,
-      "rendement_jour_pct": 1.5481,
-      "z20": 0.3666,
-      "z60": 0.409,
-      "sma50": 59.4542,
-      "dessus_sma50": true,
-      "signal": false,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:metaux",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus"
-      ]
+      "erreur": "Données insuffisantes (0 jours)",
+      "signal": false
     },
     {
       "ticker": "ZAG.TO",
