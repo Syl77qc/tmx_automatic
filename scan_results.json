@@ -1,11 +1,11 @@
 {
-  "scan_at": "2026-04-15T16:29:02.364180-04:00",
+  "scan_at": "2026-04-15T17:13:25.964788-04:00",
   "source_donnees": "Questrade API / yfinance (fallback)",
   "heures_marche": false,
   "regime_marche": {
-    "vix": 18.15,
+    "vix": 18.17,
     "regime": "neutre",
-    "description": "VIX 18.1 entre 16.0-25.0 — tailles réduites",
+    "description": "VIX 18.2 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
