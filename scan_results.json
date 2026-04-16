@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-04-16T17:00:18.418487-04:00",
+  "scan_at": "2026-04-16T17:34:03.204429-04:00",
   "source_donnees": "Questrade API / yfinance (fallback)",
   "heures_marche": false,
   "regime_marche": {
@@ -222,27 +222,8 @@
     },
     {
       "ticker": "XHC.TO",
-      "profil": "moyen",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.5,
-      "horizon_j": 15,
-      "bloc": null,
-      "prix_cloture": 68.12999725341797,
-      "rendement_jour_pct": -0.4384,
-      "z20": -0.4372,
-      "z60": -0.3868,
-      "sma50": 69.5298,
-      "dessus_sma50": false,
-      "signal": false,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:autre",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_sous"
-      ]
+      "erreur": "Données insuffisantes (0 jours)",
+      "signal": false
     },
     {
       "ticker": "XST.TO",
