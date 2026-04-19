@@ -1,12 +1,14 @@
 """
-TMX v2 — Simulateur Paper Trading
+TMX v2 — Simulateur Paper Trading  (PRD v3.0)
 Phase 1, item 3 : Gestion des positions virtuelles avec modèle de coûts réaliste
 
-Références PRD :
-  - Section 5    : Maillons 3 (filtres A-G) et 4 (exécution/suivi/sortie)
-  - Section 7    : Dimensionnement des positions
-  - Section 8    : Modèle de coûts (spread, commission, slippage)
-  - Section 9    : Métriques de succès (hit rate, rendement, MAE, drawdown)
+Références PRD v3.0 :
+  - Section 5      : Maillons 3 (filtres A-G) et 4 (exécution/suivi/sortie)
+  - Section 5bis   : Signaux de contagion inter-FNB (action_evaluer_contagion)
+  - Section 6      : Univers — 7 FNBs actifs + 5 indicateurs contextuels (C1, C2)
+  - Section 7      : Dimensionnement des positions
+  - Section 8      : Modèle de coûts (spread, commission 0$, slippage)
+  - Section 9      : Métriques de succès (hit rate, rendement, MAE, drawdown)
 
 Usage :
     python simulateur.py                          # cycle complet (scan → évaluation → suivi)
@@ -32,7 +34,7 @@ EASTERN = ZoneInfo("America/Toronto")
 
 # Section 8 — Modèle de coûts
 SPREAD_PCT        = 0.00050   # 0.05% par côté = 0.10% aller-retour (milieu fourchette PRD)
-COMMISSION_CAD    = 4.95      # $ par transaction (achat ET vente)
+COMMISSION_CAD    = 0.0       # 0$ — FNBs canadiens achetés en ligne sur Disnat (PRD v3.0 s.8)
 SLIPPAGE_PCT      = 0.0005    # 0.05% additionnel par transaction
 
 # Section 7.4 — Limites de concentration
@@ -47,60 +49,56 @@ TRAILING_STOP_PCT     = 0.015  # 1.5% depuis le plus haut atteint
 CLUSTER_SEUIL_REDUCTION = 4    # 4-6 FNBs → taille ÷ 2
 CLUSTER_SEUIL_BLOCAGE   = 7    # 7+ FNBs → bloquer
 
-# Section 5, Maillon 3, Filtre G — Blocs corrélés
+# Section 5, Maillon 3, Filtre G — Blocs corrélés (PRD v3.0 — ZAG retiré car contextuel)
 BLOCS_CORRELES = {
     "marche_large": {"XIU.TO", "XFN.TO", "XIN.TO"},
-    "metaux":       {"XGD.TO", "XMA.TO"},
-    "taux":         {"XRE.TO", "XUT.TO", "ZAG.TO"},
+    "taux":         {"XRE.TO", "XUT.TO"},
 }
 
-# FNBs sensibles aux taux (filtre BdC RPM)
-FNBS_SENSIBLES_TAUX = {"XRE.TO", "XUT.TO", "XFN.TO", "ZAG.TO"}
+# FNBs sensibles aux taux (filtre BdC RPM) — PRD v3.0 : ZAG retiré (contextuel)
+FNBS_SENSIBLES_TAUX = {"XRE.TO", "XUT.TO", "XFN.TO"}
 
-# Profils FNB — stop-loss à ~1.5x la perte additionnelle moyenne (section 5 maillon 4)
+# ── PRD v3.0 — C1 + C2 : Profils FNBs actifs avec horizons Wilcoxon corrigés ──
+# stop-loss à ~1.5x la perte additionnelle moyenne (section 5 maillon 4)
 PROFILS = {
-    "XIU.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 10,
+    "XIU.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20,
                "perte_additionnelle_moy": 0.050, "stop_loss_mult": 1.5,
                "bloc": "marche_large"},
-    "XFN.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 15,
+    "XFN.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20,
                "perte_additionnelle_moy": 0.059, "stop_loss_mult": 1.5,
                "bloc": "marche_large"},
-    "XEG.TO": {"profil": "lent",   "seuil_min": 2.5, "horizon_j": 25,
-               "perte_additionnelle_moy": 0.117, "stop_loss_mult": 1.5,
-               "bloc": None},
-    "XUT.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 10,
+    "XUT.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20,
                "perte_additionnelle_moy": 0.053, "stop_loss_mult": 1.5,
                "bloc": "taux"},
-    "XIT.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 10,
-               "perte_additionnelle_moy": 0.064, "stop_loss_mult": 1.5,
-               "bloc": None},
-    "XRE.TO": {"profil": "lent",   "seuil_min": 2.5, "horizon_j": 25,
+    "XRE.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20,
                "perte_additionnelle_moy": 0.068, "stop_loss_mult": 1.5,
                "bloc": "taux"},
-    "XMA.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 15,
-               "perte_additionnelle_moy": 0.069, "stop_loss_mult": 1.5,
-               "bloc": "metaux"},
     "XIN.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 10,
                "perte_additionnelle_moy": 0.048, "stop_loss_mult": 1.5,
                "bloc": "marche_large"},
-    "XHC.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 15,
+    "XHC.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 10,
                "perte_additionnelle_moy": 0.055, "stop_loss_mult": 1.5,
                "bloc": None},
-    "XST.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 10,
+    "XST.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 15,
                "perte_additionnelle_moy": 0.031, "stop_loss_mult": 1.5,
                "bloc": None},
-    "XGD.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 15,
-               "perte_additionnelle_moy": 0.079, "stop_loss_mult": 1.5,
-               "bloc": "metaux"},
-    "ZAG.TO": {"profil": "lent",   "seuil_min": 2.5, "horizon_j": 25,
-               "perte_additionnelle_moy": 0.018, "stop_loss_mult": 1.5,
-               "bloc": "taux"},
+}
+
+# FNBs contextuels — présents pour le suivi des trades de contagion (PRD v3.0 — C1)
+# Pas de signal mean reversion; leurs données servent à la logique de sortie contagion.
+PROFILS_CONTEXTUELS = {
+    "XEG.TO": {"perte_additionnelle_moy": 0.117, "bloc": None},
+    "ZAG.TO": {"perte_additionnelle_moy": 0.018, "bloc": "taux"},
+    "XGD.TO": {"perte_additionnelle_moy": 0.079, "bloc": "metaux"},
+    "XIT.TO": {"perte_additionnelle_moy": 0.064, "bloc": None},
+    "XMA.TO": {"perte_additionnelle_moy": 0.069, "bloc": "metaux"},
 }
 
 # Fichiers de persistance
-FICHIER_POSITIONS  = Path("positions.json")
-FICHIER_TRADES_LOG = Path("trades_log.json")
-FICHIER_SCAN       = Path("scan_results.json")
+FICHIER_POSITIONS       = Path("positions.json")
+FICHIER_TRADES_LOG      = Path("trades_log.json")
+FICHIER_SCAN            = Path("scan_results.json")
+FICHIER_CONTAGION       = Path("contagion_pending.json")
 
 
 # ── Persistance JSON ───────────────────────────────────────────────────────────
@@ -318,8 +316,8 @@ def calculer_taille_position(
     dessus_sma50 = signal.get("dessus_sma50")
     cluster_action = scan["cluster"]["action"]
 
-    # Base par profil (section 7.2)
-    base_profil = {"rapide": 1.00, "moyen": 0.75, "lent": 0.50}[profil]
+    # Base par profil (section 7.2) — PRD v3.0 : "rapide" et "moyen" uniquement
+    base_profil = {"rapide": 1.00, "moyen": 0.75}[profil]
 
     # Multiplicateur signal (section 7.1)
     if z20 >= 3.0:
@@ -766,6 +764,178 @@ def calculer_metriques(trades_log: list, portefeuille: dict) -> dict:
     }
 
 
+# ── Action contagion (PRD v3.0 — section 5bis) ────────────────────────────────
+
+def action_evaluer_contagion(portefeuille: dict, trades_log: list):
+    """
+    Lit contagion_pending.json (écrit par le scan du soir précédent) et ouvre
+    les positions J+1 pour les signaux de contagion déployables.
+
+    PRD v3.0 section 5bis — règles spécifiques :
+      - Filtre : régime VIX Maillon 1 seulement (pas les filtres A-G)
+      - Niveau 1 : taille_base = 75% de la position de base
+      - Niveau 2 : taille_base = 50% de la position de base
+      - Niveau 3 : deployer=False → log uniquement, pas de position
+      - Horizon : 1 jour (J+1 ouverture → J+1 clôture); max 4 jours si non profitable
+      - Log séparé : champ "type_signal": "contagion" dans trades_log.json
+    """
+    print("\n🔗 Évaluation des signaux de contagion (J+1)...")
+
+    if not FICHIER_CONTAGION.exists():
+        print("   ℹ️  contagion_pending.json absent — aucun signal en attente.")
+        return
+
+    with open(FICHIER_CONTAGION, encoding="utf-8") as f:
+        pending = json.load(f)
+
+    signaux = pending.get("signaux", [])
+    date_signal = pending.get("genere_le", "")[:10]
+
+    if not signaux:
+        print("   ℹ️  Aucun signal de contagion en attente.")
+        return
+
+    # Vérifier que le fichier date bien du jour précédent (pas d'un scan raté)
+    aujourd_hui = date.today()
+    hier        = (aujourd_hui - timedelta(days=1)).isoformat()
+    # On tolère aussi le jour même (week-end, jours fériés)
+    if date_signal not in (hier, aujourd_hui.isoformat()):
+        print(f"   ⚠️  contagion_pending.json daté du {date_signal} "
+              f"(attendu {hier} ou {aujourd_hui}) — signaux ignorés (trop vieux).")
+        return
+
+    print(f"   📋 {len(signaux)} signal(s) de contagion issu(s) du scan du {date_signal}")
+
+    positions = portefeuille["positions_ouvertes"]
+    nouvelles = 0
+
+    for sig in signaux:
+        id_signal = sig.get("id_signal", "?")
+        cible     = sig.get("cible")
+        direction = sig.get("direction", "long")
+        niveau    = sig.get("niveau", 3)
+        deployer  = sig.get("deployer", False)
+        taille_f  = sig.get("taille_finale", 0.0)
+
+        print(f"\n   → Contagion {id_signal} : {sig.get('emetteur')} → {cible} "
+              f"({direction.upper()}) Niveau {niveau}")
+
+        # Niveau 3 : veille — jamais déployé
+        if not deployer or niveau >= 3:
+            print(f"      ⛔ Niveau {niveau} — non déployé (PRD : veille out-of-sample requise)")
+            continue
+
+        # Vérifier que la cible est bien un FNB actif connu
+        if cible not in PROFILS:
+            print(f"      ⚠️  {cible} absent des PROFILS actifs — signal ignoré")
+            continue
+
+        # Vérification de concentration simple (max 3 positions, pas de doublon)
+        if cible in positions:
+            print(f"      ⏭️  Position déjà ouverte sur {cible} — signal ignoré")
+            continue
+        if len(positions) >= MAX_POSITIONS_TOTAL:
+            print(f"      ⛔ Max {MAX_POSITIONS_TOTAL} positions atteint — signal ignoré")
+            continue
+
+        # Récupérer le prix d'entrée (ouverture J+1 ≈ dernier prix connu)
+        prix_entree_signal = obtenir_prix_courant(cible)
+        if prix_entree_signal is None:
+            print(f"      ⚠️  Prix {cible} indisponible — signal ignoré")
+            continue
+
+        # Calcul du capital alloué
+        capital_dispo  = portefeuille["capital_disponible"]
+        capital_base   = capital_dispo / MAX_POSITIONS_TOTAL
+        capital_pos    = capital_base * taille_f
+        capital_pos    = min(capital_pos, capital_dispo * 0.40)
+
+        nb_unites = int(capital_pos / prix_entree_signal)
+        if nb_unites < 1:
+            print(f"      ⚠️  Capital insuffisant pour {cible} — signal ignoré")
+            continue
+
+        # Coûts d'entrée
+        couts = calculer_couts_entree(prix_entree_signal, nb_unites)
+        cout_total = couts["cout_total_cad"]
+        if cout_total > capital_dispo:
+            print(f"      ⚠️  {cible} : Capital insuffisant ({cout_total:.2f}$ > {capital_dispo:.2f}$)")
+            continue
+
+        # Horizons contagion : J+1 standard, max 4 jours (PRD 5bis)
+        horizon_j     = sig.get("horizon_j", 1)
+        horizon_max_j = sig.get("horizon_max_j", 4)
+        date_horizon  = (aujourd_hui + timedelta(days=horizon_max_j)).isoformat()
+
+        # Prix objectif : pour long = +0.5% (rebond attendu J+1); pour short = symétrique
+        # La sortie réelle est à la clôture J+1 — ce prix sert de target indicatif
+        if direction == "long":
+            prix_objectif  = prix_entree_signal * 1.005
+            prix_stop_loss = prix_entree_signal * 0.98   # stop 2% pour horizon 1j
+        else:  # short (paper trading — simulé comme position longue inverse)
+            prix_objectif  = prix_entree_signal * 0.995
+            prix_stop_loss = prix_entree_signal * 1.02
+
+        position = {
+            "id":              f"{cible}_CONT_{id_signal}_{datetime.now(EASTERN).strftime('%Y%m%d_%H%M%S')}",
+            "ticker":          cible,
+            "statut":          "ouvert",
+            "type_signal":     "contagion",   # ← champ PRD requis
+            "id_signal":       id_signal,
+            "emetteur":        sig.get("emetteur"),
+            "direction":       direction,
+            "niveau":          niveau,
+            "date_entree":     datetime.now(EASTERN).isoformat(),
+            "date_horizon_max": date_horizon,
+            "horizon_j":       horizon_max_j,
+            "jours_restants":  horizon_max_j,
+            # Prix
+            "prix_signal":     round(prix_entree_signal, 4),
+            "prix_entree":     couts["prix_execution"],
+            "prix_pre_baisse": round(prix_objectif, 4),   # objectif de sortie
+            "prix_stop_loss":  round(prix_stop_loss, 4),
+            "prix_plus_haut_atteint": couts["prix_execution"],
+            "prix_sortie_partielle": None,
+            # Taille
+            "nb_unites_total":   nb_unites,
+            "nb_unites_restant": nb_unites,
+            "sortie_partielle_faite": False,
+            # Coûts
+            "cout_entree":       couts,
+            "capital_investi":   cout_total,
+            "multiplicateur":    taille_f,
+            # Contexte signal
+            "z20_emetteur":  sig.get("z20_emetteur"),
+            "regime_entree": sig.get("regime_au_signal"),
+            "vix_entree":    None,
+            "z20_entree":    None,
+            "z60_entree":    None,
+            "dessus_sma50_entree": None,
+            # Filtres
+            "raisons_filtres_passes": [f"Contagion {id_signal} Niveau {niveau} — filtre VIX uniquement"],
+            "ajustements_taille":     sig.get("ajustements", []),
+            "tags":                   [f"contagion:{id_signal}", f"niveau:{niveau}",
+                                       f"direction:{direction}", f"emetteur:{sig.get('emetteur')}"],
+            "mae_pct":   0.0,
+            "mae_prix":  couts["prix_execution"],
+        }
+
+        portefeuille["positions_ouvertes"][cible] = position
+        portefeuille["capital_disponible"] = round(capital_dispo - cout_total, 2)
+
+        print(f"      📥 POSITION CONTAGION OUVERTE : {cible} ({direction.upper()})")
+        print(f"         Prix entrée  : {position['prix_entree']:.4f} $")
+        print(f"         Nb unités    : {nb_unites}")
+        print(f"         Capital      : {cout_total:.2f} $")
+        print(f"         Objectif     : {prix_objectif:.4f} $")
+        print(f"         Horizon max  : {date_horizon} ({horizon_max_j}j)")
+        print(f"         Taille       : {taille_f:.2f}x  (Niveau {niveau})")
+        nouvelles += 1
+
+    print(f"\n   → {nouvelles} position(s) de contagion ouverte(s)")
+    print(f"   → Capital disponible : {portefeuille['capital_disponible']:.2f} $")
+
+
 # ── Actions principales ────────────────────────────────────────────────────────
 
 def action_evaluer(portefeuille: dict, trades_log: list, capital: float):
@@ -896,9 +1066,14 @@ def action_surveiller(portefeuille: dict, trades_log: list):
             fermer_position(position, prix_actuel, sortie, portefeuille, trades_log)
         else:
             # Mise à jour jours restants
+            # Les trades de contagion stockent horizon_j dans la position elle-même
             date_entree = datetime.fromisoformat(position["date_entree"])
             jours_ecoules = (datetime.now(EASTERN) - date_entree).days
-            jours_restants = PROFILS[ticker]["horizon_j"] - jours_ecoules
+            horizon_j = (
+                position.get("horizon_j")              # contagion : stocké dans la position
+                or PROFILS.get(ticker, {}).get("horizon_j", 20)  # mean reversion
+            )
+            jours_restants = horizon_j - jours_ecoules
             position["jours_restants"] = jours_restants
             print(f"   ↳ Position conservée | {jours_restants}j restants | "
                   f"Objectif: {position['prix_pre_baisse']:.4f} $ | "
@@ -957,13 +1132,14 @@ def main():
     parser = argparse.ArgumentParser(description="TMX v2 — Simulateur Paper Trading")
     parser.add_argument(
         "--action",
-        choices=["evaluer", "surveiller", "rapport", "cycle"],
+        choices=["evaluer", "surveiller", "rapport", "cycle", "contagion"],
         default="cycle",
         help=(
-            "evaluer   = évaluer signaux du scan et ouvrir positions\n"
+            "evaluer    = évaluer signaux du scan et ouvrir positions mean reversion\n"
+            "contagion  = évaluer signaux de contagion J+1 (contagion_pending.json)\n"
             "surveiller = surveiller positions ouvertes et fermer si critères atteints\n"
-            "rapport   = afficher métriques section 9\n"
-            "cycle     = evaluer + surveiller (défaut)"
+            "rapport    = afficher métriques section 9\n"
+            "cycle      = contagion + evaluer + surveiller (défaut)"
         ),
     )
     parser.add_argument(
@@ -975,7 +1151,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 65)
-    print("  TMX v2 — Simulateur Paper Trading")
+    print("  TMX v2 — Simulateur Paper Trading  (PRD v3.0)")
     print(f"  Action : {args.action.upper()}")
     print("=" * 65)
 
@@ -989,9 +1165,15 @@ def main():
         portefeuille["capital_disponible"] = args.capital
 
     try:
+        # Contagion J+1 en premier — trades issus du scan précédent
+        if args.action in ("contagion", "cycle"):
+            action_evaluer_contagion(portefeuille, trades_log)
+
+        # Mean reversion — signaux du scan courant
         if args.action in ("evaluer", "cycle"):
             action_evaluer(portefeuille, trades_log, args.capital)
 
+        # Surveillance de toutes les positions ouvertes (MR + contagion)
         if args.action in ("surveiller", "cycle"):
             action_surveiller(portefeuille, trades_log)
 
