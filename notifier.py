@@ -28,19 +28,16 @@ EASTERN = ZoneInfo("America/Toronto")
 
 Z60_SEUIL_CONFIRMATION = -1.5
 
+# PRD v3.0 — 7 FNBs actifs uniquement.
+# XEG, ZAG, XGD, XIT, XMA retirés (indicateurs contextuels, sans profil de trading).
 UNIVERSE_PROFILS = {
-    "XIU.TO": {"profil": "rapide"},
+    "XIU.TO": {"profil": "moyen"},
     "XFN.TO": {"profil": "moyen"},
-    "XEG.TO": {"profil": "lent"},
-    "XUT.TO": {"profil": "rapide"},
-    "XIT.TO": {"profil": "rapide"},
-    "XRE.TO": {"profil": "lent"},
-    "XMA.TO": {"profil": "moyen"},
+    "XUT.TO": {"profil": "moyen"},
+    "XRE.TO": {"profil": "moyen"},
     "XIN.TO": {"profil": "rapide"},
-    "XHC.TO": {"profil": "moyen"},
+    "XHC.TO": {"profil": "rapide"},
     "XST.TO": {"profil": "rapide"},
-    "XGD.TO": {"profil": "moyen"},
-    "ZAG.TO": {"profil": "lent"},
 }
 
 
@@ -85,6 +82,62 @@ def _calculer_taille(
         taille /= 2
 
     return round(taille, 4)
+
+
+# ── Bloc contagion HTML ───────────────────────────────────────────────────────
+
+def _construire_bloc_contagion(rapport: dict) -> str:
+    """
+    Génère un bloc HTML listant les signaux de contagion détectés.
+    Retourne une chaîne vide si rapport["signaux_contagion"] est absent ou vide.
+    Champs attendus par signal : ticker (émetteur), type_signal, seuil_contagion,
+    cible (optionnel), taille (optionnel).
+    """
+    signaux_c = rapport.get("signaux_contagion", [])
+    if not signaux_c:
+        return ""
+
+    lignes = ""
+    for sc in signaux_c:
+        emetteur  = sc.get("ticker", "?")
+        type_sig  = sc.get("type_signal", "?")
+        seuil_c   = sc.get("seuil_contagion", "?")
+        cible     = sc.get("cible", "—")
+        taille    = sc.get("taille")
+        taille_str = f"{taille:.2f}x" if taille is not None else "—"
+
+        lignes += f"""
+        <tr>
+          <td style="padding:8px;font-weight:bold;">{emetteur}</td>
+          <td style="padding:8px;">{type_sig}</td>
+          <td style="padding:8px;text-align:center;">{seuil_c}</td>
+          <td style="padding:8px;text-align:center;">{cible}</td>
+          <td style="padding:8px;text-align:center;font-weight:bold;">{taille_str}</td>
+        </tr>"""
+
+    return f"""
+      <div style="background:#fef9e7;padding:10px 16px 0;
+                  border:1px solid #f9e79f;margin-top:8px;">
+        <p style="margin:0 0 6px;font-size:13px;font-weight:bold;color:#7d6608;">
+          ⚡ Signaux de contagion détectés
+        </p>
+        <table width="100%" cellspacing="0"
+               style="border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:#f7dc6f;color:#333;">
+              <th style="padding:7px;text-align:left;">Émetteur</th>
+              <th style="padding:7px;">Type</th>
+              <th style="padding:7px;">Seuil</th>
+              <th style="padding:7px;">Cible</th>
+              <th style="padding:7px;">Taille</th>
+            </tr>
+          </thead>
+          <tbody>{lignes}</tbody>
+        </table>
+        <p style="font-size:11px;color:#999;margin:6px 0 8px;">
+          Signal de contagion — surveiller uniquement, pas d'action automatique.
+        </p>
+      </div>"""
 
 
 # ── Construction du courriel HTML ─────────────────────────────────────────────
@@ -210,6 +263,9 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
         &nbsp;|&nbsp;
         ajustement : {rapport['filtre_D']['ajustement']}
       </div>
+
+      <!-- Signaux de contagion (rapport["signaux_contagion"]) -->
+      {_construire_bloc_contagion(rapport)}
 
       <!-- Blocs contexte news (un par signal, injectés par news_agent.py) -->
       {"".join((blocs_news or {}).values()) if blocs_news else ""}
