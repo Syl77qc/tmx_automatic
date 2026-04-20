@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNBLab — Monitoring Contagion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #0d0f11;
+      --bg2:    #131619;
+      --bg3:    #1a1e22;
+      --bg4:    #20262c;
+      --border: #2a3038;
+      --gold:   #e8c97e;
+      --gold2:  #c9a84c;
+      --text1:  #e8eaed;
+      --text2:  #9aa0a6;
+      --text3:  #5f6368;
+      --green:  #4ade80;
+      --red:    #f87171;
+      --amber:  #f59e0b;
+      --blue:   #60a5fa;
+      --mono:   'DM Mono', monospace;
+      --sans:   'DM Sans', sans-serif;
+      --serif:  'Fraunces', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text1); font-family: var(--sans); font-size: 14px; line-height: 1.6; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { color: var(--gold2); }
+
+    /* Nav */
+    .nav { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; align-items: center; gap: 32px; height: 52px; }
+    .nav-brand { font-family: var(--serif); font-size: 18px; color: var(--gold); margin-right: 16px; }
+    .nav a { font-size: 13px; color: var(--text2); padding: 4px 0; border-bottom: 2px solid transparent; }
+    .nav a:hover, .nav a.active { color: var(--text1); border-bottom-color: var(--gold); }
+
+    /* Header */
+    .page-header { padding: 32px 32px 0; }
+    .page-title { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--gold); margin-bottom: 6px; }
+    .page-subtitle { color: var(--text2); font-size: 13px; }
+    .status-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .status-pill { font-family: var(--mono); font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid; }
+    .sp-green  { color: var(--green);  border-color: var(--green);  background: #052e0a; }
+    .sp-amber  { color: var(--amber);  border-color: var(--amber);  background: #2d1a00; }
+    .sp-red    { color: var(--red);    border-color: var(--red);    background: #2d0505; }
+    .sp-blue   { color: var(--blue);   border-color: var(--blue);   background: #051a2d; }
+    .sp-gray   { color: var(--text2);  border-color: var(--border); background: var(--bg3); }
+
+    /* Métriques */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; padding: 24px 32px; }
+    .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; }
+    .metric-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+    .metric-value { font-family: var(--mono); font-size: 26px; font-weight: 400; }
+    .metric-ok   { color: var(--green); }
+    .metric-warn { color: var(--amber); }
+    .metric-neu  { color: var(--text1); }
+
+    /* Sections */
+    .section { padding: 0 32px 32px; }
+    .section-header { font-family: var(--serif); font-size: 16px; color: var(--gold); margin: 24px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 10px; }
+    .section-sub { font-family: var(--sans); font-size: 12px; color: var(--text3); }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { background: var(--bg3); color: var(--text2); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:hover { background: var(--bg3); }
+    tbody td { padding: 9px 12px; }
+    .r { text-align: right; }
+    .c { text-align: center; }
+
+    /* Badges */
+    .badge { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 3px; border: 1px solid; }
+    .b-signal { color: var(--green); border-color: var(--green); background: #052e0a; }
+    .b-ctx     { color: var(--text3); border-color: var(--border); background: var(--bg3); }
+    .b-watch   { color: var(--amber); border-color: var(--amber); background: #2d1a00; }
+    .badge-win  { font-size: 11px; color: var(--green); }
+    .badge-loss { font-size: 11px; color: var(--red); }
+    .win  { color: var(--green); font-family: var(--mono); }
+    .loss { color: var(--red);   font-family: var(--mono); }
+    .var-pos { color: var(--green); font-family: var(--mono); }
+    .var-neg { color: var(--red);   font-family: var(--mono); }
+    .z-signal { color: var(--gold);  font-family: var(--mono); }
+    .z-watch  { color: var(--amber); font-family: var(--mono); }
+
+    /* Niveaux */
+    .niv-1 { color: var(--green); font-family: var(--mono); font-size: 11px; }
+    .niv-2 { color: var(--blue);  font-family: var(--mono); font-size: 11px; }
+    .niv-3 { color: var(--text3); font-family: var(--mono); font-size: 11px; }
+
+    /* Érosion */
+    .ero-ok   { color: var(--green); font-size: 11px; font-family: var(--mono); }
+    .ero-mod  { color: var(--amber); font-size: 11px; font-family: var(--mono); }
+    .ero-warn { color: var(--red);   font-size: 11px; font-family: var(--mono); }
+
+    /* Empty state */
+    .empty-state { padding: 40px; text-align: center; color: var(--text3); }
+    .empty-state .big { font-family: var(--mono); font-size: 28px; margin-bottom: 12px; color: var(--border); }
+
+    /* Footer */
+    .footer { padding: 24px 32px; border-top: 1px solid var(--border); color: var(--text3); font-size: 12px; font-family: var(--mono); display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-brand">FNBLab</span>
+  <a href="index.html">Dashboard</a>
+  <a href="systeme.html">Système</a>
+  <a href="fondements.html">Fondements théoriques</a>
+  <a href="analyses.html">Analyses quantitatives</a>
+  <a href="resultats.html">Résultats</a>
+  <a href="contagion.html" class="active">Contagion</a>
+  <a href="apropos.html">À propos</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-title">Contagion inter-FNB</div>
+  <div class="page-subtitle">Signaux S1–S4 déployés · S5 en veille · PRD v3.0 §5bis</div>
+  <div class="status-bar">
+    <span class="status-pill sp-green">VIX 14.2 — Risk-on</span>
+    <span class="status-pill sp-blue">⚡ 1 signal(s) pending J+1</span>
+    
+    <span class="status-pill sp-gray">2 trade(s) fermé(s)</span>
+    <span class="status-pill sp-gray">Mis à jour 2026-04-20 06:44</span>
+  </div>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-label">Hit rate global</div>
+    <div class="metric-value metric-warn">50%</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Rend. moyen / trade</div>
+    <div class="metric-value metric-ok">+0.56%</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">P&amp;L net total</div>
+    <div class="metric-value metric-neu">+113.00 $</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Trades fermés</div>
+    <div class="metric-value metric-neu">2</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Pending J+1</div>
+    <div class="metric-value metric-ok">1</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Positions ouvertes</div>
+    <div class="metric-value metric-neu">0</div>
+  </div>
+</div>
+
+<div class="section">
+
+  <div class="section-header">
+    Signaux configurés
+    <span class="section-sub">S1–S4 déployés · S5 en veille (n=14)</span>
+  </div>
+  <table>
+    <thead><tr>
+      <th>ID</th><th>Paire</th><th class="c">Statut</th><th class="c">Niveau</th>
+      <th class="r">p perm.</th><th class="c">Stabilité</th><th class="c">Érosion</th>
+      <th class="r">n trades</th><th class="r">Hit rate</th><th class="r">Rend. moy.</th>
+    </tr></thead>
+    <tbody>
+        <tr>
+          <td style="font-family:var(--mono);font-weight:600">S1</td>
+          <td>XRE → XIN</td>
+          <td class="c"><span class="badge b-signal">🟢 ACTIF</span></td>
+          <td class="c"><span class="niv-1">Niv. 1</span></td>
+          <td class="r" style="font-family:var(--mono)">0,000</td>
+          <td class="c" style="font-family:var(--mono)">4/4</td>
+          <td class="c"><span class="ero-ok">FAIBLE</span></td>
+          <td class="r">1</td>
+          <td class="r">100%</td>
+          <td class="r">+1.45%</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--mono);font-weight:600">S2</td>
+          <td>XEG → XFN</td>
+          <td class="c"><span class="badge b-signal">🟢 ACTIF</span></td>
+          <td class="c"><span class="niv-2">Niv. 2</span></td>
+          <td class="r" style="font-family:var(--mono)">—</td>
+          <td class="c" style="font-family:var(--mono)">3/3</td>
+          <td class="c"><span class="ero-ok">FAIBLE</span></td>
+          <td class="r">—</td>
+          <td class="r">—</td>
+          <td class="r">—</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--mono);font-weight:600">S3</td>
+          <td>XUT → XIN</td>
+          <td class="c"><span class="badge b-signal">🟢 ACTIF</span></td>
+          <td class="c"><span class="niv-1">Niv. 1</span></td>
+          <td class="r" style="font-family:var(--mono)">0,002</td>
+          <td class="c" style="font-family:var(--mono)">3/4</td>
+          <td class="c"><span class="ero-mod">MODÉRÉ</span></td>
+          <td class="r">1</td>
+          <td class="r">0%</td>
+          <td class="r">-0.32%</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--mono);font-weight:600">S4</td>
+          <td>XUT → XFN</td>
+          <td class="c"><span class="badge b-signal">🟢 ACTIF</span></td>
+          <td class="c"><span class="niv-1">Niv. 1</span></td>
+          <td class="r" style="font-family:var(--mono)"><0,001</td>
+          <td class="c" style="font-family:var(--mono)">3/4</td>
+          <td class="c"><span class="ero-mod">MODÉRÉ</span></td>
+          <td class="r">—</td>
+          <td class="r">—</td>
+          <td class="r">—</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--mono);font-weight:600">S5</td>
+          <td>XEG → XIU</td>
+          <td class="c"><span class="badge b-ctx">⏸ VEILLE</span></td>
+          <td class="c"><span class="niv-3">Niv. 3</span></td>
+          <td class="r" style="font-family:var(--mono)">—</td>
+          <td class="c" style="font-family:var(--mono)">irrég.</td>
+          <td class="c"><span class="ero-mod">MODÉRÉ</span></td>
+          <td class="r">—</td>
+          <td class="r">—</td>
+          <td class="r">—</td>
+        </tr></tbody>
+  </table>
+
+  <div class="section-header">
+    Pending — Exécution J+1
+    <span class="section-sub">Signaux déclenchés aujourd'hui, trade à l'ouverture demain</span>
+  </div>
+  
+        <table>
+          <thead><tr>
+            <th>Signal</th><th>Paire</th><th>Déclenché J</th><th>Exécution J+1</th>
+            <th class="r">z20 émet.</th><th class="r">Taille</th><th>Régime</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--mono);font-weight:600">S1</td>
+              <td>XRE → XIN</td>
+              <td style="font-family:var(--mono);color:var(--text3)">2026-04-20</td>
+              <td style="font-family:var(--mono);color:var(--gold)">2026-04-21</td>
+              <td class="r"><span class="z-watch">-2.87</span></td>
+              <td class="r" style="font-family:var(--mono)">0.75</td>
+              <td style="font-size:11px;color:var(--text3)">risk_on</td>
+            </tr></tbody>
+        </table>
+
+  <div class="section-header">
+    Positions ouvertes
+    <span class="section-sub">Horizon max 3 jours de bourse</span>
+  </div>
+  <div class="empty-state"><div class="big">[ ]</div><div>Aucune position de contagion ouverte.</div></div>
+
+  <div class="section-header">
+    Historique — Trades fermés
+    <span class="section-sub">Du plus récent au plus ancien</span>
+  </div>
+  
+        <table>
+          <thead><tr>
+            <th>Signal</th><th>Paire</th><th>Récepteur</th>
+            <th>Entrée</th><th>Sortie</th>
+            <th class="r">Rend. %</th><th class="r">P&amp;L $</th>
+            <th>Raison sortie</th><th>Résultat</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--mono);font-weight:600">S3</td>
+              <td>XUT → XIN</td>
+              <td style="font-family:var(--mono)">XIN.TO</td>
+              <td style="font-family:var(--mono);color:var(--text3)">2026-04-15</td>
+              <td style="font-family:var(--mono);color:var(--text3)">2026-04-16</td>
+              <td class="r"><span class="loss">-0.32%</span></td>
+              <td class="r"><span class="loss">-32.00$</span></td>
+              <td style="font-size:11px;color:var(--text3)">horizon_max_atteint</td>
+              <td><span class="badge-loss">✗ perte</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono);font-weight:600">S1</td>
+              <td>XRE → XIN</td>
+              <td style="font-family:var(--mono)">XIN.TO</td>
+              <td style="font-family:var(--mono);color:var(--text3)">2026-04-10</td>
+              <td style="font-family:var(--mono);color:var(--text3)">2026-04-11</td>
+              <td class="r"><span class="win">+1.45%</span></td>
+              <td class="r"><span class="win">+145.00$</span></td>
+              <td style="font-size:11px;color:var(--text3)">horizon_max_atteint</td>
+              <td><span class="badge-win">✓ gain</span></td>
+            </tr></tbody>
+        </table>
+
+</div>
+
+<div class="footer">
+  <span>FNBLab · TMX v2 · PRD v3.0</span>
+  <span>Données : yfinance · Paper trading · 2026</span>
+</div>
+
+</body>
+</html>
