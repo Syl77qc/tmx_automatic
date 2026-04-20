@@ -18,10 +18,6 @@ import json
 import os
 import argparse
 import warnings
-import urllib.request
-import urllib.error
-import urllib.parse
-import base64
 from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -76,180 +72,69 @@ WINDOW_MOYEN           = 60
 Z60_SEUIL_CONFIRMATION = -1.5
 JOURS_HISTORIQUE       = 100
 
-# ── Questrade API ──────────────────────────────────────────────────────────────
-
-QUESTRADE_SYMBOLS = {
-    "XIU.TO": "XIU", "XFN.TO": "XFN", "XEG.TO": "XEG",
-    "XUT.TO": "XUT", "XIT.TO": "XIT", "XRE.TO": "XRE",
-    "XMA.TO": "XMA", "XIN.TO": "XIN", "XHC.TO": "XHC",
-    "XST.TO": "XST", "XGD.TO": "XGD", "ZAG.TO": "ZAG",
-}
-
-
-def _questrade_auth(refresh_token: str) -> dict | None:
-    url = "https://login.questrade.com/oauth2/token"
-    payload = urllib.parse.urlencode({
-        "grant_type":    "refresh_token",
-        "refresh_token": refresh_token,
-    }).encode("utf-8")
-    try:
-        req = urllib.request.Request(url, data=payload, method="POST")
-        req.add_header("Content-Type", "application/x-www-form-urlencoded")
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read())
-        return {
-            "access_token":      data["access_token"],
-            "api_server":        data["api_server"].rstrip("/"),
-            "new_refresh_token": data["refresh_token"],
-        }
-    except urllib.error.HTTPError as e:
-        try:
-            corps = e.read().decode("utf-8", errors="replace")
-        except Exception:
-            corps = "(corps illisible)"
-        print(f"   ⚠️  Questrade auth échouée : HTTP {e.code} {e.reason}")
-        print(f"   ⚠️  URL appelée : {url}")
-        print(f"   ⚠️  Réponse Questrade : {corps[:400]}")
-        print(f"   ⚠️  Token utilisé (10 premiers chars) : {refresh_token[:10]}...")
-        return None
-    except urllib.error.URLError as e:
-        print(f"   ⚠️  Questrade auth — erreur réseau : {e.reason}")
-        return None
-    except Exception as e:
-        print(f"   ⚠️  Questrade auth — erreur inattendue : {type(e).__name__} : {e}")
-        return None
-
-
-def _github_update_secret(repo: str, secret_name: str, secret_value: str, gh_pat: str) -> bool:
-    try:
-        url_key = f"https://api.github.com/repos/{repo}/actions/secrets/public-key"
-        headers = {
-            "Authorization": f"token {gh_pat}",
-            "Accept": "application/vnd.github+json",
-        }
-        req = urllib.request.Request(url_key, headers=headers)
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            key_data = json.loads(resp.read())
-        key_id      = key_data["key_id"]
-        pub_key_b64 = key_data["key"]
-        try:
-            from nacl import encoding, public as nacl_public
-            pub_key_bytes = base64.b64decode(pub_key_b64)
-            sealed_box    = nacl_public.SealedBox(nacl_public.PublicKey(pub_key_bytes))
-            encrypted     = sealed_box.encrypt(secret_value.encode("utf-8"))
-            encrypted_b64 = base64.b64encode(encrypted).decode("utf-8")
-        except ImportError:
-            print("   ⚠️  PyNaCl non installé — rotation token skippée.")
-            return False
-        url_secret = f"https://api.github.com/repos/{repo}/actions/secrets/{secret_name}"
-        payload = json.dumps({
-            "encrypted_value": encrypted_b64,
-            "key_id": key_id,
-        }).encode("utf-8")
-        req2 = urllib.request.Request(
-            url_secret, data=payload, headers=headers, method="PUT"
-        )
-        with urllib.request.urlopen(req2, timeout=10) as resp2:
-            return resp2.status in (201, 204)
-    except Exception as e:
-        print(f"   ⚠️  Mise à jour GitHub Secret échouée : {e}")
-        return False
-
-
-def _questrade_get_closes(auth: dict, tickers: list[str], jours: int) -> pd.DataFrame | None:
-    try:
-        access_token = auth["access_token"]
-        api_server   = auth["api_server"]
-        headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Content-Type":  "application/json",
-        }
-        fin   = date.today()
-        debut = fin - timedelta(days=jours)
-        symbol_ids = {}
-        for ticker in tickers:
-            sym = QUESTRADE_SYMBOLS.get(ticker, ticker.replace(".TO", ""))
-            url = f"{api_server}/v1/symbols/search?prefix={sym}&exchange=TSX"
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                data = json.loads(resp.read())
-            symbols = data.get("symbols", [])
-            if symbols:
-                symbol_ids[ticker] = symbols[0]["symbolId"]
-        if not symbol_ids:
-            return None
-        all_closes = {}
-        for ticker, sym_id in symbol_ids.items():
-            url = (
-                f"{api_server}/v1/markets/candles/{sym_id}"
-                f"?startTime={debut.isoformat()}T00:00:00-05:00"
-                f"&endTime={fin.isoformat()}T23:59:59-05:00"
-                f"&interval=OneDay"
-            )
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = json.loads(resp.read())
-            candles = data.get("candles", [])
-            if candles:
-                closes = {
-                    pd.Timestamp(c["start"][:10]): c["close"]
-                    for c in candles if c.get("close")
-                }
-                all_closes[ticker] = closes
-        if not all_closes:
-            return None
-        dfs = {}
-        for ticker, closes_dict in all_closes.items():
-            s = pd.Series(closes_dict, name="Close")
-            s.index = pd.DatetimeIndex(s.index)
-            dfs[ticker] = pd.DataFrame({"Close": s})
-        combined = pd.concat(dfs, axis=1)
-        combined.columns = pd.MultiIndex.from_tuples(
-            [(ticker, "Close") for ticker in dfs.keys()]
-        )
-        combined = combined.dropna(how="all")
-        return combined
-    except Exception as e:
-        print(f"   ⚠️  Questrade données échouées : {e}")
-        return None
-
-
 # ── Téléchargement des données ─────────────────────────────────────────────────
 
+def verifier_fraicheur(data: pd.DataFrame, tickers: list[str]) -> dict:
+    """
+    Garde de fraîcheur PRD v3.0 — vérifie que les données yfinance sont à jour.
+    Retourne un dict avec le statut global et le détail par FNB.
+
+    Un FNB est "périmé" si sa dernière date de clôture != aujourd'hui ET que
+    le marché était ouvert aujourd'hui (lundi-vendredi, heure HE passée 16h00).
+    Les weekends et jours fériés ne déclenchent pas d'alerte.
+    """
+    aujourd_hui   = date.today()
+    maintenant_et = datetime.now(ZoneInfo("America/Toronto"))
+    # Le marché ferme à 16h00 HE — avant 16h00, la clôture du jour n'est pas encore publiée
+    marche_clos_aujourd_hui = (
+        aujourd_hui.weekday() < 5          # lundi-vendredi
+        and maintenant_et.hour >= 16       # après la clôture
+    )
+
+    details: dict[str, dict] = {}
+    fnbs_perimes: list[str]  = []
+
+    for ticker in tickers:
+        try:
+            closes = extraire_closes(data, ticker)
+            if closes.empty:
+                details[ticker] = {"statut": "ERREUR", "derniere_date": None, "perime": True}
+                fnbs_perimes.append(ticker)
+                continue
+            derniere_date = closes.index[-1].date()
+            perime = marche_clos_aujourd_hui and (derniere_date != aujourd_hui)
+            details[ticker] = {
+                "statut":       "PÉRIMÉ" if perime else "OK",
+                "derniere_date": derniere_date.isoformat(),
+                "perime":        perime,
+            }
+            if perime:
+                fnbs_perimes.append(ticker)
+        except Exception as e:
+            details[ticker] = {"statut": "ERREUR", "derniere_date": None, "perime": True, "erreur": str(e)}
+            fnbs_perimes.append(ticker)
+
+    alerte = len(fnbs_perimes) > 0
+    return {
+        "alerte":          alerte,
+        "fnbs_perimes":    fnbs_perimes,
+        "n_perimes":       len(fnbs_perimes),
+        "aujourd_hui":     aujourd_hui.isoformat(),
+        "marche_clos_aujourd_hui": marche_clos_aujourd_hui,
+        "details":         details,
+    }
+
+
 def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) -> pd.DataFrame:
-    refresh_token = os.environ.get("QUESTRADE_REFRESH_TOKEN", "")
-    gh_pat        = os.environ.get("GH_PAT", "")
-    repo          = os.environ.get("GITHUB_REPOSITORY", "")
-
-    print(f"   🔑 QUESTRADE_REFRESH_TOKEN : {'✅ présent' if refresh_token else '❌ ABSENT'}")
-    print(f"   🔑 GH_PAT                  : {'✅ présent' if gh_pat else '❌ ABSENT'}")
-    print(f"   🔑 GITHUB_REPOSITORY       : {repo or '❌ ABSENT'}")
-
-    if refresh_token:
-        print(f"\n📥 Téléchargement des données ({jours} jours) via Questrade API...")
-        auth = _questrade_auth(refresh_token)
-        if auth:
-            new_token = auth["new_refresh_token"]
-            if gh_pat and repo and new_token != refresh_token:
-                ok = _github_update_secret(repo, "QUESTRADE_REFRESH_TOKEN", new_token, gh_pat)
-                if ok:
-                    print("   🔄 Refresh token Questrade renouvelé automatiquement.")
-                else:
-                    print("   ⚠️  Rotation token échouée — token actuel encore valide.")
-            data = _questrade_get_closes(auth, tickers, jours)
-            if data is not None and len(data) >= WINDOW_COURT:
-                print(f"   ✅ {len(data)} jours récupérés via Questrade (temps réel)")
-                return data
-            else:
-                print("   ⚠️  Données Questrade insuffisantes — bascule sur yfinance.")
-        else:
-            print("   ⚠️  Authentification Questrade échouée — bascule sur yfinance.")
-    else:
-        print(f"\n📥 Téléchargement des données ({jours} jours) via yfinance...")
-
+    """
+    Télécharge l'historique de prix via yfinance (source unique permanente — PRD v3.0).
+    Questrade abandonné définitivement (Cloudflare + termes API).
+    La garde de fraîcheur est vérifiée après le téléchargement — voir verifier_fraicheur().
+    """
+    print(f"\n📥 Téléchargement des données ({jours} jours) via yfinance...")
     fin   = date.today()
     debut = fin - timedelta(days=jours)
-    data = yf.download(
+    data  = yf.download(
         tickers=tickers,
         start=debut.strftime("%Y-%m-%d"),
         end=fin.strftime("%Y-%m-%d"),
@@ -258,9 +143,9 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
         auto_adjust=True,
         progress=False,
     )
-    data = data.dropna(how="all")
+    data    = data.dropna(how="all")
     n_jours = len(data)
-    print(f"   ✅ {n_jours} jours de bourse récupérés via yfinance ({debut} → {fin})")
+    print(f"   ✅ {n_jours} jours de bourse récupérés ({debut} → {fin})")
     if n_jours < WINDOW_MOYEN:
         print(f"   ⚠️  {n_jours} jours < {WINDOW_MOYEN} requis pour z-score 60j — résultats partiels")
     return data
@@ -523,7 +408,7 @@ def analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, mode):
 
 # ── Rapport ────────────────────────────────────────────────────────────────────
 
-def generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info):
+def generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info, fraicheur):
     signaux = [r for r in resultats if r.get("signal")]
     for s in signaux:
         s["tags"].append(cluster_info["tag"])
@@ -537,6 +422,8 @@ def generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info):
     return {
         "scan_at": maintenant.isoformat(),
         "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
+        "alerte_fraicheur": fraicheur["alerte"],
+        "fraicheur":        fraicheur,
         "heures_marche": est_heures_marche,
         "regime_marche": regime_info, "filtre_D": filtre_D,
         "jour_bdc": jour_bdc, "cluster": cluster_info,
@@ -555,6 +442,9 @@ def afficher_console(rapport):
     print("=" * 65)
     icone_regime = {"risk_on": "🟢", "neutre": "🟡", "risk_off": "🔴"}.get(regime["regime"], "⚪")
     print(f"\n  {icone_regime} Régime VIX : {regime.get('description', 'inconnu')}")
+    fraicheur = rapport.get("fraicheur", {})
+    if fraicheur.get("alerte"):
+        print(f"  🚨 DONNÉES PÉRIMÉES : {', '.join(fraicheur.get('fnbs_perimes', []))}")
     if bdc["est_jour_bdc"]:
         print(f"  ⚠️  Jour BdC ({bdc['type_bdc']}) : {bdc['regle']}")
     n = cluster["n_signaux"]
@@ -610,6 +500,19 @@ def main():
     tickers = list(UNIVERSE.keys())
     data    = telecharger_historique(tickers)
 
+    # ── Garde de fraîcheur (PRD v3.0) ─────────────────────────────────────────
+    print("\n🕐 Vérification de la fraîcheur des données...")
+    fraicheur = verifier_fraicheur(data, tickers)
+    if fraicheur["alerte"]:
+        print(f"   🚨 ALERTE FRAÎCHEUR — {fraicheur['n_perimes']} FNB(s) avec données périmées :")
+        for t in fraicheur["fnbs_perimes"]:
+            det = fraicheur["details"][t]
+            print(f"      {t:<10} dernière date : {det['derniere_date']} — statut : {det['statut']}")
+        print("   🚨 Le rapport de scan sera marqué alerte_fraicheur=True.")
+        print("   🚨 Une notification courriel sera envoyée.")
+    else:
+        print(f"   ✅ Données à jour (dernière clôture : {fraicheur['aujourd_hui']})")
+
     print("\n📊 Récupération du VIX...")
     vix         = telecharger_vix()
     regime_info = determiner_regime_vix(vix)
@@ -637,7 +540,7 @@ def main():
 
     signaux_actifs = [r for r in resultats if r.get("signal")]
     cluster_info   = compter_cluster(signaux_actifs)
-    rapport        = generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info)
+    rapport        = generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info, fraicheur)
     afficher_console(rapport)
 
     output_path = Path(args.output)
@@ -650,6 +553,8 @@ def main():
     try:
         from notifier import envoyer_notifications
         envoyer_notifications(rapport)
+        if rapport.get("alerte_fraicheur"):
+            print("   🚨 Notification fraîcheur envoyée (données périmées).")
     except Exception as e:
         print(f"   ⚠️  Notifications : {e}")
 
