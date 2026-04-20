@@ -17,6 +17,10 @@ on:
           - live
           - daily
 
+env:
+  # Forcer Node.js 24 dès maintenant — obligatoire à partir du 2 juin 2026
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   scanner:
     name: Scan z-scores + Notifications + Dashboard
@@ -28,13 +32,13 @@ jobs:
     steps:
       # ── 1. Checkout ──────────────────────────────────────────────────────────
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_PAT }}
 
       # ── 2. Python ────────────────────────────────────────────────────────────
       - name: Setup Python
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
@@ -43,7 +47,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ── 3. Scanner ───────────────────────────────────────────────────────────
+      # ── 3. Initialiser les fichiers JSON manquants (premier run) ─────────────
+      # contagion_pending.json et contagion_trades.json n'existent pas au premier
+      # run — on les crée vides pour éviter le fatal pathspec error au git add
+      - name: Initialiser fichiers JSON manquants
+        run: |
+          [ -f contagion_pending.json ] || echo '[]' > contagion_pending.json
+          [ -f contagion_trades.json  ] || echo '[]' > contagion_trades.json
+          [ -f positions.json         ] || echo '{"capital_initial":100000,"capital_disponible":100000,"positions_ouvertes":{}}' > positions.json
+          [ -f trades_log.json        ] || echo '[]' > trades_log.json
+
+      # ── 4. Scanner ───────────────────────────────────────────────────────────
       - name: Run scanner
         env:
           GMAIL_USER:               ${{ secrets.GMAIL_USER }}
@@ -59,11 +73,11 @@ jobs:
           MODE=${{ github.event.inputs.mode || 'live' }}
           python scanner.py --mode $MODE --output scan_results.json
 
-      # ── 4. Dashboard ─────────────────────────────────────────────────────────
+      # ── 5. Dashboard ─────────────────────────────────────────────────────────
       - name: Generate dashboard
         run: python generate_dashboard.py
 
-      # ── 5. Commit données JSON (à chaque run) ────────────────────────────────
+      # ── 6. Commit données JSON (à chaque run) ────────────────────────────────
       # scan_results.json, positions.json, trades_log.json : continuité paper trading mean reversion
       # contagion_pending.json : signaux de contagion en attente d'exécution J+1 (PRD v3.0 §5bis)
       # contagion_trades.json  : historique des trades de contagion fermés
@@ -72,13 +86,13 @@ jobs:
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
           git add scan_results.json positions.json trades_log.json \
-                  contagion_pending.json contagion_trades.json || true
+                  contagion_pending.json contagion_trades.json
           git diff --staged --quiet || git commit -m "Scan data $(date -u '+%Y-%m-%d %H:%M') UTC"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
-      # ── 6. Commit dashboard HTML (seulement si changement réel) ──────────────
+      # ── 7. Commit dashboard HTML (seulement si changement réel) ──────────────
       # index.html, resultats.html et contagion.html ne sont poussés QUE s'ils ont changé.
       # Sans cette séparation, chaque push déclenche un workflow
       # "pages build and deployment" qui fait throttler le schedule par GitHub.
@@ -95,10 +109,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
-      # ── 7. Artifacts (toujours) ───────────────────────────────────────────────
+      # ── 8. Artifacts (toujours) ───────────────────────────────────────────────
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v4
         with:
           name: scan-results-${{ github.run_id }}
           path: |
