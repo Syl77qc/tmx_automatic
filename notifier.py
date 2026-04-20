@@ -1,6 +1,16 @@
 """
-TMX v2 — Module de notification
-Envoie un courriel HTML + SMS quand un signal z-score est détecté.
+TMX v2 — Module de notification  [PRD v3.0]
+Envoie un courriel HTML + SMS pour :
+  - Signaux mean reversion détectés (FNBs actifs)
+  - Chocs de contagion en pending J+1 (FNBs contextuels ≥ 2,5σ)
+  - Alerte fraîcheur des données yfinance
+
+Changements v2.1 → v3.0 :
+  - UNIVERSE_PROFILS aligné (profils Wilcoxon, FNBs contextuels)
+  - Profil "lent" retiré de _calculer_taille
+  - Section contagion dans le courriel (chocs XRE/XUT/XEG/XIT)
+  - Alerte fraîcheur envoyée même sans signal mean reversion
+  - Sujet du courriel adapté selon le type d'événement
 
 Secrets GitHub requis :
   GMAIL_USER          : adresse Gmail expéditrice
@@ -24,22 +34,31 @@ from zoneinfo import ZoneInfo
 
 EASTERN = ZoneInfo("America/Toronto")
 
-# ── Constantes PRD (dupliquées ici pour éviter import circulaire) ──────────────
+# ── Profils FNB v3.0 (dupliqués ici pour éviter import circulaire) ────────────
+# Horizons corrigés par Wilcoxon (25 ans, 2001-2026)
+# Profil "lent" retiré — aucun FNB actif lent en v3.0
+# Flag "actif" : False = indicateur contextuel, aucune position mean reversion
 
-Z60_SEUIL_CONFIRMATION = -1.5
-
-# PRD v3.0 — 7 FNBs actifs uniquement.
-# XEG, ZAG, XGD, XIT, XMA retirés (indicateurs contextuels, sans profil de trading).
 UNIVERSE_PROFILS = {
-    "XIU.TO": {"profil": "moyen"},
-    "XFN.TO": {"profil": "moyen"},
-    "XUT.TO": {"profil": "moyen"},
-    "XRE.TO": {"profil": "moyen"},
-    "XIN.TO": {"profil": "rapide"},
-    "XHC.TO": {"profil": "rapide"},
-    "XST.TO": {"profil": "rapide"},
+    # FNBs actifs — trading mean reversion
+    "XIU.TO": {"profil": "moyen",  "actif": True},
+    "XFN.TO": {"profil": "moyen",  "actif": True},
+    "XUT.TO": {"profil": "moyen",  "actif": True},
+    "XRE.TO": {"profil": "moyen",  "actif": True},
+    "XIN.TO": {"profil": "rapide", "actif": True},
+    "XHC.TO": {"profil": "rapide", "actif": True},
+    "XST.TO": {"profil": "rapide", "actif": True},
+    # FNBs contextuels — z-scores calculés, chocs alimentent la contagion
+    "XEG.TO": {"profil": None, "actif": False},
+    "ZAG.TO": {"profil": None, "actif": False},
+    "XGD.TO": {"profil": None, "actif": False},
+    "XIT.TO": {"profil": None, "actif": False},
+    "XMA.TO": {"profil": None, "actif": False},
 }
 
+
+# ── Constante locale ──────────────────────────────────────────────────────────
+Z60_SEUIL_CONFIRMATION = -1.5
 
 # ── Calcul de taille (autonome, sans dépendance à scanner.py) ─────────────────
 
@@ -55,10 +74,15 @@ def _calculer_taille(
     """
     Reproduit la logique de calculer_multiplicateur_taille de scanner.py.
     Maintenu ici pour éviter l'import circulaire.
-    PRD sections 7.1, 7.2, 7.3.
+    PRD sections 7.1, 7.2, 7.3 — profil "lent" retiré en v3.0.
     """
-    profil = UNIVERSE_PROFILS.get(ticker, {}).get("profil", "moyen")
-    base = {"rapide": 1.00, "moyen": 0.75, "lent": 0.50}[profil]
+    cfg = UNIVERSE_PROFILS.get(ticker, {})
+    # Les FNBs contextuels ne génèrent pas de signal mean reversion
+    if not cfg.get("actif", True) or cfg.get("profil") is None:
+        return 0.0
+
+    profil = cfg["profil"]
+    base = {"rapide": 1.00, "moyen": 0.75}[profil]
 
     az20 = abs(z20)
     if az20 >= 3.0:
@@ -84,59 +108,99 @@ def _calculer_taille(
     return round(taille, 4)
 
 
-# ── Bloc contagion HTML ───────────────────────────────────────────────────────
+# ── Section contagion pour le courriel ────────────────────────────────────────
 
-def _construire_bloc_contagion(rapport: dict) -> str:
+# Table de correspondance émetteur → signaux contagion (PRD v3.0 §5bis)
+_CONTAGION_LABELS = {
+    "XRE.TO": [("S1", "XIN.TO", "Achat XIN J+1", "Niv.1 · p perm.=0,000")],
+    "XUT.TO": [("S3", "XIN.TO", "Achat XIN J+1", "Niv.1 · p perm.=0,002"),
+               ("S4", "XFN.TO", "Achat XFN J+1", "Niv.1 · p perm.<0,001")],
+    "XEG.TO": [("S2", "XFN.TO", "Achat XFN J+1", "Niv.2 · stabilité tridécennale")],
+    "XIT.TO": [("S5", "XIN.TO", "Achat XIN J+1 ⚠", "Niv.3 — EN VEILLE, non déployé")],
+}
+
+
+def _construire_section_contagion_html(chocs: list[dict]) -> str:
     """
-    Génère un bloc HTML listant les signaux de contagion détectés.
-    Retourne une chaîne vide si rapport["signaux_contagion"] est absent ou vide.
-    Champs attendus par signal : ticker (émetteur), type_signal, seuil_contagion,
-    cible (optionnel), taille (optionnel).
+    Génère le bloc HTML listant les chocs contagion détectés (pending J+1).
+    chocs : liste de dicts FNB avec choc_contagion=True issus de rapport["tous_fnbs"]
     """
-    signaux_c = rapport.get("signaux_contagion", [])
-    if not signaux_c:
+    if not chocs:
         return ""
 
     lignes = ""
-    for sc in signaux_c:
-        emetteur  = sc.get("ticker", "?")
-        type_sig  = sc.get("type_signal", "?")
-        seuil_c   = sc.get("seuil_contagion", "?")
-        cible     = sc.get("cible", "—")
-        taille    = sc.get("taille")
-        taille_str = f"{taille:.2f}x" if taille is not None else "—"
+    for fnb in chocs:
+        ticker = fnb["ticker"]
+        z20    = fnb.get("z20")
+        z20_str = f"{z20:+.2f}" if z20 is not None else "?"
+        signaux_associes = _CONTAGION_LABELS.get(ticker, [])
 
-        lignes += f"""
-        <tr>
-          <td style="padding:8px;font-weight:bold;">{emetteur}</td>
-          <td style="padding:8px;">{type_sig}</td>
-          <td style="padding:8px;text-align:center;">{seuil_c}</td>
-          <td style="padding:8px;text-align:center;">{cible}</td>
-          <td style="padding:8px;text-align:center;font-weight:bold;">{taille_str}</td>
+        for sid, recepteur, action, note in signaux_associes:
+            lignes += f"""
+        <tr style="background:#f0f7ff;">
+          <td style="padding:9px;font-weight:bold;font-size:14px;
+                     color:#1a56db;">{ticker}</td>
+          <td style="padding:9px;color:#c0392b;font-weight:bold;">
+            {z20_str}</td>
+          <td style="padding:9px;font-family:monospace;font-size:12px;
+                     color:#6366f1;">{sid}</td>
+          <td style="padding:9px;">→ <strong>{recepteur}</strong></td>
+          <td style="padding:9px;color:#059669;">{action}</td>
+          <td style="padding:9px;font-size:11px;color:#6b7280;">{note}</td>
         </tr>"""
 
+    if not lignes:
+        return ""
+
     return f"""
-      <div style="background:#fef9e7;padding:10px 16px 0;
-                  border:1px solid #f9e79f;margin-top:8px;">
-        <p style="margin:0 0 6px;font-size:13px;font-weight:bold;color:#7d6608;">
-          ⚡ Signaux de contagion détectés
-        </p>
-        <table width="100%" cellspacing="0"
-               style="border-collapse:collapse;font-size:13px;">
-          <thead>
-            <tr style="background:#f7dc6f;color:#333;">
-              <th style="padding:7px;text-align:left;">Émetteur</th>
-              <th style="padding:7px;">Type</th>
-              <th style="padding:7px;">Seuil</th>
-              <th style="padding:7px;">Cible</th>
-              <th style="padding:7px;">Taille</th>
-            </tr>
-          </thead>
-          <tbody>{lignes}</tbody>
-        </table>
-        <p style="font-size:11px;color:#999;margin:6px 0 8px;">
-          Signal de contagion — surveiller uniquement, pas d'action automatique.
-        </p>
+      <!-- Signaux de contagion -->
+      <div style="background:#eff6ff;padding:10px 14px;margin-top:12px;
+                  border-left:4px solid #3b82f6;font-size:13px;font-weight:bold;
+                  color:#1e40af;">
+        ⚡ Signaux de contagion J+1 détectés
+      </div>
+      <table width="100%" cellspacing="0"
+             style="border-collapse:collapse;border:1px solid #bfdbfe;
+                    font-size:13px;margin-top:0;">
+        <thead>
+          <tr style="background:#1e40af;color:white;">
+            <th style="padding:9px;text-align:left;">Émetteur</th>
+            <th style="padding:9px;">Z20</th>
+            <th style="padding:9px;">Signal</th>
+            <th style="padding:9px;">Récepteur</th>
+            <th style="padding:9px;">Action J+1</th>
+            <th style="padding:9px;">Note</th>
+          </tr>
+        </thead>
+        <tbody>{lignes}</tbody>
+      </table>
+      <div style="font-size:11px;color:#6b7280;padding:6px 14px;
+                  background:#eff6ff;border:1px solid #bfdbfe;border-top:none;">
+        Les signaux de contagion sont gérés automatiquement par contagion.py.
+        Exécution à l'ouverture J+1 si le régime VIX le permet.
+      </div>"""
+
+
+def _construire_alerte_fraicheur_html(fraicheur: dict) -> str:
+    """Génère le bloc HTML d'alerte fraîcheur des données yfinance."""
+    if not fraicheur.get("alerte"):
+        return ""
+
+    fnbs_perimes = fraicheur.get("fnbs_perimes", [])
+    lignes = "".join(
+        f'<li style="font-family:monospace;">{t} — dernière date : '
+        f'{fraicheur["details"].get(t, {}).get("derniere_date", "?")}</li>'
+        for t in fnbs_perimes
+    )
+
+    return f"""
+      <!-- Alerte fraîcheur -->
+      <div style="background:#fff1f2;padding:12px 16px;margin-top:12px;
+                  border-left:4px solid #ef4444;font-size:13px;color:#991b1b;">
+        🚨 <strong>ALERTE DONNÉES PÉRIMÉES</strong><br>
+        Les données yfinance suivantes ne correspondent pas à la date d'aujourd'hui.
+        Les signaux calculés ce cycle sont potentiellement incorrects.<br><br>
+        <ul style="margin:6px 0 0 16px;padding:0;">{lignes}</ul>
       </div>"""
 
 
@@ -150,6 +214,15 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
     cluster = rapport["cluster"]
     bdc     = rapport["jour_bdc"]
     signaux = rapport["signaux"]
+
+    # Chocs contagion (FNBs contextuels avec choc_contagion=True)
+    chocs_contagion = [
+        fnb for fnb in rapport.get("tous_fnbs", [])
+        if fnb.get("choc_contagion") and fnb.get("role") == "contextuel"
+    ]
+
+    # Alerte fraîcheur
+    fraicheur = rapport.get("fraicheur", {})
 
     icone_regime = {
         "risk_on":  "🟢",
@@ -170,7 +243,7 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
           </td>
         </tr>"""
 
-    # Lignes de signaux
+    # Lignes de signaux mean reversion
     lignes_signaux = ""
     for s in signaux:
         z20_str = f"{s['z20']:+.2f}" if s.get("z20") is not None else "N/A"
@@ -197,14 +270,24 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
           <td style="padding:10px;font-weight:bold;font-size:15px;">
             {s['ticker']}
           </td>
-          <td style="padding:10px;">{s['profil']}</td>
+          <td style="padding:10px;">{s.get('profil', '—')}</td>
           <td style="padding:10px;color:{couleur_z20};font-weight:bold;
               font-size:15px;">{z20_str}</td>
           <td style="padding:10px;">{z60_str}</td>
           <td style="padding:10px;text-align:center;">{sma_str}</td>
-          <td style="padding:10px;text-align:center;">{s['seuil_effectif']:.1f}</td>
+          <td style="padding:10px;text-align:center;">{s.get('seuil_effectif', '—')}</td>
           <td style="padding:10px;font-weight:bold;">{taille:.2f}x</td>
         </tr>"""
+
+    # Titre de l'en-tête selon le type d'événement
+    if fraicheur.get("alerte") and not signaux and not chocs_contagion:
+        titre_header = "🚨 TMX v2 — Données périmées"
+    elif signaux and chocs_contagion:
+        titre_header = "📈 TMX v2 — Signal + Contagion"
+    elif chocs_contagion and not signaux:
+        titre_header = "⚡ TMX v2 — Signal de contagion J+1"
+    else:
+        titre_header = "📈 TMX v2 — Alerte Signal"
 
     html = f"""
     <html>
@@ -214,7 +297,7 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
       <!-- En-tête -->
       <div style="background:#1a1a2e;color:white;padding:18px 20px;
                   border-radius:6px 6px 0 0;">
-        <h2 style="margin:0;font-size:20px;">📈 TMX v2 — Alerte Signal</h2>
+        <h2 style="margin:0;font-size:20px;">{titre_header}</h2>
         <p style="margin:5px 0 0;font-size:13px;color:#aab;">
           {now} HE
         </p>
@@ -227,45 +310,22 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
           {regime.get('description', 'inconnu')}
         </span>
         &nbsp;&nbsp;|&nbsp;&nbsp;
-        <span>{icone_cluster} <strong>{cluster['n_signaux']} signal(s)</strong>
+        <span>{icone_cluster} <strong>{cluster['n_signaux']} signal(s) MR</strong>
           — {cluster['action']}
         </span>
+        {"&nbsp;&nbsp;|&nbsp;&nbsp;⚡ <strong>" + str(len(chocs_contagion)) + " choc(s) contagion</strong>" if chocs_contagion else ""}
       </div>
 
-      <!-- Tableau des signaux -->
-      <table width="100%" cellspacing="0"
-             style="border-collapse:collapse;border:1px solid #dee2e6;
-                    font-size:14px;margin-top:0;">
-        <thead>
-          <tr style="background:#2c3e50;color:white;">
-            <th style="padding:10px;text-align:left;">FNB</th>
-            <th style="padding:10px;">Profil</th>
-            <th style="padding:10px;">Z20</th>
-            <th style="padding:10px;">Z60</th>
-            <th style="padding:10px;">SMA50</th>
-            <th style="padding:10px;">Seuil</th>
-            <th style="padding:10px;">Taille</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bloc_bdc}
-          {lignes_signaux}
-        </tbody>
-      </table>
+      {"<!-- Alerte fraîcheur -->" + _construire_alerte_fraicheur_html(fraicheur) if fraicheur.get("alerte") else ""}
+
+      {"<!-- Tableau signaux MR -->" if signaux else ""}
+      {"<table width='100%' cellspacing='0' style='border-collapse:collapse;border:1px solid #dee2e6;font-size:14px;margin-top:12px;'><thead><tr style='background:#2c3e50;color:white;'><th style='padding:10px;text-align:left;'>FNB</th><th style='padding:10px;'>Profil</th><th style='padding:10px;'>Z20</th><th style='padding:10px;'>Z60</th><th style='padding:10px;'>SMA50</th><th style='padding:10px;'>Seuil</th><th style='padding:10px;'>Taille</th></tr></thead><tbody>" + bloc_bdc + lignes_signaux + "</tbody></table>" if signaux else ""}
 
       <!-- Filtre D -->
-      <div style="background:#eaf4fb;padding:12px 16px;
-                  border:1px solid #bee3f8;font-size:13px;">
-        <strong>Filtre D (XIU) :</strong>
-        {rapport['filtre_D']['contexte']}
-        &nbsp;—&nbsp;
-        rendement : {rapport['filtre_D'].get('xiu_rendement_pct', 'N/A')}%
-        &nbsp;|&nbsp;
-        ajustement : {rapport['filtre_D']['ajustement']}
-      </div>
+      {"<div style='background:#eaf4fb;padding:12px 16px;border:1px solid #bee3f8;font-size:13px;margin-top:8px;'><strong>Filtre D (XIU) :</strong> " + rapport['filtre_D']['contexte'] + " &nbsp;—&nbsp; rendement : " + str(rapport['filtre_D'].get('xiu_rendement_pct', 'N/A')) + "% &nbsp;|&nbsp; ajustement : " + rapport['filtre_D']['ajustement'] + "</div>" if signaux else ""}
 
-      <!-- Signaux de contagion (rapport["signaux_contagion"]) -->
-      {_construire_bloc_contagion(rapport)}
+      <!-- Section contagion -->
+      {_construire_section_contagion_html(chocs_contagion)}
 
       <!-- Blocs contexte news (un par signal, injectés par news_agent.py) -->
       {"".join((blocs_news or {}).values()) if blocs_news else ""}
@@ -289,10 +349,15 @@ def _construire_courriel_html(rapport: dict, blocs_news: dict | None = None) -> 
 def _construire_sms(rapport: dict) -> str:
     """
     Génère un message ultra-court pour SMS (160 caractères max).
-    Format : TMX [icone] [FNB z=XX] | [FNB z=XX]
+    Format MR : TMX [icone] [FNB z=XX] | [FNB z=XX]
+    Format contagion : TMX ⚡ XRE→XIN J+1 | XUT→XFN J+1
     """
     signaux = rapport["signaux"]
     regime  = rapport["regime_marche"]
+    chocs   = [
+        fnb for fnb in rapport.get("tous_fnbs", [])
+        if fnb.get("choc_contagion") and fnb.get("role") == "contextuel"
+    ]
 
     icone = {"risk_on": "🟢", "neutre": "🟡", "risk_off": "🔴"}.get(
         regime["regime"], "⚪"
@@ -302,6 +367,16 @@ def _construire_sms(rapport: dict) -> str:
     for s in signaux:
         z20_str = f"{s['z20']:+.1f}" if s.get("z20") is not None else "?"
         parties.append(f"{s['ticker']} z={z20_str}")
+
+    # Ajouter les chocs contagion en résumé court
+    for fnb in chocs:
+        ticker = fnb["ticker"]
+        for sid, recepteur, _, _ in _CONTAGION_LABELS.get(ticker, []):
+            parties.append(f"⚡{sid}:{ticker[:3]}→{recepteur[:3]}")
+
+    # Alerte fraîcheur
+    if rapport.get("alerte_fraicheur"):
+        parties.insert(0, "🚨DONNÉES PÉRIMÉES")
 
     corps = " | ".join(parties)
     msg   = f"TMX v2 {icone} {corps}"
@@ -313,28 +388,41 @@ def _construire_sms(rapport: dict) -> str:
 
 def envoyer_notifications(rapport: dict) -> bool:
     """
-    Envoie courriel HTML + SMS si des signaux qualifiés sont présents.
-    Appelle news_agent.py pour enrichir chaque signal avec le contexte actualité.
+    Envoie courriel HTML + SMS si au moins une condition est remplie :
+      - Signaux mean reversion détectés (FNBs actifs)
+      - Chocs de contagion en pending J+1 (FNBs contextuels ≥ 2,5σ)
+      - Alerte fraîcheur des données yfinance
 
-    Conditions de blocage (PRD section 5) :
-      - Aucun signal détecté
-      - Cluster 7+ FNBs (action = "bloquer")
+    Condition de blocage (PRD section 5) :
+      - Cluster 7+ FNBs (action = "bloquer") — bloque les MR seulement,
+        pas les alertes fraîcheur ni les signaux de contagion
 
     Retourne True si au moins un envoi a réussi.
     """
 
-    # Vérifications préalables
-    if rapport.get("n_signaux", 0) == 0:
-        print("   ℹ️  Aucun signal — notifications non envoyées.")
+    n_signaux_mr = rapport.get("n_signaux", 0)
+    alerte_fraicheur = rapport.get("alerte_fraicheur", False)
+    chocs_contagion  = [
+        fnb for fnb in rapport.get("tous_fnbs", [])
+        if fnb.get("choc_contagion") and fnb.get("role") == "contextuel"
+    ]
+    cluster_bloque = rapport.get("cluster", {}).get("action") == "bloquer"
+
+    # Rien à envoyer ?
+    if not alerte_fraicheur and not chocs_contagion and n_signaux_mr == 0:
+        print("   ℹ️  Aucun signal, choc contagion ou alerte fraîcheur — notifications non envoyées.")
         return False
 
-    if rapport.get("cluster", {}).get("action") == "bloquer":
-        print("   ⛔ Notifications bloquées — cluster 7+ FNBs (PRD filtre A).")
+    if cluster_bloque and not alerte_fraicheur and not chocs_contagion:
+        print("   ⛔ Notifications MR bloquées — cluster 7+ FNBs (PRD filtre A).")
         return False
 
-    # ── Appel à l'agent news pour chaque signal ───────────────────────────────
-    blocs_news_html = {}   # { ticker: bloc_html }
-    blocs_news_sms  = {}   # { ticker: bloc_sms  }
+    if cluster_bloque and n_signaux_mr > 0:
+        print("   ⛔ Signaux MR bloqués (cluster 7+) — contagion/fraîcheur envoyés quand même.")
+
+    # ── Appel à l'agent news pour chaque signal MR ────────────────────────────
+    blocs_news_html = {}
+    blocs_news_sms  = {}
 
     try:
         from news_agent import obtenir_contexte_news
@@ -342,10 +430,8 @@ def envoyer_notifications(rapport: dict) -> bool:
         for signal in rapport.get("signaux", []):
             ticker = signal["ticker"]
             z20    = signal["z20"]
-
             if z20 is None:
                 continue
-
             bloc_html, bloc_sms = obtenir_contexte_news(ticker, z20, rapport)
             if bloc_html:
                 blocs_news_html[ticker] = bloc_html
@@ -373,16 +459,25 @@ def envoyer_notifications(rapport: dict) -> bool:
     html_body = _construire_courriel_html(rapport, blocs_news_html)
     sms_body  = _construire_sms(rapport)
 
-    # Enrichir le SMS avec les verdicts news si disponibles
     if blocs_news_sms:
         verdicts = " | ".join(blocs_news_sms.values())
         sms_body = (sms_body + " | " + verdicts)[:160]
 
+    # Sujet adapté selon le type d'événement
     now_str = datetime.now(EASTERN).strftime("%Y-%m-%d %H:%M")
-    sujet_courriel = (
-        f"🚨 TMX v2 — {rapport['n_signaux']} signal(s) — {now_str} HE"
-    )
-    sujet_sms = f"TMX v2 — {rapport['n_signaux']} signal(s)"
+    if alerte_fraicheur and n_signaux_mr == 0 and not chocs_contagion:
+        sujet_courriel = f"🚨 TMX v2 — Données périmées — {now_str} HE"
+        sujet_sms      = "TMX v2 — Données périmées"
+    elif chocs_contagion and n_signaux_mr == 0:
+        n_c = len(chocs_contagion)
+        sujet_courriel = f"⚡ TMX v2 — {n_c} choc(s) contagion J+1 — {now_str} HE"
+        sujet_sms      = f"TMX v2 — {n_c} contagion J+1"
+    elif chocs_contagion and n_signaux_mr > 0:
+        sujet_courriel = f"📈⚡ TMX v2 — {n_signaux_mr} signal(s) + {len(chocs_contagion)} contagion — {now_str} HE"
+        sujet_sms      = f"TMX v2 — MR+contagion"
+    else:
+        sujet_courriel = f"🚨 TMX v2 — {n_signaux_mr} signal(s) — {now_str} HE"
+        sujet_sms      = f"TMX v2 — {n_signaux_mr} signal(s)"
 
     # ── Liste des destinataires ───────────────────────────────────────────────
     destinataires = []
