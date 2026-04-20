@@ -53,7 +53,6 @@ jobs:
           NOTIF_SMS_ROGERS:         ${{ secrets.NOTIF_SMS_ROGERS }}
           NOTIF_SMS_TELUS:          ${{ secrets.NOTIF_SMS_TELUS }}
           GROQ_API_KEY:             ${{ secrets.GROQ_API_KEY }}
-          QUESTRADE_REFRESH_TOKEN:  ${{ secrets.QUESTRADE_REFRESH_TOKEN }}
           GH_PAT:                   ${{ secrets.GH_PAT }}
           GITHUB_REPOSITORY:        ${{ github.repository }}
         run: |
@@ -65,13 +64,15 @@ jobs:
         run: python generate_dashboard.py
 
       # ── 5. Commit données JSON (à chaque run) ────────────────────────────────
-      # scan_results.json, positions.json, trades_log.json sont toujours poussés
-      # car ils servent à la continuité du paper trading entre les runs.
+      # scan_results.json, positions.json, trades_log.json : continuité paper trading mean reversion
+      # contagion_pending.json : signaux de contagion en attente d'exécution J+1 (PRD v3.0 §5bis)
+      # contagion_trades.json  : historique des trades de contagion fermés
       - name: Commit scan data
         run: |
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
-          git add scan_results.json positions.json trades_log.json || true
+          git add scan_results.json positions.json trades_log.json \
+                  contagion_pending.json contagion_trades.json || true
           git diff --staged --quiet || git commit -m "Scan data $(date -u '+%Y-%m-%d %H:%M') UTC"
           git push
         env:
@@ -104,4 +105,6 @@ jobs:
             scan_results.json
             positions.json
             trades_log.json
+            contagion_pending.json
+            contagion_trades.json
           retention-days: 7
