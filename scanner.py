@@ -1,21 +1,17 @@
 """
-TMX v2 — Scanner de signaux z-scores  (PRD v3.0)
-Phase 1, item 2 : Calcul des z-scores 20j et 60j sur les 12 FNBs
+TMX v2 — Scanner de signaux z-scores  [PRD v3.0]
+Calcul des z-scores 20j et 60j sur 12 FNBs (7 actifs + 5 contextuels)
 
-Source de données permanente : yfinance (PRD v3.0 — C7)
-  Questrade abandonné définitivement (blocage Cloudflare, conditions API).
-  Le code Questrade est conservé mais ne s'active qu'en présence du secret.
+Source de données : yfinance (source unique permanente)
+                   Questrade abandonné définitivement (Cloudflare + termes API)
 
-Garde de fraîcheur (PRD v3.0 — C7) :
-  Si la dernière date des données ≠ date du jour → alerte console + courriel.
+Univers actif (7 FNBs) : XIU, XFN, XUT, XRE, XIN, XHC, XST
+Univers contextuel (5 FNBs) : XEG, ZAG, XGD, XIT, XMA
+  → z-scores calculés mais aucun signal mean reversion généré
+  → chocs ≥ 2,5 é.-t. transmis au module de contagion (contagion.py)
 
 Secrets GitHub requis :
-  GMAIL_USER          : adresse Gmail expéditrice (pour alertes fraîcheur)
-  GMAIL_APP_PASSWORD  : mot de passe d'application Google
-  NOTIF_EMAIL_1       : destinataire courriel 1
-  NOTIF_EMAIL_2       : destinataire courriel 2 (optionnel)
-  QUESTRADE_REFRESH_TOKEN : (obsolète — conservé pour compatibilité)
-  GH_PAT              : Personal Access Token GitHub (scope: repo)
+  GH_PAT : Personal Access Token GitHub (scope: repo) — pour les mises à jour du dashboard
 """
 
 import json
@@ -38,10 +34,13 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 EASTERN = ZoneInfo("America/Toronto")
 
-# ── PRD v3.0 — C1 + C2 : Univers réduit à 7 FNBs actifs, horizons Wilcoxon corrigés ──
-
-# FNBs actifs — signal mean reversion validé, positions ouvertes par le simulateur
-UNIVERSE = {
+# ── Univers de trading actif — signaux mean reversion validés (Wilcoxon, 25 ans) ──
+# Horizons horizon_j corrigés PRD v3.0 (Wilcoxon) vs v2.2 :
+#   XIU : 10 → 20  |  XFN : 15 → 20  |  XUT : 10 → 20 (marginal)
+#   XRE : 25 → 20  |  XHC : 15 → 10  |  XST : 10 → 15  |  XIN : 10 ✓ confirmé
+# Profils : "rapide" (≤15j) / "moyen" (20j) — profil "lent" retiré (aucun FNB lent actif)
+# Blocs : "marche_large" {XIU, XFN, XIN} | "taux" {XRE, XUT} — bloc "metaux" retiré
+UNIVERSE_ACTIF = {
     "XIU.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20, "bloc": "marche_large"},
     "XFN.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20, "bloc": "marche_large"},
     "XUT.TO": {"profil": "moyen",  "seuil_min": 2.0, "horizon_j": 20, "bloc": "taux"},
@@ -51,15 +50,24 @@ UNIVERSE = {
     "XST.TO": {"profil": "rapide", "seuil_min": 2.0, "horizon_j": 15, "bloc": None},
 }
 
-# FNBs contextuels — z-scores calculés, pas de position mean reversion.
-# Leurs chocs ≥ seuil activent les signaux de contagion (PRD section 5bis).
+# ── Univers contextuel — z-scores calculés, aucun signal mean reversion ──────────
+# Ces FNBs n'ont pas de signal Wilcoxon validé (ou sont fondamentalement biaisés).
+# Leurs chocs ≥ 2,5 é.-t. alimentent les signaux de contagion (contagion.py).
+#   XEG : émetteur contagion vers XFN (S2) et XIU (S5)
+#   XRE_ctx → non : XRE est actif; XUT : émetteur contagion vers XIN (S3) et XFN (S4)
+#   XIT : 87 % baisses fondamentales (Shopify) — pas de rebond systématique
+#   XGD, XMA : aucun signal Wilcoxon validé
+#   ZAG : baromètre taux — aucun signal mean reversion validé
 UNIVERSE_CONTEXTUEL = {
-    "XEG.TO": {"seuil_contagion": 2.5, "bloc": None},      # émetteur S2, S5
-    "ZAG.TO": {"seuil_contagion": 2.5, "bloc": "taux"},
-    "XGD.TO": {"seuil_contagion": 2.5, "bloc": "metaux"},
-    "XIT.TO": {"seuil_contagion": 2.5, "bloc": None},
-    "XMA.TO": {"seuil_contagion": 2.5, "bloc": "metaux"},
+    "XEG.TO": {"profil": None, "seuil_min": None, "horizon_j": None, "bloc": None},
+    "ZAG.TO": {"profil": None, "seuil_min": None, "horizon_j": None, "bloc": "taux"},
+    "XGD.TO": {"profil": None, "seuil_min": None, "horizon_j": None, "bloc": "metaux"},
+    "XIT.TO": {"profil": None, "seuil_min": None, "horizon_j": None, "bloc": None},
+    "XMA.TO": {"profil": None, "seuil_min": None, "horizon_j": None, "bloc": "metaux"},
 }
+
+# ── UNIVERSE — fusion pour compatibilité (iteration, téléchargement, dashboard) ─
+UNIVERSE = {**UNIVERSE_ACTIF, **UNIVERSE_CONTEXTUEL}
 
 VIX_RISK_ON            = 16.0
 VIX_RISK_OFF           = 25.0
@@ -255,106 +263,7 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
     print(f"   ✅ {n_jours} jours de bourse récupérés via yfinance ({debut} → {fin})")
     if n_jours < WINDOW_MOYEN:
         print(f"   ⚠️  {n_jours} jours < {WINDOW_MOYEN} requis pour z-score 60j — résultats partiels")
-
-    # ── Garde de fraîcheur (PRD v3.0 — C7) ──────────────────────────────────
-    # Vérifier que chaque FNB a bien des données du jour courant.
-    # Les marchés canadiens ferment à 16h HE — après 16h15 on attend le prix de clôture.
-    # En dehors des heures de marché (week-end, avant ouverture) on vérifie le dernier
-    # jour de bourse disponible vs la date de la dernière entrée dans le DataFrame.
-    maintenant_et   = datetime.now(EASTERN)
-    est_jour_bourse = maintenant_et.weekday() < 5  # lundi=0 … vendredi=4
-    apres_cloture   = maintenant_et.hour >= 16
-
-    # La dernière date attendue : aujourd'hui si c'est un jour de bourse et après 16h,
-    # sinon on ne déclenche pas l'alerte (données du dernier jour de bourse = normales).
-    if est_jour_bourse and apres_cloture:
-        fnbs_perimes = []
-        for ticker in tickers:
-            try:
-                closes = data[ticker]["Close"].dropna()
-                if closes.empty:
-                    fnbs_perimes.append((ticker, "aucune donnée"))
-                    continue
-                derniere_date = closes.index[-1].date()
-                if derniere_date != fin:
-                    fnbs_perimes.append((ticker, str(derniere_date)))
-            except KeyError:
-                fnbs_perimes.append((ticker, "colonne absente"))
-
-        if fnbs_perimes:
-            print("\n" + "!" * 65)
-            print("  🚨 ALERTE FRAÎCHEUR DONNÉES yfinance")
-            for t, d in fnbs_perimes:
-                print(f"     {t:<10} dernière date disponible : {d}  (attendu : {fin})")
-            print("!" * 65 + "\n")
-            _envoyer_alerte_fraicheur(fnbs_perimes, fin)
-        else:
-            print(f"   ✅ Fraîcheur confirmée — toutes les données sont à jour ({fin})")
-    else:
-        print(f"   ℹ️  Garde fraîcheur non déclenchée "
-              f"({'hors heures de clôture' if est_jour_bourse else 'hors jour de bourse'})")
-
     return data
-
-
-def _envoyer_alerte_fraicheur(fnbs_perimes: list[tuple], date_attendue: date):
-    """
-    Déclenche une notification courriel via notifier.py lorsque des données
-    yfinance sont périmées (PRD v3.0 — C7 : garde de fraîcheur).
-
-    Forge un rapport minimal compatible avec envoyer_notifications() sans
-    modifier notifier.py.
-    """
-    maintenant = datetime.now(EASTERN)
-    liste_fnbs = ", ".join(f"{t} ({d})" for t, d in fnbs_perimes)
-
-    # Rapport minimal qui passe les vérifications de envoyer_notifications()
-    # On injecte un faux signal pour forcer l'envoi (n_signaux > 0, cluster non bloquant)
-    rapport_fraicheur = {
-        "scan_at":       maintenant.isoformat(),
-        "source_donnees": "yfinance",
-        "heures_marche": True,
-        "regime_marche": {
-            "vix": None,
-            "regime": "inconnu",
-            "description": "N/A — alerte fraîcheur",
-            "tag": "regime:inconnu",
-        },
-        "filtre_D": {
-            "xiu_rendement_pct": None,
-            "contexte": "N/A — alerte fraîcheur",
-            "ajustement": "aucun",
-        },
-        "jour_bdc":  {"est_jour_bdc": False, "type_bdc": None, "tag": "boc:non_BdC", "regle": None},
-        "cluster":   {"n_signaux": 1, "action": "normal", "tag": "cluster:fraicheur"},
-        "n_fnbs_scannes": len(fnbs_perimes),
-        "n_signaux": 1,
-        # Signal synthétique portant l'information d'alerte
-        "signaux": [{
-            "ticker":          "ALERTE_FRAICHEUR",
-            "profil":          "N/A",
-            "seuil_min_base":  0.0,
-            "seuil_effectif":  0.0,
-            "horizon_j":       0,
-            "bloc":            None,
-            "prix_cloture":    0.0,
-            "rendement_jour_pct": None,
-            "z20":             -9.99,   # valeur sentinelle visible dans le courriel
-            "z60":             None,
-            "sma50":           None,
-            "dessus_sma50":    None,
-            "signal":          True,
-            "tags":            [f"FRAICHEUR:{date_attendue}", f"fnbs:{liste_fnbs}"],
-        }],
-        "tous_fnbs": [],
-    }
-
-    try:
-        from notifier import envoyer_notifications
-        print("   📬 Envoi alerte fraîcheur par courriel...")
-        envoyer_notifications(rapport_fraicheur)
-    except Exception as e:
-        print(f"   ⚠️  Alerte fraîcheur — envoi courriel échoué : {e}")
 
 
 def telecharger_vix() -> float | None:
@@ -504,7 +413,8 @@ def calculer_multiplicateur_taille(
 ) -> dict:
     cfg    = UNIVERSE[ticker]
     profil = cfg["profil"]
-    # PRD v3.0 — section 7.2 : profils "rapide" (1.0x) et "moyen" (0.75x) uniquement
+    # Profil "lent" retiré en v3.0 — aucun FNB actif n'a ce profil
+    # Les FNBs contextuels ne doivent jamais atteindre ce calcul
     base   = {"rapide": 1.00, "moyen": 0.75}[profil]
     az20   = abs(z20)
     if az20 >= 3.0:
@@ -534,54 +444,60 @@ def calculer_multiplicateur_taille(
 
 # ── Analyse FNB ────────────────────────────────────────────────────────────────
 
-def analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, mode,
-                 contextuel: bool = False):
-    """
-    Analyse un FNB et retourne son résultat z-score.
-
-    Si contextuel=True (UNIVERSE_CONTEXTUEL) : z-scores calculés mais
-    signal mean reversion toujours False (PRD v3.0 — C1, section 5 Maillon 2).
-    """
-    if contextuel:
-        cfg_source = UNIVERSE_CONTEXTUEL[ticker]
-        profil_str = "contextuel"
-        bloc_str   = cfg_source.get("bloc")
-    else:
-        cfg_source = UNIVERSE[ticker]
-        profil_str = cfg_source["profil"]
-        bloc_str   = cfg_source["bloc"]
-
+def analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, mode):
+    cfg    = UNIVERSE[ticker]
+    est_contextuel = ticker in UNIVERSE_CONTEXTUEL
     closes = extraire_closes(data, ticker)
     if closes.empty or len(closes) < WINDOW_COURT + 1:
         return {"ticker": ticker, "erreur": f"Données insuffisantes ({len(closes)} jours)",
-                "signal": False, "contextuel": contextuel}
+                "signal": False, "role": "contextuel" if est_contextuel else "actif"}
     rendements     = calculer_rendements(closes)
     z20            = calculer_zscore(rendements, WINDOW_COURT)
     z60            = calculer_zscore(rendements, WINDOW_MOYEN)
     sma_info       = calculer_sma50(closes)
     rendement_jour = float(rendements.iloc[-1]) if len(rendements) > 0 else None
 
-    if contextuel:
-        # Les contextuels n'ont pas de seuil mean reversion ni de signal
-        seuil_effectif = cfg_source.get("seuil_contagion", 2.5)
-        signal_actif   = False
-        intraday       = {}
-    else:
-        seuil_effectif = cfg_source["seuil_min"]
-        fnbs_taux      = {"XRE.TO", "XUT.TO", "XFN.TO"}
-        if jour_bdc["type_bdc"] == "RPM" and ticker in fnbs_taux:
-            seuil_effectif += 0.5
-        if filtre_D.get("ajustement") == "seuil+0.5_taille÷1.5":
-            seuil_effectif += 0.5
-        signal_actif = z20 is not None and z20 <= -seuil_effectif
-        intraday = {}
-        if mode == "live" and signal_actif:
-            intraday = calculer_momentum_intraday(ticker)
-
+    # ── FNB contextuel : z-scores calculés, signal mean reversion toujours False ──
+    if est_contextuel:
+        choc_contagion = z20 is not None and z20 <= -2.5
+        return {
+            "ticker":            ticker,
+            "role":              "contextuel",
+            "profil":            None,
+            "seuil_min_base":    None,
+            "seuil_effectif":    None,
+            "horizon_j":         None,
+            "bloc":              cfg["bloc"],
+            "prix_cloture":      float(closes.iloc[-1]),
+            "rendement_jour_pct": round(rendement_jour * 100, 4) if rendement_jour else None,
+            "z20":               round(z20, 4) if z20 is not None else None,
+            "z60":               round(z60, 4) if z60 is not None else None,
+            "sma50":             sma_info.get("sma50"),
+            "dessus_sma50":      sma_info.get("dessus_sma50"),
+            "signal":            False,
+            "choc_contagion":    choc_contagion,  # transmis à contagion.py (Phase 2)
+            "tags":              [f"role:contextuel", f"bloc:{cfg['bloc'] or 'autre'}",
+                                  "choc_contagion:oui" if choc_contagion else "choc_contagion:non"],
+        }
+    if closes.empty or len(closes) < WINDOW_COURT + 1:
+        return {"ticker": ticker, "erreur": f"Données insuffisantes ({len(closes)} jours)", "signal": False}
+    rendements     = calculer_rendements(closes)
+    z20            = calculer_zscore(rendements, WINDOW_COURT)
+    z60            = calculer_zscore(rendements, WINDOW_MOYEN)
+    sma_info       = calculer_sma50(closes)
+    rendement_jour = float(rendements.iloc[-1]) if len(rendements) > 0 else None
+    seuil_effectif = cfg["seuil_min"]
+    fnbs_taux      = {"XRE.TO", "XUT.TO", "XFN.TO"}  # ZAG retiré (contextuel en v3.0)
+    if jour_bdc["type_bdc"] == "RPM" and ticker in fnbs_taux:
+        seuil_effectif += 0.5
+    if filtre_D.get("ajustement") == "seuil+0.5_taille÷1.5":
+        seuil_effectif += 0.5
+    signal_actif = z20 is not None and z20 <= -seuil_effectif
+    intraday = {}
+    if mode == "live" and signal_actif:
+        intraday = calculer_momentum_intraday(ticker)
     tags = [jour_bdc["tag"], regime_info["tag"],
-            f"bloc:{bloc_str or 'autre'}", f"profil:{profil_str}"]
-    if contextuel:
-        tags.append("role:contextuel")
+            f"bloc:{cfg['bloc'] or 'autre'}", f"profil:{cfg['profil']}"]
     if z20 is not None:
         az20 = abs(z20)
         tags.append("z20:2.0-2.49" if az20 < 2.5 else ("z20:2.5-2.99" if az20 < 3.0 else "z20:≥3.0"))
@@ -589,217 +505,26 @@ def analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, mode,
                 else ("z60:faible" if z60 is not None else "z60:N/A"))
     if sma_info["dessus_sma50"] is not None:
         tags.append("trend:SMA50_dessus" if sma_info["dessus_sma50"] else "trend:SMA50_sous")
-
-    if contextuel:
-        resultat = {
-            "ticker":              ticker,
-            "profil":              "contextuel",
-            "contextuel":          True,
-            "seuil_contagion":     seuil_effectif,
-            "seuil_min_base":      seuil_effectif,   # compat. notifier.py
-            "seuil_effectif":      seuil_effectif,
-            "horizon_j":           None,
-            "bloc":                bloc_str,
-            "prix_cloture":        float(closes.iloc[-1]),
-            "rendement_jour_pct":  round(rendement_jour * 100, 4) if rendement_jour else None,
-            "z20":                 round(z20, 4) if z20 is not None else None,
-            "z60":                 round(z60, 4) if z60 is not None else None,
-            "sma50":               sma_info.get("sma50"),
-            "dessus_sma50":        sma_info.get("dessus_sma50"),
-            "signal":              False,   # jamais de signal mean reversion
-            "tags":                tags,
-        }
-    else:
-        resultat = {
-            "ticker":              ticker,
-            "profil":              profil_str,
-            "contextuel":          False,
-            "seuil_min_base":      cfg_source["seuil_min"],
-            "seuil_effectif":      seuil_effectif,
-            "horizon_j":           cfg_source["horizon_j"],
-            "bloc":                bloc_str,
-            "prix_cloture":        float(closes.iloc[-1]),
-            "rendement_jour_pct":  round(rendement_jour * 100, 4) if rendement_jour else None,
-            "z20":                 round(z20, 4) if z20 is not None else None,
-            "z60":                 round(z60, 4) if z60 is not None else None,
-            "sma50":               sma_info.get("sma50"),
-            "dessus_sma50":        sma_info.get("dessus_sma50"),
-            "signal":              signal_actif,
-            "tags":                tags,
-        }
-        if intraday:
-            resultat["intraday"] = intraday
-    return resultat
-
-
-# ── Signaux de contagion inter-FNB (PRD v3.0 — C3, section 5bis) ──────────────
-
-# Définition des 5 signaux validés (PRD section 5bis)
-# Format : (émetteur, seuil_déclencheur, cible, direction, niveau, description)
-SIGNAUX_CONTAGION = [
-    # S1 — XRE → XIN | Niveau 1 | p=0.000 | Prioritaire
-    {
-        "id":          "S1",
-        "emetteur":    "XRE.TO",
-        "seuil":       2.5,
-        "cible":       "XIN.TO",
-        "direction":   "long",
-        "niveau":      1,
-        "taille_base": 0.75,   # 75% de la position de base (Niveau 1)
-        "deployer":    True,
-        "description": "XRE chute ≥ 2.5 é.-t. → acheter XIN J+1",
-    },
-    # S2 — XEG → XFN | Niveau 2 | stabilité tridécennale | Phase 2
-    {
-        "id":          "S2",
-        "emetteur":    "XEG.TO",
-        "seuil":       2.5,
-        "cible":       "XFN.TO",
-        "direction":   "short",
-        "niveau":      2,
-        "taille_base": 0.50,   # 50% de la position de base (Niveau 2)
-        "deployer":    True,
-        "description": "XEG chute ≥ 2.5 é.-t. → shorter XFN J+1",
-    },
-    # S3 — XUT → XIN | Niveau 1 | p=0.002 | Surveiller érosion 2021-26
-    {
-        "id":          "S3",
-        "emetteur":    "XUT.TO",
-        "seuil":       2.5,
-        "cible":       "XIN.TO",
-        "direction":   "long",
-        "niveau":      1,
-        "taille_base": 0.75,
-        "deployer":    True,
-        "description": "XUT chute ≥ 2.5 é.-t. → acheter XIN J+1",
-    },
-    # S4 — XUT → XFN | Niveau 1 | p<0.001 | Phase 2
-    {
-        "id":          "S4",
-        "emetteur":    "XUT.TO",
-        "seuil":       2.5,
-        "cible":       "XFN.TO",
-        "direction":   "long",
-        "niveau":      1,
-        "taille_base": 0.75,
-        "deployer":    True,
-        "description": "XUT chute ≥ 2.5 é.-t. → acheter XFN J+1",
-    },
-    # S5 — XEG → XIU | Niveau 3 | n=14 — NE PAS DÉPLOYER
-    {
-        "id":          "S5",
-        "emetteur":    "XEG.TO",
-        "seuil":       3.0,
-        "cible":       "XIU.TO",
-        "direction":   "short",
-        "niveau":      3,
-        "taille_base": 0.0,    # Niveau 3 = ne pas déployer
-        "deployer":    False,  # Bloqué jusqu'à 2 ans de validation out-of-sample
-        "description": "XEG chute ≥ 3.0 é.-t. → shorter XIU J+1 (VEILLE — ne pas déployer)",
-    },
-]
-
-FICHIER_CONTAGION_PENDING = Path("contagion_pending.json")
-
-
-def detecter_signaux_contagion(
-    resultats_actifs: list[dict],
-    resultats_contextuels: list[dict],
-    regime_info: dict,
-) -> list[dict]:
-    """
-    Détecte les chocs sur les FNBs émetteurs (actifs ET contextuels) et génère
-    des signaux de contagion conditionnels J+1.
-
-    PRD v3.0 section 5bis :
-      - Filtre : régime VIX Maillon 1 uniquement (pas les filtres A-G)
-      - Niveau 3 → loggué mais déployer=False (ne pas ouvrir de position)
-      - Résultat écrit dans contagion_pending.json pour lecture le lendemain matin
-    """
-    # Construire un index z20 par ticker (actifs + contextuels)
-    z20_par_ticker: dict[str, float | None] = {}
-    for r in resultats_actifs + resultats_contextuels:
-        if not r.get("erreur"):
-            z20_par_ticker[r["ticker"]] = r.get("z20")
-
-    regime = regime_info.get("regime", "inconnu")
-    maintenant = datetime.now(EASTERN)
-    signaux_detectes = []
-
-    for sig_def in SIGNAUX_CONTAGION:
-        emetteur = sig_def["emetteur"]
-        z20_em   = z20_par_ticker.get(emetteur)
-
-        if z20_em is None:
-            continue
-
-        # Choc détecté si z20 de l'émetteur ≤ -seuil (baisse anormale)
-        if z20_em > -sig_def["seuil"]:
-            continue
-
-        # Filtre régime VIX (Maillon 1 uniquement — PRD 5bis)
-        if regime == "risk_off":
-            print(f"   ⛔ Contagion {sig_def['id']} détecté mais bloqué — régime risk_off")
-            continue
-
-        # Ajustement taille régime neutre
-        taille = sig_def["taille_base"]
-        ajustements = []
-        if regime == "neutre":
-            taille /= 2
-            ajustements.append("régime_neutre÷2")
-
-        signal_contagion = {
-            "id_signal":   sig_def["id"],
-            "emetteur":    emetteur,
-            "z20_emetteur": round(z20_em, 4),
-            "seuil_declenche": sig_def["seuil"],
-            "cible":       sig_def["cible"],
-            "direction":   sig_def["direction"],
-            "niveau":      sig_def["niveau"],
-            "deployer":    sig_def["deployer"],
-            "taille_finale": round(taille, 4),
-            "ajustements": ajustements,
-            "description": sig_def["description"],
-            "regime_au_signal": regime,
-            "date_signal": maintenant.date().isoformat(),
-            "date_entree_cible": (maintenant.date() + timedelta(days=1)).isoformat(),
-            "horizon_j":   1,       # entrée J+1 ouverture, sortie J+1 clôture
-            "horizon_max_j": 4,     # max 1 + 3 jours additionnels si non profitable
-            "type_signal": "contagion",
-        }
-        signaux_detectes.append(signal_contagion)
-
-        emoji = "🔴" if not sig_def["deployer"] else ("🟡" if sig_def["niveau"] == 2 else "🟢")
-        print(f"   {emoji} Contagion {sig_def['id']} : {emetteur} z20={z20_em:+.2f} "
-              f"→ {sig_def['cible']} ({sig_def['direction'].upper()}) "
-              f"taille={taille:.2f}x "
-              f"{'[VEILLE — non déployé]' if not sig_def['deployer'] else ''}")
-
-    return signaux_detectes
-
-
-def ecrire_contagion_pending(signaux: list[dict]):
-    """
-    Persiste les signaux de contagion détectés dans contagion_pending.json.
-    Ce fichier est lu le lendemain matin par simulateur.action_evaluer_contagion().
-    """
-    payload = {
-        "genere_le":      datetime.now(EASTERN).isoformat(),
-        "n_signaux":      len(signaux),
-        "signaux":        signaux,
+    resultat = {
+        "ticker": ticker, "role": "actif", "profil": cfg["profil"],
+        "seuil_min_base": cfg["seuil_min"], "seuil_effectif": seuil_effectif,
+        "horizon_j": cfg["horizon_j"], "bloc": cfg["bloc"],
+        "prix_cloture": float(closes.iloc[-1]),
+        "rendement_jour_pct": round(rendement_jour * 100, 4) if rendement_jour else None,
+        "z20": round(z20, 4) if z20 is not None else None,
+        "z60": round(z60, 4) if z60 is not None else None,
+        "sma50": sma_info.get("sma50"), "dessus_sma50": sma_info.get("dessus_sma50"),
+        "signal": signal_actif, "tags": tags,
     }
-    with open(FICHIER_CONTAGION_PENDING, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2, default=str)
-    print(f"   💾 {len(signaux)} signal(s) de contagion sauvegardé(s) → {FICHIER_CONTAGION_PENDING}")
+    if intraday:
+        resultat["intraday"] = intraday
+    return resultat
 
 
 # ── Rapport ────────────────────────────────────────────────────────────────────
 
-def generer_rapport(resultats_actifs, resultats_contextuels,
-                    regime_info, filtre_D, jour_bdc, cluster_info,
-                    signaux_contagion=None):
-    signaux = [r for r in resultats_actifs if r.get("signal")]
+def generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info):
+    signaux = [r for r in resultats if r.get("signal")]
     for s in signaux:
         s["tags"].append(cluster_info["tag"])
     maintenant        = datetime.now(EASTERN)
@@ -809,23 +534,14 @@ def generer_rapport(resultats_actifs, resultats_contextuels,
         and (maintenant.hour > 9 or maintenant.minute >= 30)
         and maintenant.hour < 16
     )
-    tous_fnbs = resultats_actifs + resultats_contextuels
     return {
-        "scan_at":           maintenant.isoformat(),
-        "source_donnees":    "yfinance (source permanente — PRD v3.0)",
-        "heures_marche":     est_heures_marche,
-        "regime_marche":     regime_info,
-        "filtre_D":          filtre_D,
-        "jour_bdc":          jour_bdc,
-        "cluster":           cluster_info,
-        "n_fnbs_actifs":     len(resultats_actifs),
-        "n_fnbs_contextuels": len(resultats_contextuels),
-        "n_fnbs_scannes":    len(tous_fnbs),
-        "n_signaux":         len(signaux),
-        "signaux":           signaux,
-        "tous_fnbs":         tous_fnbs,
-        "signaux_contagion": signaux_contagion or [],
-        "n_signaux_contagion": len(signaux_contagion or []),
+        "scan_at": maintenant.isoformat(),
+        "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
+        "heures_marche": est_heures_marche,
+        "regime_marche": regime_info, "filtre_D": filtre_D,
+        "jour_bdc": jour_bdc, "cluster": cluster_info,
+        "n_fnbs_scannes": len(resultats), "n_signaux": len(signaux),
+        "signaux": signaux, "tous_fnbs": resultats,
     }
 
 
@@ -843,10 +559,10 @@ def afficher_console(rapport):
         print(f"  ⚠️  Jour BdC ({bdc['type_bdc']}) : {bdc['regle']}")
     n = cluster["n_signaux"]
     if n == 0:
-        print(f"\n  Aucun signal mean reversion sur les {rapport['n_fnbs_actifs']} FNBs actifs.")
+        print(f"\n  Aucun signal actif sur les {rapport['n_fnbs_scannes']} FNBs scannés.")
     else:
         icone_cluster = "🟢" if n <= 3 else ("🟡" if n <= 6 else "🔴")
-        print(f"\n  {icone_cluster} {n} signal(s) mean reversion — {cluster['action']}")
+        print(f"\n  {icone_cluster} {n} signal(s) — {cluster['action']}")
     if rapport["signaux"]:
         print(f"\n  {'FNB':<10} {'Profil':<8} {'Z20':>7} {'Z60':>7} {'SMA50':>8} {'Seuil':>7} {'Taille':>8}")
         print("  " + "-" * 58)
@@ -861,47 +577,20 @@ def afficher_console(rapport):
             )
             print(f"  {s['ticker']:<10} {s['profil']:<8} {z20_str:>7} {z60_str:>7} "
                   f"{sma_str:>8} {s['seuil_effectif']:>7.1f} {taille_info['taille_finale']:.2f}x")
-
-    # Tableau complet — actifs
-    print(f"\n  ── FNBs actifs ({rapport['n_fnbs_actifs']}) ──")
-    print(f"  {'FNB':<10} {'Z20':>7} {'Z60':>7} {'SMA50':>8} {'Prix':>8}")
-    print("  " + "-" * 45)
+    print(f"\n  {'':2}{'FNB':<10} {'Rôle':<5} {'Z20':>7} {'Z60':>7} {'SMA50':>8} {'Prix':>8}")
+    print("  " + "-" * 50)
     for r in rapport["tous_fnbs"]:
-        if r.get("contextuel"):
-            continue
         if r.get("erreur"):
-            print(f"  {r['ticker']:<10} ERREUR"); continue
+            role_str = "[C]" if r.get("role") == "contextuel" else "[A]"
+            print(f"  {role_str} {r['ticker']:<10} ERREUR"); continue
         z20_str  = f"{r['z20']:+.2f}" if r["z20"] is not None else "  N/A"
         z60_str  = f"{r['z60']:+.2f}" if r["z60"] is not None else "  N/A"
         sma_str  = "✓" if r.get("dessus_sma50") else ("✗" if r.get("dessus_sma50") is False else "?")
         prix_str = f"{r['prix_cloture']:.2f}" if r.get("prix_cloture") else "N/A"
+        role_str = "[C]" if r.get("role") == "contextuel" else "[A]"
         flag     = " ◄ SIGNAL" if r.get("signal") else ""
-        print(f"  {r['ticker']:<10} {z20_str:>7} {z60_str:>7} {sma_str:>8} {prix_str:>8}{flag}")
-
-    # Tableau contextuels
-    print(f"\n  ── FNBs contextuels ({rapport['n_fnbs_contextuels']}) — z-scores de surveillance ──")
-    print(f"  {'FNB':<10} {'Z20':>7} {'Z60':>7} {'Prix':>8}")
-    print("  " + "-" * 36)
-    for r in rapport["tous_fnbs"]:
-        if not r.get("contextuel"):
-            continue
-        if r.get("erreur"):
-            print(f"  {r['ticker']:<10} ERREUR"); continue
-        z20_str  = f"{r['z20']:+.2f}" if r["z20"] is not None else "  N/A"
-        z60_str  = f"{r['z60']:+.2f}" if r["z60"] is not None else "  N/A"
-        prix_str = f"{r['prix_cloture']:.2f}" if r.get("prix_cloture") else "N/A"
-        print(f"  {r['ticker']:<10} {z20_str:>7} {z60_str:>7} {prix_str:>8}")
-
-    # Signaux de contagion détectés
-    sc = rapport.get("signaux_contagion", [])
-    if sc:
-        print(f"\n  ── Signaux de contagion détectés : {len(sc)} ──")
-        for s in sc:
-            deployer_str = "→ EN ATTENTE J+1" if s["deployer"] else "→ VEILLE (non déployé)"
-            print(f"  {s['id_signal']} {s['description']} {deployer_str}")
-    else:
-        print("\n  Aucun signal de contagion détecté.")
-
+        contagion_flag = " ◄ CHOC CONTAGION" if r.get("choc_contagion") else ""
+        print(f"  {role_str} {r['ticker']:<10} {z20_str:>7} {z60_str:>7} {sma_str:>8} {prix_str:>8}{flag}{contagion_flag}")
     print()
 
 
@@ -914,18 +603,13 @@ def main():
     args, _ = parser.parse_known_args()
 
     print("=" * 65)
-    print("  TMX v2 — Scanner de signaux z-scores  (PRD v3.0)")
+    print("  TMX v2 — Scanner de signaux z-scores")
     print(f"  Mode : {args.mode.upper()}")
     print("=" * 65)
 
-    # ── Téléchargement des données (actifs + contextuels) ─────────────────────
-    tickers_actifs      = list(UNIVERSE.keys())
-    tickers_contextuels = list(UNIVERSE_CONTEXTUEL.keys())
-    tous_tickers        = tickers_actifs + tickers_contextuels
+    tickers = list(UNIVERSE.keys())
+    data    = telecharger_historique(tickers)
 
-    data = telecharger_historique(tous_tickers)
-
-    # ── VIX + Régime ──────────────────────────────────────────────────────────
     print("\n📊 Récupération du VIX...")
     vix         = telecharger_vix()
     regime_info = determiner_regime_vix(vix)
@@ -939,51 +623,21 @@ def main():
     if jour_bdc["est_jour_bdc"]:
         print(f"\n⚠️  Jour BdC détecté : {jour_bdc['type_bdc']}")
 
-    # ── Analyse — FNBs actifs ─────────────────────────────────────────────────
-    print(f"\n🔎 Analyse des {len(tickers_actifs)} FNBs actifs...")
-    resultats_actifs = []
-    for ticker in tickers_actifs:
-        r = analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, args.mode,
-                         contextuel=False)
-        resultats_actifs.append(r)
-        z20_str = f"{r['z20']:+.3f}" if r.get("z20") is not None else "N/A"
-        z60_str = f"{r['z60']:+.3f}" if r.get("z60") is not None else "N/A"
-        flag    = " ◄ SIGNAL" if r.get("signal") else ""
-        print(f"   {ticker:<10} z20: {z20_str:>8}  z60: {z60_str:>8}{flag}")
+    print(f"\n🔎 Analyse des {len(tickers)} FNBs ({len(UNIVERSE_ACTIF)} actifs [A] + {len(UNIVERSE_CONTEXTUEL)} contextuels [C])...")
+    resultats = []
+    for ticker in tickers:
+        r = analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, args.mode)
+        resultats.append(r)
+        z20_str  = f"{r['z20']:+.3f}" if r.get("z20") is not None else "N/A"
+        z60_str  = f"{r['z60']:+.3f}" if r.get("z60") is not None else "N/A"
+        role_str = "[C]" if r.get("role") == "contextuel" else "[A]"
+        flag     = " ◄ SIGNAL" if r.get("signal") else ""
+        contagion_flag = " ◄ CHOC CONTAGION" if r.get("choc_contagion") else ""
+        print(f"   {role_str} {ticker:<10} z20: {z20_str:>8}  z60: {z60_str:>8}{flag}{contagion_flag}")
 
-    # ── Analyse — FNBs contextuels ────────────────────────────────────────────
-    print(f"\n🔎 Analyse des {len(tickers_contextuels)} FNBs contextuels...")
-    resultats_contextuels = []
-    for ticker in tickers_contextuels:
-        r = analyser_fnb(ticker, data, regime_info, filtre_D, jour_bdc, args.mode,
-                         contextuel=True)
-        resultats_contextuels.append(r)
-        z20_str = f"{r['z20']:+.3f}" if r.get("z20") is not None else "N/A"
-        z60_str = f"{r['z60']:+.3f}" if r.get("z60") is not None else "N/A"
-        print(f"   {ticker:<10} z20: {z20_str:>8}  z60: {z60_str:>8}  [contextuel]")
-
-    # ── Cluster (mean reversion uniquement) ───────────────────────────────────
-    signaux_actifs = [r for r in resultats_actifs if r.get("signal")]
+    signaux_actifs = [r for r in resultats if r.get("signal")]
     cluster_info   = compter_cluster(signaux_actifs)
-
-    # ── Signaux de contagion ──────────────────────────────────────────────────
-    print("\n🔗 Détection des signaux de contagion...")
-    signaux_contagion = detecter_signaux_contagion(
-        resultats_actifs, resultats_contextuels, regime_info
-    )
-    if signaux_contagion:
-        ecrire_contagion_pending(signaux_contagion)
-    else:
-        print("   Aucun signal de contagion détecté.")
-        # Écrire un fichier vide pour signaler que le scan s'est bien exécuté
-        ecrire_contagion_pending([])
-
-    # ── Rapport + console ─────────────────────────────────────────────────────
-    rapport = generer_rapport(
-        resultats_actifs, resultats_contextuels,
-        regime_info, filtre_D, jour_bdc, cluster_info,
-        signaux_contagion,
-    )
+    rapport        = generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info)
     afficher_console(rapport)
 
     output_path = Path(args.output)
@@ -1004,16 +658,12 @@ def main():
     try:
         from simulateur import (
             charger_positions, charger_trades_log,
-            action_evaluer_contagion, action_evaluer, action_surveiller,
+            action_evaluer, action_surveiller,
             sauvegarder_positions, sauvegarder_trades_log,
         )
         portefeuille = charger_positions()
         trades_log   = charger_trades_log()
-        # 1. Contagion en premier (trades J+1 issus du scan précédent)
-        action_evaluer_contagion(portefeuille, trades_log)
-        # 2. Mean reversion (signaux du scan courant)
         action_evaluer(portefeuille, trades_log, 100_000.0)
-        # 3. Surveillance des positions ouvertes
         action_surveiller(portefeuille, trades_log)
         sauvegarder_positions(portefeuille)
         sauvegarder_trades_log(trades_log)
@@ -1026,4 +676,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
