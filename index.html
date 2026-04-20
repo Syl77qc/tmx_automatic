@@ -268,6 +268,10 @@ td.c { text-align: center; }
 .b-watch   { background: var(--bg4); color: var(--text3); border: 1px solid var(--border); }
 .b-block   { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
 .b-sect    { background: rgba(74,222,128,0.08); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+.b-ctx     { background: rgba(255,255,255,.04); color: var(--text3); border: 1px solid var(--border); }
+.b-contagion { background: rgba(129,140,248,.12); color: #818cf8; border: 1px solid rgba(129,140,248,.25); }
+.sp-blue   { background: rgba(129,140,248,.12); color: #818cf8; border: 1px solid rgba(129,140,248,.25); }
+tr.ctx-row td { opacity: 0.6; }
 .b-fond    { background: rgba(248,113,113,0.08); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
 .b-sys     { background: var(--bg4); color: var(--text2); border: 1px solid var(--border2); }
 
@@ -503,7 +507,7 @@ footer {
     </div>
   </div>
 
-  <div class="status-bar"><span class="status-pill sp-amber">VIX 17.48 — Neutre</span><span class="status-pill sp-gray">Aucun signal</span><span class="status-pill sp-gray">Source : yfinance (source unique permanente </span></div>
+  <div class="status-bar"><span class="status-pill sp-amber">VIX 17.48 — Neutre</span><span class="status-pill sp-gray">Aucun signal MR</span><span class="status-pill sp-gray">yfinance</span></div>
 
   <div class="metrics">
     <div class="metric">
@@ -529,7 +533,7 @@ footer {
   </div>
 
   <div class="section-header">
-    <div class="section-title-text">Les 12 FNBs</div>
+    <div class="section-title-text">Les 12 FNBs — 7 actifs · 5 contextuels</div>
     <div class="section-sub">Scan complet · 12 FNBs analysés · 1 signal(s) actif(s)</div>
   </div>
 
@@ -552,143 +556,156 @@ footer {
       </thead>
       <tbody><tr>
       <td><div class="fnb-name">XIU.TO</div><div class="fnb-sector">Marché large</div></td>
-      <td class="r" style="font-family:var(--mono)">50.49</td>
-      <td class="r"><span class="var-pos">+0.84%</span></td>
-      <td class="r"><span class="z-pos">+0.59</span></td>
-      <td class="r"><span class="z-pos">+0.77</span></td>
+      <td class="r" style="font-family:var(--mono)">50.07</td>
+      <td class="r"><span class="var-neg">-0.30%</span></td>
+      <td class="r"><span class="z-neg">-0.46</span></td>
+      <td class="r"><span class="z-neg">-0.37</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
     </tr>
 <tr>
       <td><div class="fnb-name">XFN.TO</div><div class="fnb-sector">Financières</div></td>
-      <td class="r" style="font-family:var(--mono)">83.93</td>
-      <td class="r"><span class="var-pos">+1.48%</span></td>
-      <td class="r"><span class="z-pos">+0.94</span></td>
-      <td class="r"><span class="z-pos">+1.33</span></td>
+      <td class="r" style="font-family:var(--mono)">82.71</td>
+      <td class="r"><span class="var-neg">-0.46%</span></td>
+      <td class="r"><span class="z-neg">-0.81</span></td>
+      <td class="r"><span class="z-neg">-0.54</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
-      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
-    </tr>
-<tr>
-      <td><div class="fnb-name">XRE.TO</div><div class="fnb-sector">FPI</div></td>
-      <td class="r" style="font-family:var(--mono)">16.85</td>
-      <td class="r"><span class="var-pos">+0.18%</span></td>
-      <td class="r"><span class="z-neg">-0.17</span></td>
-      <td class="r"><span class="z-pos">+0.10</span></td>
-      <td class="c"><span class="sma-ok">✓</span></td>
-      <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
-      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
-    </tr>
-<tr>
-      <td><div class="fnb-name">XIN.TO</div><div class="fnb-sector">International</div></td>
-      <td class="r" style="font-family:var(--mono)">45.36</td>
-      <td class="r"><span class="var-pos">+1.23%</span></td>
-      <td class="r"><span class="z-pos">+0.72</span></td>
-      <td class="r"><span class="z-pos">+1.01</span></td>
-      <td class="c"><span class="sma-ok">✓</span></td>
-      <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
-      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
-    </tr>
-<tr>
-      <td><div class="fnb-name">XHC.TO</div><div class="fnb-sector">Santé</div></td>
-      <td class="r" style="font-family:var(--mono)">68.59</td>
-      <td class="r"><span class="var-pos">+1.58%</span></td>
-      <td class="r"><span class="z-pos">+1.68</span></td>
-      <td class="r"><span class="z-pos">+1.74</span></td>
-      <td class="c"><span class="sma-warn">✗</span></td>
-      <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
-      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
-    </tr>
-<tr>
-      <td><div class="fnb-name">XST.TO</div><div class="fnb-sector">Consommation</div></td>
-      <td class="r" style="font-family:var(--mono)">62.80</td>
-      <td class="r"><span class="var-pos">+0.71%</span></td>
-      <td class="r"><span class="z-pos">+0.71</span></td>
-      <td class="r"><span class="z-pos">+0.55</span></td>
-      <td class="c"><span class="sma-warn">✗</span></td>
-      <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
     </tr>
 <tr>
       <td><div class="fnb-name">XEG.TO</div><div class="fnb-sector">Énergie</div></td>
-      <td class="r" style="font-family:var(--mono)">24.37</td>
-      <td class="r"><span class="var-neg">-4.77%</span></td>
-      <td class="r"><span class="z-watch">-2.40</span></td>
-      <td class="r"><span class="z-signal">-3.34</span></td>
-      <td class="c"><span class="sma-warn">✗</span></td>
+      <td class="r" style="font-family:var(--mono)">25.59</td>
+      <td class="r"><span class="var-pos">+1.03%</span></td>
+      <td class="r"><span class="z-pos">+0.54</span></td>
+      <td class="r"><span class="z-pos">+0.41</span></td>
+      <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
     </tr>
 <tr>
-      <td><div class="fnb-name">ZAG.TO</div><div class="fnb-sector">Obligations</div></td>
-      <td class="r" style="font-family:var(--mono)">13.78</td>
-      <td class="r"><span class="var-pos">+0.58%</span></td>
-      <td class="r"><span class="z-pos">+1.43</span></td>
-      <td class="r"><span class="z-pos">+1.96</span></td>
+      <td><div class="fnb-name">XUT.TO</div><div class="fnb-sector">Services pub.</div></td>
+      <td class="r" style="font-family:var(--mono)">35.43</td>
+      <td class="r"><span class="var-neg">-0.51%</span></td>
+      <td class="r"><span class="z-neg">-0.71</span></td>
+      <td class="r"><span class="z-neg">-1.06</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
-      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
-    </tr>
-<tr>
-      <td><div class="fnb-name">XGD.TO</div><div class="fnb-sector">Or</div></td>
-      <td class="r" style="font-family:var(--mono)">61.31</td>
-      <td class="r"><span class="var-pos">+3.20%</span></td>
-      <td class="r"><span class="z-pos">+0.88</span></td>
-      <td class="r"><span class="z-pos">+0.91</span></td>
-      <td class="c"><span class="sma-ok">✓</span></td>
-      <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
     </tr>
 <tr>
       <td><div class="fnb-name">XIT.TO</div><div class="fnb-sector">Technologie</div></td>
-      <td class="r" style="font-family:var(--mono)">73.38</td>
-      <td class="r"><span class="var-pos">+1.86%</span></td>
-      <td class="r"><span class="z-pos">+0.52</span></td>
-      <td class="r"><span class="z-pos">+0.81</span></td>
+      <td class="r" style="font-family:var(--mono)">72.04</td>
+      <td class="r"><span class="var-pos">+0.45%</span></td>
+      <td class="r"><span class="z-neg">-0.04</span></td>
+      <td class="r"><span class="z-pos">+0.22</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
+      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
+      <td class="r"><span class="taille-na">—</span></td>
+      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+    </tr>
+<tr>
+      <td><div class="fnb-name">XRE.TO</div><div class="fnb-sector">FPI</div></td>
+      <td class="r" style="font-family:var(--mono)">16.82</td>
+      <td class="r"><span class="var-pos">+1.57%</span></td>
+      <td class="r"><span class="z-pos">+1.39</span></td>
+      <td class="r"><span class="z-pos">+1.77</span></td>
+      <td class="c"><span class="sma-ok">✓</span></td>
+      <td class="c"><span class="badge b-watch">Neutre</span></td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
     </tr>
 <tr>
       <td><div class="fnb-name">XMA.TO</div><div class="fnb-sector">Matériaux</div></td>
-      <td class="r" style="font-family:var(--mono)">49.62</td>
-      <td class="r"><span class="var-pos">+2.10%</span></td>
-      <td class="r"><span class="z-pos">+0.57</span></td>
-      <td class="r"><span class="z-pos">+0.65</span></td>
+      <td class="r" style="font-family:var(--mono)">48.60</td>
+      <td class="r"><span class="var-neg">-0.23%</span></td>
+      <td class="r"><span class="z-neg">-0.16</span></td>
+      <td class="r"><span class="z-neg">-0.09</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-watch">Neutre</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
+      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
+      <td class="r"><span class="taille-na">—</span></td>
+      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+    </tr>
+<tr>
+      <td><div class="fnb-name">XIN.TO</div><div class="fnb-sector">International</div></td>
+      <td class="r" style="font-family:var(--mono)">44.81</td>
+      <td class="r"><span class="var-neg">-0.16%</span></td>
+      <td class="r"><span class="z-neg">-0.25</span></td>
+      <td class="r"><span class="z-neg">-0.17</span></td>
+      <td class="c"><span class="sma-ok">✓</span></td>
+      <td class="c"><span class="badge b-watch">Neutre</span></td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
+      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
+      <td class="r"><span class="taille-na">—</span></td>
+      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+    </tr>
+<tr>
+      <td><div class="fnb-name">XHC.TO</div><div class="fnb-sector">Santé</div></td>
+      <td class="r" style="font-family:var(--mono)">67.52</td>
+      <td class="r"><span class="var-neg">-0.90%</span></td>
+      <td class="r"><span class="z-neg">-0.90</span></td>
+      <td class="r"><span class="z-neg">-0.88</span></td>
+      <td class="c"><span class="sma-warn">✗</span></td>
+      <td class="c"><span class="badge b-watch">Neutre</span></td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
+      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
+      <td class="r"><span class="taille-na">—</span></td>
+      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+    </tr>
+<tr>
+      <td><div class="fnb-name">XST.TO</div><div class="fnb-sector">Consommation</div></td>
+      <td class="r" style="font-family:var(--mono)">62.36</td>
+      <td class="r"><span class="var-neg">-1.31%</span></td>
+      <td class="r"><span class="z-neg">-0.84</span></td>
+      <td class="r"><span class="z-neg">-1.03</span></td>
+      <td class="c"><span class="sma-warn">✗</span></td>
+      <td class="c"><span class="badge b-watch">Neutre</span></td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
+      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
+      <td class="r"><span class="taille-na">—</span></td>
+      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+    </tr>
+<tr>
+      <td><div class="fnb-name">XGD.TO</div><div class="fnb-sector">Or</div></td>
+      <td class="r" style="font-family:var(--mono)">59.41</td>
+      <td class="r"><span class="var-neg">-0.37%</span></td>
+      <td class="r"><span class="z-neg">-0.18</span></td>
+      <td class="r"><span class="z-neg">-0.11</span></td>
+      <td class="c"><span class="sma-warn">✗</span></td>
+      <td class="c"><span class="badge b-watch">Neutre</span></td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
+      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
+      <td class="r"><span class="taille-na">—</span></td>
+      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+    </tr>
+<tr>
+      <td><div class="fnb-name">ZAG.TO</div><div class="fnb-sector">Obligations</div></td>
+      <td class="r" style="font-family:var(--mono)">13.70</td>
+      <td class="r"><span class="var-neg">-0.22%</span></td>
+      <td class="r"><span class="z-neg">-0.53</span></td>
+      <td class="r"><span class="z-neg">-0.73</span></td>
+      <td class="c"><span class="sma-warn">✗</span></td>
+      <td class="c"><span class="badge b-watch">Neutre</span></td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
@@ -707,10 +724,6 @@ footer {
           Aucune position ouverte. Le premier signal déclenchera l'entrée en paper trading.
         </div>
   </div>
-
-  
-
-  
 
   
 
@@ -861,7 +874,7 @@ footer {
       </div>
       <div class="def-item">
         <div class="def-label">Var.</div>
-        <div class="def-text">Variation du prix par rapport à la <strong>clôture précédente</strong>. Note : les données proviennent de yfinance (J−1) sauf si Questrade API disponible.</div>
+        <div class="def-text">Variation du prix par rapport à la <strong>clôture précédente</strong>. Les données proviennent de yfinance (source unique permanente).</div>
       </div>
     </div>
   </div>
@@ -883,18 +896,18 @@ footer {
         </div>
         <div class="guide-desc-text">Réaction émotionnelle ou mécanique du marché à une nouvelle macro ou sectorielle. Les titres dans le FNB baissent <em>tous</em> dans des proportions similaires — aucun n'est spécialement visé.</div>
         <div class="guide-example">
-          WTI perd 4% après une décision OPEP+ décevante → CNQ, Suncor, Cenovus baissent tous de 5–8% → <strong>XEG déclenche z = −3.1</strong>
+          Hausse surprise des taux BdC → banques, assureurs et REITs baissent tous de 3–5% → <strong>XFN ou XRE déclenche z = −2.6</strong>
         </div>
         <div class="guide-action ga-sect">
           <div class="ga-title">ACHETER — selon taille calculée</div>
-          <div class="ga-text">Rebond historiquement fiable · Meilleur terrain pour TMX v2</div>
+          <div class="ga-text">Rebond historiquement fiable · Terrain principal de TMX v2</div>
         </div>
         <div class="guide-fnbs">
-          <span class="guide-fnb-pill">XEG 82%</span>
-          <span class="guide-fnb-pill">XGD 72%</span>
-          <span class="guide-fnb-pill">XFN 70%</span>
-          <span class="guide-fnb-pill">XUT 68%</span>
-          <span class="guide-fnb-pill">ZAG 70%</span>
+          <span class="guide-fnb-pill">XFN 2% fond.</span>
+          <span class="guide-fnb-pill">XRE — fiable</span>
+          <span class="guide-fnb-pill">XUT — fiable</span>
+          <span class="guide-fnb-pill">XIU — fiable</span>
+          <span class="guide-fnb-pill" style="opacity:0.5">XEG — contextuel ⚡</span>
         </div>
       </div>
 
@@ -908,17 +921,17 @@ footer {
         </div>
         <div class="guide-desc-text">Un titre qui pèse lourd dans le FNB baisse de façon <em>disproportionnée</em> par rapport aux autres — publications trimestrielles décevantes, guidance réduite, annonce défavorable. La baisse peut <strong>persister</strong> si la nouvelle est réellement mauvaise.</div>
         <div class="guide-example">
-          Shopify annonce des résultats trimestriels décevants → SHOP baisse de 12%, CSU et CGI bougent peu → <strong>XIT déclenche z = −3.0</strong>
+          Shopify annonce des résultats trimestriels décevants → SHOP baisse de 12%, CSU et CGI bougent peu → <strong>XIT z = −3.0</strong>
         </div>
         <div class="guide-action ga-fond">
-          <div class="ga-title">PRUDENCE — vérifier les nouvelles</div>
-          <div class="ga-text">Rebond non garanti · Consulter le verdict Groq avant d'agir</div>
+          <div class="ga-title">PAS DE POSITION — XIT est contextuel</div>
+          <div class="ga-text">87% des baisses XIT sont fondamentales · Aucun signal mean reversion · Surveille contagion XIT→XIN</div>
         </div>
         <div class="guide-fnbs">
-          <span class="guide-fnb-pill warn">XIT 87% ⚠</span>
-          <span class="guide-fnb-pill">XHC 20%</span>
-          <span class="guide-fnb-pill">XGD 7%</span>
-          <span class="guide-fnb-pill">XFN 2%</span>
+          <span class="guide-fnb-pill warn">XIT 87% ⚠ contextuel</span>
+          <span class="guide-fnb-pill" style="opacity:0.5">XHC 20%</span>
+          <span class="guide-fnb-pill" style="opacity:0.5">XGD 7% contextuel</span>
+          <span class="guide-fnb-pill">XFN 2% — OK</span>
         </div>
       </div>
 

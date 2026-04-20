@@ -96,7 +96,7 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
 <div class="page">
   <div class="hero">
     <div class="hero-title">Architecture du <span>système TMX v2</span></div>
-    <div class="hero-sub">Mean reversion sur 12 FNBs canadiens (TSX) · Paper trading · Phase 1 en cours</div>
+    <div class="hero-sub">Mean reversion sur 7 FNBs actifs + 4 signaux de contagion (TSX) · Paper trading · Phase 1 en cours</div>
   </div>
 
   <div class="callout">
@@ -109,7 +109,7 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
     <div class="section-title">Flux de décision</div>
     <div class="chart-card" style="text-align:center;padding:32px">
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:12px">
-        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">yfinance / Questrade</span>
+        <span style="background:var(--bg3);border:1px solid var(--border);padding:8px 14px;border-radius:6px;color:var(--text2)">yfinance</span>
         <span style="color:var(--text3)">→</span>
         <span style="background:var(--bg3);border:1px solid var(--accent);padding:8px 14px;border-radius:6px;color:var(--accent)">Scanner z-scores</span>
         <span style="color:var(--text3)">→</span>
@@ -150,11 +150,11 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       </div>
       <div class="chart-card" style="margin-bottom:0">
         <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 3</div>
-        <div style="font-weight:600;margin-bottom:8px">Filtres A–H</div>
+        <div style="font-weight:600;margin-bottom:8px">Filtres A–G</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.7">
-          7 filtres de sécurité + Filtre H (XIT)<br>
+          7 filtres de sécurité<br>
           Cluster, régime, profil, SMA50<br>
-          Volume, BdC, corrélation, publications
+          Volume, corrélation, BdC
         </div>
       </div>
       <div class="chart-card" style="margin-bottom:0">
@@ -177,13 +177,12 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
         <thead><tr><th>Filtre</th><th>Nom</th><th>Règle</th></tr></thead>
         <tbody>
           <tr><td class="ticker">A</td><td>Cluster</td><td style="color:var(--text2);font-size:12px">4–6 signaux simultanés → taille ÷2. 7+ signaux → bloquer tout.</td></tr>
-          <tr><td class="ticker">B</td><td>Régime</td><td style="color:var(--text2);font-size:12px">Risk-off (VIX &gt; 25) → bloquer sauf signaux extrêmes sur défensifs.</td></tr>
-          <tr><td class="ticker">C</td><td>Profil</td><td style="color:var(--text2);font-size:12px">Z-score doit dépasser le seuil effectif du profil FNB (2,0σ à 2,5σ).</td></tr>
+          <tr><td class="ticker">B</td><td>Régime</td><td style="color:var(--text2);font-size:12px">Risk-off (VIX &gt; 25) → bloquer sauf signaux extrêmes sur XST.</td></tr>
+          <tr><td class="ticker">C</td><td>Profil</td><td style="color:var(--text2);font-size:12px">Z-score doit dépasser le seuil effectif du profil FNB (2,0σ). Seuil unique pour les 7 FNBs actifs.</td></tr>
           <tr><td class="ticker">D</td><td>XIU</td><td style="color:var(--text2);font-size:12px">XIU stable = correction sectorielle isolée → seuil +0,5, taille ÷1,5.</td></tr>
           <tr><td class="ticker">E</td><td>Volume</td><td style="color:var(--text2);font-size:12px">Volume élevé lors de la baisse = capitulation = signal de meilleure qualité.</td></tr>
           <tr><td class="ticker">F</td><td>SMA50</td><td style="color:var(--text2);font-size:12px">Sous SMA50 → taille ÷2. Protège contre les tendances baissières structurelles.</td></tr>
-          <tr><td class="ticker">G</td><td>Blocs</td><td style="color:var(--text2);font-size:12px">Max 1 position par bloc corrélé (marché large, métaux, taux).</td></tr>
-          <tr><td class="ticker">H</td><td>Publications</td><td style="color:var(--text2);font-size:12px">XIT uniquement : seuil 3,0σ dans ±2j publications Shopify, bloquer le jour J.</td></tr>
+          <tr><td class="ticker">G</td><td>Blocs</td><td style="color:var(--text2);font-size:12px">Max 1 position par bloc corrélé : marché large {XIU, XFN, XIN} · taux {XRE, XUT}.</td></tr>
         </tbody>
       </table>
     </div>
@@ -194,24 +193,52 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
     <div class="section-title">Les 12 FNBs canadiens (TSX)</div>
     <div class="chart-card" style="padding:0;overflow-x:auto">
       <table class="data-table">
-        <thead><tr><th>Ticker</th><th>Nom</th><th class="r">Profil</th><th class="r">Seuil z</th><th class="r">Horizon</th></tr></thead>
+        <thead><tr><th>Ticker</th><th>Nom</th><th class="r">Rôle</th><th class="r">Profil</th><th class="r">Seuil z</th><th class="r">Horizon</th></tr></thead>
         <tbody>
-          <tr><td class="ticker">XIU.TO</td><td style="color:var(--text2)">iShares S&P/TSX 60</td><td class="r"><span class="badge badge-blue">Modéré</span></td><td class="r num">2,5σ</td><td class="r num">10j</td></tr>
-          <tr><td class="ticker">XFN.TO</td><td style="color:var(--text2)">Financières canadiennes</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
-          <tr><td class="ticker">XEG.TO</td><td style="color:var(--text2)">Énergie canadienne</td><td class="r"><span class="badge badge-amber">Lent</span></td><td class="r num">2,5σ</td><td class="r num">25j</td></tr>
-          <tr><td class="ticker">XIT.TO</td><td style="color:var(--text2)">Technologies canadiennes</td><td class="r"><span class="badge badge-red">Spécial</span></td><td class="r num">2,0σ / 3,0σ*</td><td class="r num">20j</td></tr>
-          <tr><td class="ticker">XGD.TO</td><td style="color:var(--text2)">Mines d'or</td><td class="r"><span class="badge badge-amber">Lent</span></td><td class="r num">2,5σ</td><td class="r num">25j</td></tr>
-          <tr><td class="ticker">XRE.TO</td><td style="color:var(--text2)">Immobilier CA (REIT)</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
-          <tr><td class="ticker">XMA.TO</td><td style="color:var(--text2)">Matériaux canadiens</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
-          <tr><td class="ticker">XIN.TO</td><td style="color:var(--text2)">International (hors Amér.)</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
-          <tr><td class="ticker">XHC.TO</td><td style="color:var(--text2)">Soins de santé mondiaux</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
-          <tr><td class="ticker">XST.TO</td><td style="color:var(--text2)">Consommation de base CA</td><td class="r"><span class="badge badge-green">Rapide</span></td><td class="r num">2,0σ</td><td class="r num">10j</td></tr>
-          <tr><td class="ticker">XUT.TO</td><td style="color:var(--text2)">Services publics CA</td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
-          <tr><td class="ticker">ZAG.TO</td><td style="color:var(--text2)">Obligations CA agrégées</td><td class="r"><span class="badge badge-blue">Défensif</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XIU.TO</td><td style="color:var(--text2)">iShares S&amp;P/TSX 60</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XFN.TO</td><td style="color:var(--text2)">Financières canadiennes</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XUT.TO</td><td style="color:var(--text2)">Services publics CA</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j ⚠</td></tr>
+          <tr><td class="ticker">XRE.TO</td><td style="color:var(--text2)">Immobilier CA (REIT)</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-blue">Moyen</span></td><td class="r num">2,0σ</td><td class="r num">20j</td></tr>
+          <tr><td class="ticker">XIN.TO</td><td style="color:var(--text2)">International (hors Amér.)</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-green">Rapide</span></td><td class="r num">2,0σ</td><td class="r num">10j</td></tr>
+          <tr><td class="ticker">XHC.TO</td><td style="color:var(--text2)">Soins de santé mondiaux</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-green">Rapide</span></td><td class="r num">2,0σ</td><td class="r num">10j</td></tr>
+          <tr><td class="ticker">XST.TO</td><td style="color:var(--text2)">Consommation de base CA</td><td class="r"><span class="badge badge-green">Actif</span></td><td class="r"><span class="badge badge-green">Rapide</span></td><td class="r num">2,0σ</td><td class="r num">15j</td></tr>
+          <tr style="opacity:0.55"><td class="ticker">XEG.TO</td><td style="color:var(--text2)">Énergie canadienne</td><td class="r"><span class="badge badge-blue">Contextuel</span></td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td></tr>
+          <tr style="opacity:0.55"><td class="ticker">ZAG.TO</td><td style="color:var(--text2)">Obligations CA agrégées</td><td class="r"><span class="badge badge-blue">Contextuel</span></td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td></tr>
+          <tr style="opacity:0.55"><td class="ticker">XGD.TO</td><td style="color:var(--text2)">Mines d'or</td><td class="r"><span class="badge badge-blue">Contextuel</span></td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td></tr>
+          <tr style="opacity:0.55"><td class="ticker">XIT.TO</td><td style="color:var(--text2)">Technologies canadiennes</td><td class="r"><span class="badge badge-blue">Contextuel</span></td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td></tr>
+          <tr style="opacity:0.55"><td class="ticker">XMA.TO</td><td style="color:var(--text2)">Matériaux canadiens</td><td class="r"><span class="badge badge-blue">Contextuel</span></td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td><td class="r" style="color:var(--text3)">—</td></tr>
         </tbody>
       </table>
     </div>
-    <div style="font-size:11px;color:var(--text3);margin-top:8px;padding:0 4px">* XIT : seuil 3,0σ dans ±2 jours d'une publication trimestrielle Shopify (filtre H). HYG utilisé comme indicateur macro, non tradé directement.</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;padding:0 4px">
+      <strong style="color:var(--text2)">Actif</strong> — signal mean reversion validé (Wilcoxon, 25 ans) · position possible.
+      &nbsp;·&nbsp;
+      <strong style="color:var(--text2)">Contextuel</strong> — z-scores calculés, aucune position mean reversion · chocs ≥ 2,5σ alimentent les signaux de contagion.
+      &nbsp;·&nbsp;
+      ⚠ XUT.TO horizon marginal — érosion 2021–26 à surveiller.
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">Contagion</div>
+    <div class="section-title">Signaux de contagion inter-FNB (PRD v3.0 §5bis)</div>
+    <div class="chart-card" style="padding:0;overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Signal</th><th>Direction</th><th class="r">Seuil émetteur</th><th class="r">Rend. moy.</th><th class="r">Win rate</th><th class="r">p perm.</th><th>Mécanisme</th><th class="r">Niveau</th></tr></thead>
+        <tbody>
+          <tr><td class="ticker">S1</td><td style="color:var(--text2)">XRE → XIN</td><td><span class="badge badge-green">Achat XIN J+1</span></td><td class="r num">≥ 2,5σ</td><td class="r num" style="color:var(--green)">+0,61%</td><td class="r num">62,7%</td><td class="r num">0,000</td><td style="font-size:11px;color:var(--text3)">Décalage horaire</td><td class="r"><span class="badge badge-green">1 — Déployé</span></td></tr>
+          <tr><td class="ticker">S2</td><td style="color:var(--text2)">XEG → XFN</td><td><span class="badge badge-green">Achat XFN J+1</span></td><td class="r num">≥ 2,5σ</td><td class="r num" style="color:var(--green)">−0,43%*</td><td class="r num">55,2%</td><td class="r num">—</td><td style="font-size:11px;color:var(--text3)">Crédit énergie-banques</td><td class="r"><span class="badge badge-blue">2 — Déployé</span></td></tr>
+          <tr><td class="ticker">S3</td><td style="color:var(--text2)">XUT → XIN</td><td><span class="badge badge-green">Achat XIN J+1</span></td><td class="r num">≥ 2,5σ</td><td class="r num" style="color:var(--green)">+0,70%</td><td class="r num">57,6%</td><td class="r num">0,002</td><td style="font-size:11px;color:var(--text3)">Décalage horaire</td><td class="r"><span class="badge badge-green">1 — Déployé ⚠</span></td></tr>
+          <tr><td class="ticker">S4</td><td style="color:var(--text2)">XUT → XFN</td><td><span class="badge badge-green">Achat XFN J+1</span></td><td class="r num">≥ 2,5σ</td><td class="r num" style="color:var(--green)">+0,92%</td><td class="r num">—</td><td class="r num">&lt;0,001</td><td style="font-size:11px;color:var(--text3)">Rotation défensive</td><td class="r"><span class="badge badge-green">1 — Déployé ⚠</span></td></tr>
+          <tr style="opacity:0.5"><td class="ticker">S5</td><td style="color:var(--text2)">XEG → XIU</td><td><span class="badge" style="background:rgba(255,255,255,.04);color:var(--text3);border:1px solid var(--border)">Achat XIU J+1</span></td><td class="r num">≥ 3,0σ</td><td class="r num">−0,74%</td><td class="r num">64,3%</td><td class="r num">—</td><td style="font-size:11px;color:var(--text3)">Rebalancement indiciel</td><td class="r"><span class="badge badge-amber">3 — Veille</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px;padding:0 4px">
+      * S2 : direction long XFN après choc XEG — rendement négatif de l'émetteur, positif pour le récepteur sur données historiques.
+      &nbsp;·&nbsp; ⚠ S3/S4 : érosion possible post-2021 — surveillance mensuelle active.
+      &nbsp;·&nbsp; S5 en veille : n=14 trades historiques insuffisants.
+    </div>
   </section>
 </div>
 <footer>

@@ -65,8 +65,14 @@ def generer_row_fnb(r, regime, filtre_D, cluster_action):
 
     groq_html = '<span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span>'
 
+    # Rôle PRD v3.0 — actif vs contextuel
+    role = r.get("role", "actif")
+    est_contextuel = (role == "contextuel")
+    choc_contagion = r.get("choc_contagion", False)
+
     if signal:
-        profil_base = {"rapide": 1.0, "moyen": 0.75, "lent": 0.5}
+        # Profil "lent" retiré — aucun FNB actif lent en v3.0
+        profil_base = {"rapide": 1.0, "moyen": 0.75}
         profil = r.get("profil", "moyen")
         base   = profil_base.get(profil, 0.75)
         az20   = abs(z20) if z20 else 2.0
@@ -78,6 +84,12 @@ def generer_row_fnb(r, regime, filtre_D, cluster_action):
         if "positif" in ctx or "stable" in ctx: t /= 1.5
         taille_html = f'<span class="taille-actif">{t:.2f}x</span>'
         action_html = '<span class="badge b-signal">Signal</span>'
+    elif est_contextuel and choc_contagion:
+        taille_html = '<span class="taille-na">—</span>'
+        action_html = '<span class="badge b-contagion">⚡ Contagion</span>'
+    elif est_contextuel:
+        taille_html = '<span class="taille-na">—</span>'
+        action_html = '<span class="badge b-ctx">Contextuel</span>'
     else:
         taille_html = '<span class="taille-na">—</span>'
         action_html = '<span class="badge b-watch">Surveiller</span>'
@@ -89,9 +101,16 @@ def generer_row_fnb(r, regime, filtre_D, cluster_action):
     else:
         var_html = f'<span class="var-neu">{rend:+.2f}%</span>'
 
+    # Indicateur rôle dans la première cellule
+    role_badge = ''
+    if est_contextuel:
+        role_badge = ' <span style="font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:3px;vertical-align:middle">CTX</span>'
+
+    row_class = ' class="signal-row"' if signal else (' class="ctx-row"' if est_contextuel else '')
+
     secteur = SECTEURS.get(ticker, "")
     return f'''<tr{row_class}>
-      <td><div class="fnb-name">{ticker}</div><div class="fnb-sector">{secteur}</div></td>
+      <td><div class="fnb-name">{ticker}{role_badge}</div><div class="fnb-sector">{secteur}</div></td>
       <td class="r" style="font-family:var(--mono)">{prix:.2f}</td>
       <td class="r">{var_html}</td>
       <td class="r"><span class="{z20c}">{z20t}</span></td>
@@ -149,21 +168,30 @@ def generer_status_pills(rapport):
     vix    = regime.get("vix", "?")
     reg    = regime.get("regime", "inconnu")
 
+    n_contagion = sum(1 for fnb in rapport.get("tous_fnbs", []) if fnb.get("choc_contagion"))
+    fraicheur   = rapport.get("fraicheur", {})
+
     vix_pill = {
         "risk_on":  f'<span class="status-pill sp-green">VIX {vix} — Risk-on</span>',
         "neutre":   f'<span class="status-pill sp-amber">VIX {vix} — Neutre</span>',
         "risk_off": f'<span class="status-pill sp-red">VIX {vix} — Risk-off</span>',
     }.get(reg, f'<span class="status-pill sp-gray">VIX {vix}</span>')
 
-    sig_pill = ('<span class="status-pill sp-gray">Aucun signal</span>' if n_sig == 0
-                else f'<span class="status-pill sp-amber">{n_sig} signal(s) actif(s)</span>')
+    sig_pill = ('<span class="status-pill sp-gray">Aucun signal MR</span>' if n_sig == 0
+                else f'<span class="status-pill sp-amber">{n_sig} signal(s) mean reversion</span>')
 
-    src_pill = f'<span class="status-pill sp-gray">Source : {source[:35]}</span>'
+    contagion_pill = (f'<span class="status-pill sp-blue">⚡ {n_contagion} choc(s) contagion</span>'
+                      if n_contagion > 0 else "")
+
+    src_pill = f'<span class="status-pill sp-gray">yfinance</span>'
+
+    fraicheur_pill = ('<span class="status-pill sp-red">🚨 Données périmées</span>'
+                      if fraicheur.get("alerte") else "")
 
     bdc_pill = (f'<span class="status-pill sp-amber">Jour BdC : {bdc["type_bdc"]}</span>'
                 if bdc.get("est_jour_bdc") else "")
 
-    return vix_pill + sig_pill + src_pill + bdc_pill
+    return vix_pill + sig_pill + contagion_pill + src_pill + fraicheur_pill + bdc_pill
 
 
 def generer_dashboard(rapport, positions=None):

@@ -212,7 +212,7 @@ footer a:hover{color:var(--accent);}
 
 <div class="hub-intro">
   <span class="icon">📊</span>
-  <div>Ces sept analyses transforment la théorie en données concrètes. Elles documentent comment le mean reversion se manifeste sur l'univers TMX v2, quel est le profil réel d'un trade, comment optimiser les seuils de déclenchement par FNB, et les résultats complets du backtesting de la stratégie de contagion.</div>
+  <div>Ces analyses transforment la théorie en données concrètes. Elles documentent comment le mean reversion se manifeste sur les 7 FNBs actifs de TMX v2, quel est le profil réel d'un trade, comment optimiser les seuils de déclenchement, et les résultats de la recherche sur les signaux de contagion inter-FNB (4 signaux déployés, 1 en veille).</div>
 </div>
 
 <div class="section-label">Analyses existantes</div>
@@ -249,19 +249,19 @@ footer a:hover{color:var(--accent);}
   </a>
 </div>
 
-<div class="section-label" style="margin-top:8px;">Nouvelles analyses — Signaux de contagion (recherche 2026)</div>
+<div class="section-label" style="margin-top:8px;">Signaux de contagion inter-FNB — Recherche 2026 (5 étapes · 25 ans · 13 FNBs)</div>
 <div class="cards-grid">
   <a class="card" href="analyse_quantitative_chocs.html">
-    <div class="ctag new">Nouveau · Recherche 6 étapes <span class="cnew">NEW</span></div>
+    <div class="ctag new">Recherche · 6 étapes <span class="cnew">NEW</span></div>
     <h3>Analyse quantitative — Fréquence et signaux de contagion</h3>
-    <p>Fréquence des chocs extrêmes (≥ 2σ / 2,5σ / 3σ) sur 25 ans. Heatmap saisonnière. Comparaison des seuils pour le signal XEG→XIU. Tableau des 8 signaux survivants avec mécanismes et risques d'érosion.</p>
-    <div class="cmeta">8 signaux · p_BH &lt; 0,01 · Stabilité 4 sous-périodes · Mécanismes identifiés</div>
+    <p>Fréquence des chocs extrêmes (≥ 2σ / 2,5σ / 3σ) sur 25 ans. Heatmap saisonnière. Tableau des signaux survivants avec mécanismes et risques d'érosion. Base de la section 5bis du PRD v3.0.</p>
+    <div class="cmeta">S1–S4 déployés · p perm. 0,000–0,002 · Stabilité 4 sous-périodes · Mécanismes structurels</div>
   </a>
   <a class="card" href="backtest_performance.html">
-    <div class="ctag new">Nouveau · Backtesting IS/OOS <span class="cnew">NEW</span></div>
-    <h3>Backtesting — Stratégie de contagion combinée</h3>
-    <p>Règle de trading complète : XUT + XRE + XMA + XIT z ≤ −2,5 → long XIU + XFN + XIN. Sizing proportionnel au z-score. Validation stricte in-sample (2001–2019) vs out-of-sample (2020–2026).</p>
-    <div class="cmeta">Sharpe 2,95 · MaxDD −9,2 % · OOS meilleur qu'IS · 3 scénarios de coûts</div>
+    <div class="ctag new">Backtesting IS/OOS <span class="cnew">RÉFÉRENCE</span></div>
+    <h3>Backtesting — Signaux de contagion individuels</h3>
+    <p>Validation statistique des signaux XRE→XIN, XEG→XFN, XUT→XIN, XUT→XFN sur données in-sample (2001–2019) vs out-of-sample (2020–2026). La stratégie combinée A+B a été retirée du PRD (Wilcoxon p=0,908 — distribution pathologique).</p>
+    <div class="cmeta">S1 p perm.=0,000 · S2 stabilité tridécennale · Stratégie combinée non déployable</div>
   </a>
 </div>
 
