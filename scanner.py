@@ -28,9 +28,9 @@ import yfinance as yf
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-# Désactiver le cache yfinance (peewee/SQLite) — inutile sur runner éphémère GitHub Actions
-# Évite les erreurs de permissions et les données périmées entre les runs (PRD v3.0 §C7)
-yf.set_tz_cache_location(None)
+# Rediriger le cache yfinance (peewee/SQLite) vers /tmp — garanti accessible sur GitHub Actions
+# yfinance 1.3.0 ne supporte pas None comme valeur (TypeError) — /tmp est éphémère = comportement voulu
+yf.set_tz_cache_location("/tmp/yfinance_cache")
 
 EASTERN = ZoneInfo("America/Toronto")
 
