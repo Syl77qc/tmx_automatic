@@ -60,6 +60,7 @@ section{margin-bottom:48px;}
 .badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;}
 .badge-green{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2);}
 .badge-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.badge-blue{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);}
 .badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);}
 .badge-blue{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
 .callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
@@ -187,13 +188,13 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
         <tbody>
           <tr><td class="ticker">XFN.TO</td><td style="color:var(--text2);font-size:11px">Financières CA</td><td class="r num">87</td><td class="r num" style="color:var(--green)">2%</td><td class="r num" style="color:var(--accent)">70%</td><td class="r num">28%</td><td style="font-family:var(--mono);font-size:11px">Royal Bank (51×)</td><td><span class="badge badge-green">✓ Excellent</span></td></tr>
           <tr><td class="ticker">XIT.TO</td><td style="color:var(--text2);font-size:11px">Technologies CA</td><td class="r num">85</td><td class="r num" style="color:var(--red)">87%</td><td class="r num">0%</td><td class="r num">13%</td><td style="font-family:var(--mono);font-size:11px">Shopify (80×)</td><td><span class="badge badge-red">⚠ Filtre requis</span></td></tr>
-          <tr><td class="ticker">XEG.TO</td><td style="color:var(--text2);font-size:11px">Énergie CA</td><td class="r num">68</td><td class="r num" style="color:var(--green)">0%</td><td class="r num" style="color:var(--accent)">82%</td><td class="r num">18%</td><td style="font-family:var(--mono);font-size:11px">Canadian Natural (45×)</td><td><span class="badge badge-green">✓ Excellent</span></td></tr>
+          <tr><td class="ticker">XEG.TO</td><td style="color:var(--text2);font-size:11px">Énergie CA</td><td class="r num">68</td><td class="r num" style="color:var(--green)">0%</td><td class="r num" style="color:var(--accent)">82%</td><td class="r num">18%</td><td style="font-family:var(--mono);font-size:11px">Canadian Natural (45×)</td><td><span class="badge badge-blue">⚡ Émetteur contagion</span><br><span style="font-family:var(--mono);font-size:9px;color:var(--text3)">CTX v3.0</span></td></tr>
           <tr><td class="ticker">XGD.TO</td><td style="color:var(--text2);font-size:11px">Mines d'or</td><td class="r num">61</td><td class="r num" style="color:var(--green)">7%</td><td class="r num" style="color:var(--accent)">72%</td><td class="r num">21%</td><td style="font-family:var(--mono);font-size:11px">Agnico Eagle (45×)</td><td><span class="badge badge-green">✓ Bon</span></td></tr>
         </tbody>
       </table></div>
     </div>
     <div class="interp">
-      <strong>Comment lire ce tableau.</strong> La colonne Fondamental indique la part des baisses causées par le titre dominant (CF news — pas de rebond attendu). Sectoriel = baisses diffuses à travers le secteur (DR news — rebond probable). <strong>XIT est l'anomalie structurelle :</strong> 87% de ses chocs sont fondamentaux, tirés par Shopify (55% du FNB). XFN, XEG et XGD ont au contraire des profils sains — leurs baisses sont majoritairement sectorielles. Pour le diagnostic complet incluant la conformité du système, voir <a href="diagnostic_systeme.html" style="color:var(--accent)">Diagnostic du système</a>.
+      <strong>Comment lire ce tableau.</strong> La colonne Fondamental indique la part des baisses causées par le titre dominant (CF news — pas de rebond attendu). Sectoriel = baisses diffuses à travers le secteur (DR news — rebond probable). <strong>XIT est l'anomalie structurelle :</strong> 87% de ses chocs sont fondamentaux, tirés par Shopify (55% du FNB). XFN a un profil sain avec 70% de baisses sectorielles. <strong>XEG</strong> affiche 82% sectoriel — excellent profil historique — mais a été retiré du trading actif en PRD v3.0 (aucun signal Wilcoxon validé sur 25 ans) ; ses chocs ≥ 2,5σ activent désormais le signal de contagion S2 (XEG→XFN). Pour le diagnostic complet incluant la conformité du système, voir <a href="diagnostic_systeme.html" style="color:var(--accent)">Diagnostic du système</a>.
     </div>
   </section>
 
@@ -214,11 +215,11 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       </div>
       <div style="background:#4ade8008;border:1px solid #4ade8030;border-radius:8px;padding:18px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <span>✅</span><strong>Statu quo</strong><span class="badge badge-green" style="margin-left:auto">XFN · XEG · XGD</span>
+          <span>⚡</span><strong>Contagion S2</strong><span class="badge badge-blue" style="margin-left:auto">XEG — CTX v3.0</span>
         </div>
         <div style="font-size:12px;color:var(--text2);line-height:1.8">
           <div>→ <strong style="color:var(--text)">XFN :</strong> 70% sectoriel · Royal Bank diffuse · rebond probable</div>
-          <div>→ <strong style="color:var(--text)">XEG :</strong> 82% sectoriel · lié au WTI · retournement classique</div>
+          <div>→ <strong style="color:var(--text)">XEG :</strong> 82% sectoriel · lié au WTI · choc XEG ≥ 2,5σ → signal S2 (achat XFN J+1)</div>
           <div>→ <strong style="color:var(--text)">XGD :</strong> 72% sectoriel · métaux précieux · mean reversion robuste</div>
         </div>
       </div>
