@@ -28,13 +28,13 @@ jobs:
     steps:
       # ── 1. Checkout ──────────────────────────────────────────────────────────
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           token: ${{ secrets.GH_PAT }}
 
       # ── 2. Python ────────────────────────────────────────────────────────────
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.12"
           cache: "pip"
@@ -79,12 +79,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       # ── 6. Commit dashboard HTML (seulement si changement réel) ──────────────
-      # index.html et resultats.html ne sont poussés QUE s'ils ont changé.
+      # index.html, resultats.html et contagion.html ne sont poussés QUE s'ils ont changé.
       # Sans cette séparation, chaque push déclenche un workflow
       # "pages build and deployment" qui fait throttler le schedule par GitHub.
       - name: Commit dashboard (signal changes only)
         run: |
-          git add index.html resultats.html || true
+          git add index.html resultats.html contagion.html || true
           if git diff --staged --quiet; then
             echo "Aucun changement dans le dashboard — push ignoré."
           else
@@ -98,7 +98,7 @@ jobs:
       # ── 7. Artifacts (toujours) ───────────────────────────────────────────────
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: scan-results-${{ github.run_id }}
           path: |
