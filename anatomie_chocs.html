@@ -2,300 +2,623 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FNBLab — Anatomie des chocs</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FNBLab — Anatomie des chocs de marché</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg:#0d0f11;--bg2:#131619;--bg3:#1a1e22;--bg4:#21262d;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
-  --text:#e8e4dd;--text2:#8a8880;--text3:#555250;
-  --accent:#e8c97e;
-  --green:#4ade80;--amber:#f59e0b;--red:#f87171;--blue:#60a5fa;
-  --mono:'DM Mono',monospace;--display:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --bg:    #0d0f11; --bg2:   #131619; --bg3:   #1a1e22; --bg4:   #20262c;
+  --border:#2a3038; --gold:  #e8c97e; --gold2: #c9a84c;
+  --text1: #e8eaed; --text2: #9aa0a6; --text3: #5f6368;
+  --green: #4ade80; --red:   #f87171; --amber: #f59e0b; --blue:  #60a5fa;
+  --mono:  'DM Mono', monospace;
+  --sans:  'DM Sans', sans-serif;
+  --serif: 'Fraunces', serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
-nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;gap:0;}
-.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;white-space:nowrap;}
-.nav-links{display:flex;gap:2px;overflow-x:auto;}
-.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color .15s,background .15s;white-space:nowrap;}
-.nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
-.page{max-width:1200px;margin:0 auto;padding:40px 32px 80px;}
-.hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);}
-.hero-title{font-family:var(--display);font-size:28px;font-weight:300;font-style:italic;line-height:1.2;margin-bottom:6px;}
-.hero-title span{color:var(--accent);font-style:normal;font-weight:500;}
-.hero-sub{font-size:13px;color:var(--text3);}
-section{margin-bottom:48px;}
-.section-label{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
-.section-title{font-family:var(--display);font-size:17px;font-weight:400;color:var(--text);margin-bottom:4px;}
-.section-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
-.chart-title{font-family:var(--mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-.chart-desc{font-size:12px;color:var(--text3);margin-bottom:20px;}
-.chart-wrap{position:relative;}
-.interp{margin-top:0;padding:14px 18px;background:var(--bg3);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
-.interp strong{color:var(--text);}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
-.stat-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
-.stat-value{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);line-height:1;margin-bottom:4px;}
-.stat-sub{font-size:11px;color:var(--text3);}
-.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
-.card-link{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:border-color .15s,background .15s;display:block;}
-.card-link:hover{border-color:var(--border2);background:var(--bg3);}
-.card-tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
-.card-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.3;}
-.card-desc{font-size:12px;color:var(--text3);line-height:1.55;}
-.card-meta{margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--text3);}
-.data-table{width:100%;border-collapse:collapse;font-size:12px;}
-.data-table th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;}
-.data-table th.r{text-align:right;}
-.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.data-table tr:last-child td{border-bottom:none;}
-.data-table tr:hover td{background:rgba(255,255,255,.02);}
-.data-table .r{text-align:right;}
-.ticker{font-family:var(--mono);color:var(--accent);font-weight:500;}
-.num{font-family:var(--mono);font-size:11px;}
-.badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;}
-.badge-green{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2);}
-.badge-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
-.badge-blue{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);}
-.badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);}
-.badge-blue{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
-.callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
-.callout .icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
-.callout strong{color:var(--text);}
-.conclusion{margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.85;}
-.conclusion h3{font-family:var(--display);font-size:15px;font-weight:400;color:var(--text);margin-bottom:12px;}
-.conclusion p{margin-bottom:10px;}
-.conclusion p:last-child{margin-bottom:0;}
-.conclusion strong{color:var(--text);}
-footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);}
-.footer-brand{font-family:var(--display);font-size:14px;color:var(--accent);font-style:italic;}
-@media(max-width:900px){
-  .page{padding:24px 16px 60px;}
-  nav{padding:0 16px;}
-  .stats-row{grid-template-columns:1fr 1fr;}
-  .cards-grid{grid-template-columns:1fr;}
-}
-</style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text1);font-family:var(--sans);font-size:14px;line-height:1.6}
+a{color:var(--gold);text-decoration:none} a:hover{color:var(--gold2)}
 
+/* Nav */
+.nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;gap:28px;height:52px}
+.nav-brand{font-family:var(--serif);font-size:18px;color:var(--gold);margin-right:12px}
+.nav a{font-size:13px;color:var(--text2);padding:4px 0;border-bottom:2px solid transparent}
+.nav a:hover,.nav a.active{color:var(--text1);border-bottom-color:var(--gold)}
+
+/* Breadcrumb */
+.breadcrumb{padding:14px 32px 0;font-size:12px;color:var(--text3)}
+.breadcrumb a{color:var(--text3)} .breadcrumb a:hover{color:var(--gold)}
+.breadcrumb .sep{margin:0 6px}
+
+/* Header */
+.page-header{padding:20px 32px 0}
+.htag{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.page-header h1{font-family:var(--serif);font-size:32px;font-weight:300;color:var(--text1);margin-bottom:10px}
+.hdesc{color:var(--text2);font-size:14px;max-width:700px;line-height:1.7}
+
+/* Tabs */
+.nav-tabs{display:flex;gap:0;padding:24px 32px 0;border-bottom:1px solid var(--border)}
+.tab{padding:10px 20px;cursor:pointer;font-size:13px;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab:hover{color:var(--text1)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* Sections */
+.section{padding:28px 32px;display:none} .section.active{display:block}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:28px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:18px 20px}
+.kpi.acc{border-left:3px solid var(--gold)}
+.kpi.mr{border-left:3px solid var(--green)}
+.kpi.ctx{border-left:3px solid var(--blue)}
+.kl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.kv{font-family:var(--mono);font-size:28px;font-weight:400;color:var(--gold)}
+.kv.green{color:var(--green)} .kv.blue{color:var(--blue)}
+.ks{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* Panels */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:22px 24px;margin-bottom:20px}
+.panel-title{font-family:var(--serif);font-size:17px;font-weight:300;color:var(--gold);margin-bottom:6px}
+.panel-desc{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6}
+
+/* Layer badge */
+.layer-label{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:3px;border:1px solid;margin-bottom:16px}
+.layer-mr{color:var(--green);border-color:var(--green);background:#052e0a}
+.layer-ctx{color:var(--blue);border-color:var(--blue);background:#051a2d}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg3);color:var(--text2);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:hover{background:var(--bg3)}
+tbody td{padding:9px 12px}
+.r{text-align:right} .c{text-align:center}
+
+/* Badges fréquence */
+.badge-hi{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;color:var(--green);border:1px solid var(--green);background:#052e0a}
+.badge-mid{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;color:var(--amber);border:1px solid var(--amber);background:#2d1a00}
+.badge-lo{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;color:var(--text3);border:1px solid var(--border);background:var(--bg3)}
+.seuil-sys{font-family:var(--mono);font-size:11px;color:var(--gold)}
+
+/* Callout */
+.callout{background:var(--bg3);border-left:3px solid var(--gold);padding:14px 18px;border-radius:0 6px 6px 0;font-size:13px;color:var(--text2);line-height:1.7;margin-top:14px}
+.callout strong{color:var(--text1)}
+
+/* Chart */
+.chart-wrap{position:relative;height:280px;margin:18px 0}
+.chart-wrap-tall{position:relative;height:340px;margin:18px 0}
+
+/* Insight grid */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:20px}
+.insight{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:18px}
+.i-title{font-family:var(--serif);font-size:14px;color:var(--gold);margin-bottom:8px}
+.i-body{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* Heatmap */
+.heatmap-wrap{overflow-x:auto}
+.heatmap-table{border-collapse:collapse;font-size:12px;width:100%}
+.heatmap-table th{background:var(--bg3);color:var(--text2);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;text-align:center;border:1px solid var(--border)}
+.heatmap-table td{padding:7px 10px;text-align:center;border:1px solid var(--border);font-family:var(--mono);font-size:12px;transition:background .1s}
+.hm-fnb{text-align:left !important;font-family:var(--sans);font-weight:500;color:var(--text1)}
+.hm-role{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle}
+
+/* Footer */
+footer{padding:24px 32px;border-top:1px solid var(--border);color:var(--text3);font-size:12px;font-family:var(--mono);display:flex;justify-content:space-between}
+</style>
 </head>
 <body>
-<nav>
-  <a class="nav-brand" href="index.html">FNBLab</a>
-  <div class="nav-links">
-    <a href="index.html">Dashboard</a>
-    <a href="systeme.html">Système</a>
-    <a href="fondements.html">Fondements théoriques</a>
-    <a href="analyses.html" class="active">Analyses quantitatives</a>
-    <a href="resultats.html">Résultats</a>
-    <a href="apropos.html">À propos</a>
-  </div>
+
+<nav class="nav">
+  <span class="nav-brand">FNBLab</span>
+  <a href="index.html">Tableau de bord</a>
+  <a href="resultats.html">Résultats MR</a>
+  <a href="contagion.html">Contagion</a>
+  <a href="systeme.html">Système</a>
+  <a href="analyses.html" class="active">Analyses</a>
+  <a href="apropos.html">À propos</a>
 </nav>
-<div class="page">
-  <div class="hero">
-    <div class="hero-title">Anatomie des <span>chocs de marché</span></div>
-    <div class="hero-sub">De la fréquence empirique au diagnostic structurel · 13 FNBs · 2001–2026 (25 ans)</div>
+
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a><span class="sep">/</span>
+  <a href="analyses.html">Analyses quantitatives</a><span class="sep">/</span>
+  <span>Anatomie des chocs de marché</span>
+</div>
+
+<div class="page-header">
+  <div class="htag">Analyse quantitative · PRD v3.0 · 25 ans · 12 FNBs · TSX</div>
+  <h1>Anatomie des chocs de marché</h1>
+  <p class="hdesc">Fréquence des baisses extrêmes par couche de trading — Mean reversion (7 FNBs actifs, seuil 2,0σ) et contagion (5 FNBs contextuels, seuil 2,5σ). Saisonnalité mensuelle et comparaison des seuils sur 25 ans de données.</p>
+</div>
+
+<div class="nav-tabs">
+  <div class="tab active" onclick="showTab('freq',this)">Fréquence par couche</div>
+  <div class="tab" onclick="showTab('heat',this)">Saisonnalité mensuelle</div>
+  <div class="tab" onclick="showTab('seuils',this)">Comparaison des seuils</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     TAB 1 — FRÉQUENCE PAR COUCHE
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-freq" class="section active">
+
+  <div class="kpis">
+    <div class="kpi mr">
+      <div class="kl">MR — Signaux 2,0σ/an (moy.)</div>
+      <div class="kv green">5,7</div>
+      <div class="ks">7 FNBs actifs · toutes les ~9 semaines</div>
+    </div>
+    <div class="kpi mr">
+      <div class="kl">MR — Total signaux historiques</div>
+      <div class="kv green">1 043</div>
+      <div class="ks">Sur 25 ans · seuil de déclenchement réel</div>
+    </div>
+    <div class="kpi ctx">
+      <div class="kl">Contagion — Émissions 2,5σ/an (moy.)</div>
+      <div class="kv blue">1,5</div>
+      <div class="ks">5 FNBs contextuels · toutes les ~34 semaines</div>
+    </div>
+    <div class="kpi ctx">
+      <div class="kl">Contagion — Total émissions historiques</div>
+      <div class="kv blue">200</div>
+      <div class="ks">Sur 25 ans · base des signaux S1–S4</div>
+    </div>
+    <div class="kpi acc">
+      <div class="kl">Univers complet 2,0σ/an (moy.)</div>
+      <div class="kv">5,9</div>
+      <div class="ks">12 FNBs · HYG retiré (PRD v3.0)</div>
+    </div>
+    <div class="kpi acc">
+      <div class="kl">FNB le plus fréquent</div>
+      <div class="kv">XIU</div>
+      <div class="ks">7,5 chocs ≥ 2,0σ/an · marché large</div>
+    </div>
   </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 20px;margin-bottom:32px;display:flex;align-items:center;gap:8px;overflow-x:auto;font-family:var(--mono);font-size:11px;color:var(--text3);">
-    <a href="#frequence" style="color:var(--accent);text-decoration:none;white-space:nowrap">① Fréquence</a>
-    <span>▶</span><a href="#saisonnalite" style="color:var(--text3);text-decoration:none;white-space:nowrap">② Saisonnalité</a>
-    <span>▶</span><a href="#litterature" style="color:var(--text3);text-decoration:none;white-space:nowrap">③ Littérature</a>
-    <span>▶</span><a href="#diagnostic" style="color:var(--text3);text-decoration:none;white-space:nowrap">④ Diagnostic</a>
-    <span>▶</span><a href="#implications" style="color:var(--text3);text-decoration:none;white-space:nowrap">⑤ Implications</a>
+
+  <!-- Couche MR -->
+  <div class="panel">
+    <div class="layer-label layer-mr">COUCHE 1 — MEAN REVERSION · 7 FNBs actifs · seuil déclenchement 2,0σ</div>
+    <div class="panel-title">Fréquence des baisses — FNBs actifs</div>
+    <div class="panel-desc">Les 7 FNBs pour lesquels le test de Wilcoxon sur 25 ans valide un signal de mean reversion. Le seuil de déclenchement est 2,0σ pour tous (PRD v3.0). La colonne « Total 2,0σ » indique le n disponible pour la validation statistique.</div>
+    <table>
+      <thead><tr>
+        <th>FNB</th><th>Secteur</th><th>Historique</th>
+        <th class="r">2,0σ/an</th><th class="r">2,5σ/an</th><th class="r">3,0σ/an</th>
+        <th class="r">Total 2,0σ</th><th class="c">Seuil système</th><th class="c">Fréquence</th>
+      </tr></thead>
+      <tbody id="tbody-mr"></tbody>
+    </table>
+    <div class="callout">
+      <strong>Lecture.</strong> La fréquence au seuil 2,0σ — le seuil réel de déclenchement — varie de <strong>3,2/an (XST)</strong> à <strong>7,5/an (XIU)</strong>. La moyenne de 5,7/an signifie qu'un FNB actif génère un signal potentiel toutes les 9 semaines environ. Ce n'est pas une anomalie rare — c'est la fréquence normale des fluctuations extrêmes dans un marché boursier actif.
+    </div>
   </div>
 
-  <section id="frequence">
-    <div class="section-label">Acte I</div>
-    <div class="section-title">Le constat brut — Fréquence des baisses ≥ 2σ</div>
-    <div class="section-sub">Combien de fois par an un FNB subit-il un choc négatif significatif ? · 2001–2026</div>
-    <div class="stats-row" id="heroStats"></div>
-    <div class="chart-card">
-      <div class="chart-title">Fréquence annuelle des baisses par seuil</div>
-      <div class="chart-desc">13 FNBs classés par fréquence à 2σ · période complète 25 ans</div>
-      <div style="overflow-x:auto"><table class="data-table" id="freqTable"></table></div>
-    </div>
-    <div class="interp" id="freqInterp"></div>
-    <div class="chart-card">
-      <div class="chart-title">Nombre moyen de baisses ≥ 2σ par an · 2001–2026</div>
-      <div class="chart-wrap" style="height:300px"><canvas id="barFreq"></canvas></div>
-    </div>
-    <div class="interp">
-      <strong>Comment lire ce graphique.</strong> Les barres indiquent combien de fois par an chaque FNB a subi une baisse ≥ 2σ, en moyenne sur 25 ans. <strong>XIU mène à 7,5 épisodes/an</strong> — soit environ une baisse significative toutes les 7 semaines. À l'opposé, ZAG à 4,0/an en connaît une toutes les 13 semaines. La couleur rouge signale les FNBs au-dessus de 7/an, ambre entre 5 et 7, vert en dessous. <strong>Ce n'est pas une anomalie :</strong> c'est la cadence normale des marchés sur 25 ans incluant deux crises majeures (GFC 2008, COVID 2020).
-    </div>
-  </section>
+  <!-- Chart MR -->
+  <div class="panel">
+    <div class="layer-label layer-mr">COUCHE 1 — MEAN REVERSION</div>
+    <div class="panel-title">Fréquence des chocs par FNB actif (par an)</div>
+    <div class="panel-desc">Barres groupées aux trois seuils. La barre verte (2,0σ) correspond au seuil réel de déclenchement du système.</div>
+    <div class="chart-wrap"><canvas id="chartMR"></canvas></div>
+  </div>
 
-  <section id="saisonnalite">
-    <div class="section-label">Acte II</div>
-    <div class="section-title">Quand arrivent-ils ? — Saisonnalité mensuelle</div>
-    <div class="section-sub">Distribution des baisses ≥ 2σ par mois · 25 ans cumulés</div>
-    <div class="chart-card">
-      <div class="chart-title">Heatmap : baisses ≥ 2σ par FNB et par mois</div>
-      <div style="overflow-x:auto"><table id="heatmapTable" style="border-collapse:collapse;font-family:var(--mono);font-size:11px;width:100%;min-width:600px;"></table></div>
-      <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;color:var(--text3);">
-        <span>Intensité :</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#1a1e22;border-radius:2px"></span> 1–3</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#e8c97e30;border-radius:2px"></span> 4–7</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#e8c97e70;border-radius:2px"></span> 8–11</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;background:#e8c97e;border-radius:2px"></span> 12+</span>
-      </div>
+  <!-- Couche contagion -->
+  <div class="panel">
+    <div class="layer-label layer-ctx">COUCHE 2 — CONTAGION · 5 FNBs contextuels · seuil émission 2,5σ</div>
+    <div class="panel-title">Fréquence des émissions — FNBs contextuels</div>
+    <div class="panel-desc">Ces 5 FNBs n'ont pas de signal de mean reversion validé. Leurs chocs ≥ 2,5σ servent d'émetteurs pour les signaux de contagion inter-FNB (S1–S4). La colonne « Total 2,5σ » est le n de base pour la validation des signaux S1–S4.</div>
+    <table>
+      <thead><tr>
+        <th>FNB</th><th>Secteur</th><th>Historique</th>
+        <th class="r">2,0σ/an</th><th class="r">2,5σ/an</th><th class="r">3,0σ/an</th>
+        <th class="r">Total 2,5σ</th><th class="c">Seuil système</th><th class="c">Fréquence</th>
+      </tr></thead>
+      <tbody id="tbody-ctx"></tbody>
+    </table>
+    <div class="callout">
+      <strong>Note importante.</strong> La fréquence au seuil d'émission 2,5σ est plus faible : <strong>1,5 émissions/an en moyenne</strong> contre 5,7 déclenchements/an pour la couche MR. C'est précisément cette rareté qui donne leur valeur statistique aux signaux de contagion — et qui explique le n limité (200 émissions au total sur 25 ans pour les 5 FNBs contextuels). XUT et XRE, bien qu'émetteurs dans les signaux S1–S4, sont des <strong>FNBs actifs</strong> — leurs z-scores proviennent du scanner principal, pas de cette couche.
     </div>
-    <div class="interp">
-      <strong>Comment lire cette heatmap.</strong> Chaque cellule indique le nombre cumulé de baisses ≥ 2σ pour ce FNB durant ce mois, sur 25 ans. <strong>Mars, septembre et octobre</strong> ressortent systématiquement — un patron saisonnier bien documenté dans la littérature (réallocations institutionnelles de fin de trimestre, nervosité automnale). Ce n'est pas une coïncidence : ces mois correspondent à des moments structurels de pression de vente récurrente dans les marchés canadiens et nord-américains.
+  </div>
+
+  <!-- Chart CTX -->
+  <div class="panel">
+    <div class="layer-label layer-ctx">COUCHE 2 — CONTAGION</div>
+    <div class="panel-title">Fréquence des émissions par FNB contextuel (par an)</div>
+    <div class="panel-desc">Barres groupées aux trois seuils. La barre bleue (2,5σ) correspond au seuil d'émission des signaux de contagion.</div>
+    <div class="chart-wrap"><canvas id="chartCTX"></canvas></div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight">
+      <div class="i-title">Impact du retrait de HYG</div>
+      <div class="i-body">HYG était le FNB le plus fréquent de l'univers original (6,5 chocs ≥ 2,0σ/an, 8,9 chocs ≥ 2,0σ/an selon les données complètes). Son retrait en PRD v3.0 ramène la moyenne globale de 6,3 à 5,9/an — un gain de précision pour la couche MR, qui n'opère plus que sur des FNBs canadiens TSX.</div>
     </div>
-  </section>
-
-  <section id="litterature">
-    <div class="section-label">Acte III</div>
-    <div class="section-title">Ce que dit la littérature</div>
-    <div class="section-sub">Trois décennies de recherche · Voir aussi <a href="fondements.html" style="color:var(--accent)">Fondements théoriques</a> pour les détails complets</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      <div class="chart-card" style="margin-bottom:0">
-        <div class="chart-title">Fama & French (1988)</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:8px">Composante <strong style="color:var(--text)">permanente</strong> vs <strong style="color:var(--text)">temporaire</strong> des prix. La temporaire explique 25–40% de la variance — c'est le fondement du mean reversion. Chaque fois qu'une baisse est de nature temporaire, le retour à la moyenne est attendu.</div>
-        <div style="margin-top:8px"><span class="badge badge-green">Mean reversion ✓</span></div>
-      </div>
-      <div class="chart-card" style="margin-bottom:0">
-        <div class="chart-title">Vuolteenaho (2002)</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:8px"><strong style="color:var(--text)">CF news</strong> (révision bénéfices → permanent, pas de rebond) vs <strong style="color:var(--text)">DR news</strong> (taux requis → temporaire, rebond). Shopify rate ses résultats = CF. Taux montent sectoriellement = DR.</div>
-        <div style="margin-top:8px"><span class="badge badge-red">Résultats → pas de rebond</span> <span class="badge badge-green">Macro → rebond</span></div>
-      </div>
-      <div class="chart-card" style="margin-bottom:0">
-        <div class="chart-title">Da & Shive (2018)</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:8px">AR(1) = −0,06, t = −19,37 sur 549 FNBs — preuve directe de mean reversion à court terme. <strong style="color:var(--text)">Les baisses non-fondamentales se renversent rapidement.</strong> Demi-vie du mispricing : 0,44 jour.</div>
-        <div style="margin-top:8px"><span class="badge badge-green">FNB systémique → rebond ✓</span></div>
-      </div>
-      <div class="chart-card" style="margin-bottom:0">
-        <div class="chart-title">Bernard & Thomas (1989) — PEAD</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:8px"><strong style="color:var(--text)">Post-Earnings Announcement Drift :</strong> après une mauvaise annonce, les prix continuent de baisser 30–60 jours. L'opposé du mean reversion. Base du filtre H (XIT/Shopify) dans le PRD.</div>
-        <div style="margin-top:8px"><span class="badge badge-red">Drift post-résultats</span> <span class="badge badge-amber">±2 jours critiques</span></div>
-      </div>
+    <div class="insight">
+      <div class="i-title">XST — FNB le moins fréquent</div>
+      <div class="i-body">Avec seulement 3,2 chocs ≥ 2,0σ/an, XST (consommation de base) est le FNB actif le plus défensif. C'est cohérent avec sa nature : les biens de consommation courante sont moins volatils. Son horizon de 15 jours (Wilcoxon) reflète un rebond plus lent mais structurel.</div>
     </div>
-    <div class="interp">
-      <strong>Synthèse.</strong> La littérature est sans ambiguïté : <strong>le mean reversion fonctionne sur les chocs temporaires</strong> (macro, sectoriel, sentiment) et <strong>échoue sur les chocs fondamentaux</strong> (publication d'un titre dominant). TMX v2 applique cette distinction via le classificateur Groq et le filtre H. Pour aller plus loin, consultez les <a href="fondements.html" style="color:var(--accent)">Fondements théoriques</a>.
+    <div class="insight">
+      <div class="i-title">XIU et XIN — les plus fréquents</div>
+      <div class="i-body">XIU (7,5/an) et XIN (7,3/an) dominent la couche MR. XIU réplique le S&P/TSX 60 — très liquide, très sensible aux événements de marché. XIN est exposé aux marchés internationaux (Europe, Asie) — deux fenêtres de trading distinctes qui multiplient les occasions de chocs.</div>
     </div>
-  </section>
-
-  <section id="diagnostic">
-    <div class="section-label">Acte IV</div>
-    <div class="section-title">Le diagnostic — Classification des chocs</div>
-    <div class="section-sub">978 événements classifiés · XFN, XIT, XEG, XGD · 2016–2025</div>
-    <div class="chart-card">
-      <div style="overflow-x:auto"><table class="data-table">
-        <thead><tr><th>FNB</th><th>Description</th><th class="r">Événements</th><th class="r">Fondamental</th><th class="r">Sectoriel</th><th class="r">Systémique</th><th>Titre #1</th><th>Verdict</th></tr></thead>
-        <tbody>
-          <tr><td class="ticker">XFN.TO</td><td style="color:var(--text2);font-size:11px">Financières CA</td><td class="r num">87</td><td class="r num" style="color:var(--green)">2%</td><td class="r num" style="color:var(--accent)">70%</td><td class="r num">28%</td><td style="font-family:var(--mono);font-size:11px">Royal Bank (51×)</td><td><span class="badge badge-green">✓ Excellent</span></td></tr>
-          <tr><td class="ticker">XIT.TO</td><td style="color:var(--text2);font-size:11px">Technologies CA</td><td class="r num">85</td><td class="r num" style="color:var(--red)">87%</td><td class="r num">0%</td><td class="r num">13%</td><td style="font-family:var(--mono);font-size:11px">Shopify (80×)</td><td><span class="badge badge-red">⚠ Filtre requis</span></td></tr>
-          <tr><td class="ticker">XEG.TO</td><td style="color:var(--text2);font-size:11px">Énergie CA</td><td class="r num">68</td><td class="r num" style="color:var(--green)">0%</td><td class="r num" style="color:var(--accent)">82%</td><td class="r num">18%</td><td style="font-family:var(--mono);font-size:11px">Canadian Natural (45×)</td><td><span class="badge badge-blue">⚡ Émetteur contagion</span><br><span style="font-family:var(--mono);font-size:9px;color:var(--text3)">CTX v3.0</span></td></tr>
-          <tr><td class="ticker">XGD.TO</td><td style="color:var(--text2);font-size:11px">Mines d'or</td><td class="r num">61</td><td class="r num" style="color:var(--green)">7%</td><td class="r num" style="color:var(--accent)">72%</td><td class="r num">21%</td><td style="font-family:var(--mono);font-size:11px">Agnico Eagle (45×)</td><td><span class="badge badge-green">✓ Bon</span></td></tr>
-        </tbody>
-      </table></div>
+    <div class="insight">
+      <div class="i-title">XGD — émetteur rare mais puissant</div>
+      <div class="i-body">Avec 1,2 émissions ≥ 2,5σ/an, XGD est le FNB contextuel le moins fréquent. C'est l'une des raisons pour lesquelles XGD→XIU (S5) est en veille : n=14 seulement après filtrage, insuffisant pour valider un signal statistiquement robuste (seuil minimal : n ≥ 30).</div>
     </div>
-    <div class="interp">
-      <strong>Comment lire ce tableau.</strong> La colonne Fondamental indique la part des baisses causées par le titre dominant (CF news — pas de rebond attendu). Sectoriel = baisses diffuses à travers le secteur (DR news — rebond probable). <strong>XIT est l'anomalie structurelle :</strong> 87% de ses chocs sont fondamentaux, tirés par Shopify (55% du FNB). XFN a un profil sain avec 70% de baisses sectorielles. <strong>XEG</strong> affiche 82% sectoriel — excellent profil historique — mais a été retiré du trading actif en PRD v3.0 (aucun signal Wilcoxon validé sur 25 ans) ; ses chocs ≥ 2,5σ activent désormais le signal de contagion S2 (XEG→XFN). Pour le diagnostic complet incluant la conformité du système, voir <a href="diagnostic_systeme.html" style="color:var(--accent)">Diagnostic du système</a>.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     TAB 2 — SAISONNALITÉ
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-heat" class="section">
+
+  <div class="kpis">
+    <div class="kpi acc">
+      <div class="kl">Mois le plus actif</div>
+      <div class="kv">Mars</div>
+      <div class="ks">172 baisses ≥ 2,0σ sur 25 ans</div>
     </div>
-  </section>
-
-  <section id="implications">
-    <div class="section-label">Acte V</div>
-    <div class="section-title">Implications pour TMX v2</div>
-    <div class="section-sub">Règles opérationnelles dérivées du diagnostic · PRD v2.2</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      <div style="background:#f8717108;border:1px solid #f8717130;border-radius:8px;padding:18px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <span>⚠️</span><strong>Traitement spécial</strong><span class="badge badge-red" style="margin-left:auto">XIT.TO</span>
-        </div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.8">
-          <div>→ <strong style="color:var(--text)">Seuil relevé :</strong> z ≤ −3,0 si publication Shopify dans ±2 jours</div>
-          <div>→ <strong style="color:var(--text)">Taille réduite :</strong> 25% si période de publication</div>
-          <div>→ <strong style="color:var(--text)">Calendrier :</strong> début février, mai, août, novembre</div>
-        </div>
-      </div>
-      <div style="background:#4ade8008;border:1px solid #4ade8030;border-radius:8px;padding:18px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <span>⚡</span><strong>Contagion S2</strong><span class="badge badge-blue" style="margin-left:auto">XEG — CTX v3.0</span>
-        </div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.8">
-          <div>→ <strong style="color:var(--text)">XFN :</strong> 70% sectoriel · Royal Bank diffuse · rebond probable</div>
-          <div>→ <strong style="color:var(--text)">XEG :</strong> 82% sectoriel · lié au WTI · choc XEG ≥ 2,5σ → signal S2 (achat XFN J+1)</div>
-          <div>→ <strong style="color:var(--text)">XGD :</strong> 72% sectoriel · métaux précieux · mean reversion robuste</div>
-        </div>
-      </div>
+    <div class="kpi acc">
+      <div class="kl">Mois le plus calme</div>
+      <div class="kv">Nov.</div>
+      <div class="ks">114 baisses ≥ 2,0σ sur 25 ans</div>
     </div>
-    <div class="conclusion">
-      <h3>Ce que cette analyse confirme pour TMX v2</h3>
-      <p>Le diagnostic de 978 événements sur 10 ans, complété par 25 ans de données de fréquence, établit que <strong>le mean reversion est un comportement structurel et stable</strong> de l'univers TMX v2. La grande majorité des chocs sont de nature sectorielle ou systémique (temporaires), ce qui explique pourquoi le système fonctionne sur la durée.</p>
-      <p>L'exception XIT est précieuse : elle démontre que le système sait distinguer un signal exploitable d'un piège fondamental. Le filtre H du PRD n'est pas une précaution arbitraire — c'est une nécessité statistique démontrée par 85 événements classifiés sur 10 ans.</p>
+    <div class="kpi acc">
+      <div class="kl">Écart max/min</div>
+      <div class="kv">+51%</div>
+      <div class="ks">Mars vs novembre — patron saisonnier réel</div>
     </div>
-  </section>
-</div><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script>
-const FREQ = {"XIU.TO": {"desc": "S&P/TSX 60 (large caps CA)", "n20": 196, "moy20": 7.5, "n25": 68, "moy25": 2.6, "n30": 15, "moy30": 0.6}, "XFN.TO": {"desc": "Financi\u00e8res CA", "n20": 179, "moy20": 6.9, "n25": 65, "moy25": 2.5, "n30": 16, "moy30": 0.6}, "XEG.TO": {"desc": "\u00c9nergie CA", "n20": 171, "moy20": 6.6, "n25": 55, "moy25": 2.1, "n30": 10, "moy30": 0.4}, "XUT.TO": {"desc": "Services publics CA", "n20": 118, "moy20": 4.5, "n25": 34, "moy25": 1.3, "n30": 8, "moy30": 0.3}, "XIT.TO": {"desc": "Technologies CA", "n20": 161, "moy20": 6.2, "n25": 45, "moy25": 1.7, "n30": 9, "moy30": 0.3}, "XRE.TO": {"desc": "Immobilier CA (REIT)", "n20": 169, "moy20": 6.5, "n25": 59, "moy25": 2.3, "n30": 14, "moy30": 0.5}, "XMA.TO": {"desc": "Mat\u00e9riaux CA", "n20": 142, "moy20": 5.5, "n25": 35, "moy25": 1.3, "n30": 11, "moy30": 0.4}, "XIN.TO": {"desc": "International (hors Am\u00e9r. du Nord)", "n20": 190, "moy20": 7.3, "n25": 67, "moy25": 2.6, "n30": 16, "moy30": 0.6}, "XHC.TO": {"desc": "Soins de sant\u00e9 mondiaux (CAD)", "n20": 107, "moy20": 4.1, "n25": 33, "moy25": 1.3, "n30": 7, "moy30": 0.3}, "XST.TO": {"desc": "Consommation de base CA", "n20": 84, "moy20": 3.2, "n25": 28, "moy25": 1.1, "n30": 6, "moy30": 0.2}, "XGD.TO": {"desc": "Mines d'or", "n20": 136, "moy20": 5.2, "n25": 32, "moy25": 1.2, "n30": 7, "moy30": 0.3}, "ZAG.TO": {"desc": "Obligations CA agr\u00e9g\u00e9es", "n20": 103, "moy20": 4.0, "n25": 33, "moy25": 1.3, "n30": 8, "moy30": 0.3}, "HYG": {"desc": "Obligations haut rendement US", "n20": 168, "moy20": 6.5, "n25": 65, "moy25": 2.5, "n30": 23, "moy30": 0.9}};
-const HEATMAP = {"XIU.TO": [22, 16, 21, 18, 13, 19, 10, 19, 15, 14, 9, 20], "XFN.TO": [18, 19, 14, 14, 13, 14, 14, 19, 12, 18, 12, 12], "XEG.TO": [22, 11, 19, 15, 16, 21, 7, 9, 16, 15, 10, 10], "XUT.TO": [10, 9, 11, 7, 8, 13, 7, 9, 14, 10, 9, 11], "XIT.TO": [17, 11, 14, 14, 10, 17, 12, 8, 19, 15, 10, 14], "XRE.TO": [9, 15, 25, 10, 15, 16, 8, 15, 16, 15, 12, 13], "XMA.TO": [12, 13, 12, 12, 12, 10, 16, 10, 13, 15, 9, 8], "XIN.TO": [22, 15, 14, 15, 21, 12, 12, 20, 17, 19, 12, 11], "XHC.TO": [8, 7, 10, 12, 4, 10, 7, 14, 9, 15, 3, 8], "XST.TO": [8, 7, 7, 7, 10, 11, 1, 10, 3, 7, 8, 5], "XGD.TO": [11, 14, 10, 18, 8, 6, 13, 9, 15, 15, 11, 6], "ZAG.TO": [8, 5, 15, 5, 6, 11, 9, 6, 6, 11, 9, 12], "HYG": [11, 14, 21, 7, 19, 15, 11, 16, 19, 14, 12, 9]};
-const FNBS = ["HYG", "XEG.TO", "XFN.TO", "XGD.TO", "XHC.TO", "XIN.TO", "XIT.TO", "XIU.TO", "XMA.TO", "XRE.TO", "XST.TO", "XUT.TO", "ZAG.TO"];
-const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  </div>
 
-const validFnbs = FNBS.filter(f => FREQ[f]);
-const avg = validFnbs.reduce((s,f)=>s+FREQ[f].moy20,0)/validFnbs.length;
-const total = validFnbs.reduce((s,f)=>s+FREQ[f].n20,0);
-const maxFnb = validFnbs.reduce((a,b)=>FREQ[a].moy20>FREQ[b].moy20?a:b);
-const minFnb = validFnbs.reduce((a,b)=>FREQ[a].moy20<FREQ[b].moy20?a:b);
+  <div class="panel">
+    <div class="panel-title">Carte thermique — Baisses ≥ 2,0σ par mois et par FNB</div>
+    <div class="panel-desc">Nombre total de baisses ≥ 2,0σ sur 25 ans (2001–2026) par mois calendaire. Les FNBs actifs sont séparés des FNBs contextuels par un trait. Plus la cellule est foncée, plus le mois est historiquement turbulent pour ce FNB.</div>
+    <div class="heatmap-wrap">
+      <table class="heatmap-table" id="heatmap-table"></table>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <strong>Patron saisonnier.</strong> Mars, janvier et octobre concentrent le plus de baisses extrêmes — trois moments historiquement liés aux publications macroéconomiques (début de trimestre, annonces de la Fed/BdC) et aux chocs de liquidité (fin d'année fiscale, rebalancements). Novembre et juillet sont les mois les plus calmes — à nuancer : la période estivale a des volumes plus faibles, ce qui peut <em>amplifier</em> les baisses individuelles quand elles surviennent. La saisonnalité est une information complémentaire, pas un filtre de déclenchement.
+    </div>
+  </div>
 
-document.getElementById('heroStats').innerHTML =
-  '<div class="stat-card"><div class="stat-label">Moyenne univers ≥ 2σ</div><div class="stat-value">'+avg.toFixed(1)+'</div><div class="stat-sub">chocs par an par FNB</div></div>'+
-  '<div class="stat-card"><div class="stat-label">Total 25 ans</div><div class="stat-value">'+total+'</div><div class="stat-sub">événements ≥ 2σ tous FNBs</div></div>'+
-  '<div class="stat-card"><div class="stat-label">Plus exposé</div><div class="stat-value" style="font-size:1.3rem;margin-top:4px">'+maxFnb+'</div><div class="stat-sub">'+FREQ[maxFnb].moy20+' chocs/an</div></div>'+
-  '<div class="stat-card"><div class="stat-label">Moins exposé</div><div class="stat-value" style="font-size:1.3rem;margin-top:4px">'+minFnb+'</div><div class="stat-sub">'+FREQ[minFnb].moy20+' chocs/an</div></div>';
+  <div class="panel">
+    <div class="panel-title">Distribution mensuelle — Total 12 FNBs</div>
+    <div class="panel-desc">Nombre total de baisses ≥ 2,0σ par mois, toutes FNBs confondues. Visualise le patron saisonnier global de l'univers v3.0.</div>
+    <div class="chart-wrap"><canvas id="chartMois"></canvas></div>
+  </div>
+</div>
 
-// Tableau fréquence
-const sorted = [...validFnbs].sort((a,b)=>FREQ[b].moy20-FREQ[a].moy20);
-const maxM = Math.max(...sorted.map(f=>FREQ[f].moy20));
-let th = '<thead><tr><th>#</th><th>FNB</th><th>Description</th><th class="r">≥ 2σ total</th><th class="r">Moy/an</th><th style="min-width:120px">Intensité</th><th class="r">≥ 2.5σ/an</th><th class="r">≥ 3σ/an</th></tr></thead><tbody>';
-sorted.forEach((f,i) => {
-  const d=FREQ[f]; const pct=(d.moy20/maxM*100).toFixed(0);
-  const col=d.moy20>=7?'var(--red)':d.moy20>=6?'var(--amber)':'var(--green)';
-  th += '<tr><td class="num" style="color:var(--text3)">'+(i+1)+'</td><td class="ticker">'+f+'</td><td style="color:var(--text2);font-size:11px">'+d.desc+'</td><td class="r num">'+d.n20+'</td><td class="r num" style="color:'+col+'">'+d.moy20.toFixed(1)+'</td>';
-  th += '<td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;max-width:100px;height:5px;background:var(--bg4);border-radius:3px"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"></div></div><span style="font-family:var(--mono);font-size:10px;color:var(--text3)">'+pct+'%</span></div></td>';
-  th += '<td class="r num">'+d.moy25.toFixed(1)+'</td><td class="r num">'+d.moy30.toFixed(1)+'</td></tr>';
-});
-th += '</tbody>';
-document.getElementById('freqTable').innerHTML = th;
-document.getElementById('freqInterp').innerHTML = '<strong>Comment lire ce tableau.</strong> Chaque ligne représente un FNB classé du plus au moins fréquemment touché par des baisses ≥ 2σ. <strong>XIU mène avec '+FREQ['XIU.TO'].moy20+' épisodes/an</strong> sur 25 ans — soit une baisse significative toutes les 7 semaines environ. Les colonnes ≥ 2,5σ et ≥ 3σ montrent la queue de distribution : les chocs extrêmes restent rares (0,2 à 0,9 par an). Ces chiffres sont le point de départ du calibrage des seuils de déclenchement du PRD v2.2.';
+<!-- ══════════════════════════════════════════════════════════════════════════
+     TAB 3 — COMPARAISON DES SEUILS
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="tab-seuils" class="section">
 
-// Bar chart
-new Chart(document.getElementById('barFreq'), {
-  type:'bar',
-  data:{labels:sorted.map(f=>f),datasets:[{
-    data:sorted.map(f=>FREQ[f].moy20),
-    backgroundColor:sorted.map(f=>FREQ[f].moy20>=7?'#f8717150':FREQ[f].moy20>=6?'#f59e0b50':'#4ade8040'),
-    borderColor:sorted.map(f=>FREQ[f].moy20>=7?'#f87171':FREQ[f].moy20>=6?'#f59e0b':'#4ade80'),
-    borderWidth:1,borderRadius:3
-  }]},
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{x:{grid:{display:false},ticks:{color:'#e8c97e',font:{family:'DM Mono',size:11}}},
-      y:{grid:{color:'#21262d'},ticks:{color:'#555250',font:{family:'DM Mono',size:11},callback:v=>v+'/an'}}}}
-});
+  <div class="kpis">
+    <div class="kpi acc">
+      <div class="kl">Seuil 2,0σ — Signal par défaut (MR)</div>
+      <div class="kv">5,7/an</div>
+      <div class="ks">7 FNBs actifs · seuil de déclenchement v3.0</div>
+    </div>
+    <div class="kpi acc">
+      <div class="kl">Seuil 2,5σ — Émission contagion</div>
+      <div class="kv">1,5/an</div>
+      <div class="ks">5 FNBs contextuels · 73% moins fréquent</div>
+    </div>
+    <div class="kpi acc">
+      <div class="kl">Seuil 3,0σ — Événements rares</div>
+      <div class="kv">0,4/an</div>
+      <div class="ks">Toutes les 2,5 ans par FNB · S5 en veille</div>
+    </div>
+  </div>
 
-// Heatmap
-function heatColor(v){ if(v>=12)return'#e8c97e'; if(v>=8)return'#e8c97e70'; if(v>=4)return'#e8c97e30'; return'#1a1e22'; }
-let htm='<thead><tr><th style="text-align:left;color:var(--accent);font-size:10px;padding:6px 10px">FNB</th>';
-MOIS.forEach(m=>{ htm+='<th style="text-align:center;color:var(--text3);font-size:10px;padding:6px 8px">'+m+'</th>'; });
-htm+='<th style="text-align:center;color:var(--text3);font-size:10px;padding:6px 8px">Total</th></tr></thead><tbody>';
-FNBS.filter(f=>HEATMAP[f]).forEach(f=>{
-  const v=HEATMAP[f]; const tot=v.reduce((a,b)=>a+b,0);
-  htm+='<tr><td style="font-family:var(--mono);color:var(--accent);font-size:11px;padding:5px 10px">'+f+'</td>';
-  v.forEach(x=>{ htm+='<td style="background:'+heatColor(x)+';color:'+(x>=8?'#e8e4dd':'#8a8880')+';text-align:center;font-size:11px;padding:5px 8px">'+x+'</td>'; });
-  htm+='<td style="font-family:var(--mono);color:var(--accent);font-size:11px;text-align:center;padding:5px 8px;font-weight:500">'+tot+'</td></tr>';
-});
-htm+='</tbody>';
-document.getElementById('heatmapTable').innerHTML=htm;
-</script>
+  <div class="panel">
+    <div class="panel-title">Comparaison 2,0σ / 2,5σ / 3,0σ — tous les FNBs v3.0</div>
+    <div class="panel-desc">Fréquence annuelle aux trois seuils. La ligne rouge verticale marque la frontière actif/contextuel. Le seuil système réel est indiqué pour chaque FNB.</div>
+    <div class="chart-wrap-tall"><canvas id="chartSeuils"></canvas></div>
+    <div class="callout">
+      <strong>Logique des seuils PRD v3.0.</strong> Le seuil 2,0σ est le seuil de déclenchement pour tous les FNBs actifs — il équilibre fréquence (suffisamment d'occurrences pour valider statistiquement) et signal (suffisamment rare pour éviter le bruit quotidien). Le seuil 2,5σ est retenu pour les émetteurs contextuels de contagion parce que les signaux de contagion nécessitent un choc <em>plus marqué</em> pour être statistiquement distinguables du hasard. Le seuil 3,0σ est trop rare (1 événement tous les 2,5 ans par FNB) pour être exploitable en production — sauf cas exceptionnel.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Tableau comparatif complet — 12 FNBs · 3 seuils</div>
+    <div class="panel-desc">Données sur 25 ans (2001–2026). Les FNBs actifs (couche MR) sont en haut, les FNBs contextuels (couche contagion) en bas. La colonne « Seuil système » indique le seuil effectivement utilisé par TMX v2.</div>
+    <table>
+      <thead><tr>
+        <th>FNB</th><th>Couche</th><th>Secteur</th>
+        <th class="r">≥ 2,0σ / an</th><th class="r">Total 2,0σ</th>
+        <th class="r">≥ 2,5σ / an</th><th class="r">Total 2,5σ</th>
+        <th class="r">≥ 3,0σ / an</th><th class="r">Total 3,0σ</th>
+        <th class="c">Seuil système</th>
+      </tr></thead>
+      <tbody id="tbody-seuils"></tbody>
+    </table>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight">
+      <div class="i-title">Pourquoi 2,0σ et non 2,5σ pour la couche MR ?</div>
+      <div class="i-body">À 2,5σ, la couche MR ne générerait que 2,0 signaux/an par FNB actif — soit environ 14 signaux/an pour les 7 FNBs. Sur 25 ans, cela représente ~350 trades : statistiquement exploitable, mais trop peu pour valider les horizons Wilcoxon FNB par FNB. À 2,0σ, on obtient 1 043 trades historiques — une base robuste pour la validation et le paper trading.</div>
+    </div>
+    <div class="insight">
+      <div class="i-title">Pourquoi 2,5σ pour la couche contagion ?</div>
+      <div class="i-body">Les signaux de contagion reposent sur un mécanisme précis : un choc suffisamment fort sur l'émetteur pour déclencher une réaction mesurable sur le récepteur. À 2,0σ, trop de bruit dilue le signal — la p-valeur de XEG→XIU passe de 0,0049 à 0,357 (non significatif). À 2,5σ, le mécanisme est distinct et statistiquement robuste.</div>
+    </div>
+    <div class="insight">
+      <div class="i-title">XUT et XRE — actifs ET émetteurs</div>
+      <div class="i-body">XUT et XRE sont des FNBs <em>actifs</em> (couche MR, seuil 2,0σ) qui sont aussi des <em>émetteurs</em> dans les signaux de contagion S1–S4 (seuil d'émission 2,5σ). Leurs z-scores sont calculés par le scanner principal. Un même jour de choc peut donc déclencher à la fois un signal MR sur XUT et un signal de contagion S3 (XUT→XIN) ou S4 (XUT→XFN).</div>
+    </div>
+    <div class="insight">
+      <div class="i-title">ZAG — contextuel particulier</div>
+      <div class="i-body">ZAG (obligations CA agrégées) est le baromètre des taux d'intérêt. Ses 4,0 chocs ≥ 2,0σ/an sont significatifs, mais son comportement est structurellement différent des FNBs d'actions : pas de mean reversion validée (Wilcoxon échoue), mais une corrélation inverse avec XRE et XUT lors des chocs de taux. Sa présence dans l'univers contextuel reste justifiée comme indicateur de régime.</div>
+    </div>
+  </div>
+</div>
+
 <footer>
-  <span class="footer-brand">FNBLab</span>
-  <span>TMX v2 · 2026 · <a href="https://github.com/Syl77qc/tmx_automatic" style="color:var(--text3);text-decoration:none;">GitHub</a></span>
-  <span>Ce site ne constitue pas un conseil financier</span>
+  <span>FNBLab · TMX v2 · PRD v3.0 · Données 2001–2026</span>
+  <span>Source : yfinance · 12 FNBs · Fenêtre z-score : 20 jours · Paper trading</span>
 </footer>
+
+<script>
+// ── Données PRD v3.0 ──────────────────────────────────────────────────────────
+const ACTIFS = [
+  {t:'XIU.TO', label:'S&P/TSX 60',         annees:26.2, c2:196, py2:7.5, c25:68,  py25:2.6, c3:15, py3:0.6, seuilSys:2.0},
+  {t:'XFN.TO', label:'Financières CA',      annees:26.0, c2:179, py2:6.9, c25:65,  py25:2.5, c3:16, py3:0.6, seuilSys:2.0},
+  {t:'XUT.TO', label:'Services publics CA', annees:26.2, c2:118, py2:4.5, c25:34,  py25:1.3, c3:8,  py3:0.3, seuilSys:2.0},
+  {t:'XRE.TO', label:'Immobilier CA',       annees:26.1, c2:169, py2:6.5, c25:59,  py25:2.3, c3:14, py3:0.5, seuilSys:2.0},
+  {t:'XIN.TO', label:'International',       annees:26.0, c2:190, py2:7.3, c25:67,  py25:2.6, c3:16, py3:0.6, seuilSys:2.0},
+  {t:'XHC.TO', label:'Santé mondiale',      annees:26.1, c2:107, py2:4.1, c25:33,  py25:1.3, c3:7,  py3:0.3, seuilSys:2.0},
+  {t:'XST.TO', label:'Consommation base',   annees:26.3, c2:84,  py2:3.2, c25:28,  py25:1.1, c3:6,  py3:0.2, seuilSys:2.0},
+];
+const CONTEXTUELS = [
+  {t:'XEG.TO', label:'Énergie CA',         annees:26.1, c2:172, py2:6.6, c25:55, py25:2.1, c3:10, py3:0.4, seuilSys:2.5},
+  {t:'ZAG.TO', label:'Obligations CA',     annees:25.8, c2:103, py2:4.0, c25:33, py25:1.3, c3:8,  py3:0.3, seuilSys:2.5},
+  {t:'XGD.TO', label:'Mines d\'or',        annees:26.2, c2:136, py2:5.2, c25:32, py25:1.2, c3:7,  py3:0.3, seuilSys:2.5},
+  {t:'XIT.TO', label:'Technologies CA',    annees:26.0, c2:161, py2:6.2, c25:45, py25:1.7, c3:9,  py3:0.3, seuilSys:2.5},
+  {t:'XMA.TO', label:'Matériaux CA',       annees:25.8, c2:142, py2:5.5, c25:35, py25:1.3, c3:11, py3:0.4, seuilSys:2.5},
+];
+const TOUS = [...ACTIFS, ...CONTEXTUELS];
+
+const HEATMAP = {
+  'XIU':[22,16,21,18,13,19,10,19,15,14, 9,20],
+  'XFN':[18,19,14,14,13,14,14,19,12,18,12,12],
+  'XUT':[10, 9,11, 7, 8,13, 7, 9,14,10, 9,11],
+  'XRE':[ 9,15,25,10,15,16, 8,15,16,15,12,13],
+  'XIN':[22,15,14,15,21,12,12,20,17,19,12,11],
+  'XHC':[ 8, 7,10,12, 4,10, 7,14, 9,15, 3, 8],
+  'XST':[ 8, 7, 7, 7,10,11, 1,10, 3, 7, 8, 5],
+  'XEG':[22,11,19,16,16,21, 7, 9,16,15,10,10],
+  'ZAG':[ 8, 5,15, 5, 6,11, 9, 6, 6,11, 9,12],
+  'XGD':[11,14,10,18, 8, 6,13, 9,15,15,11, 6],
+  'XIT':[17,11,14,14,10,17,12, 8,19,15,10,14],
+  'XMA':[12,13,12,12,12,10,16,10,13,15, 9, 8],
+};
+const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const TOTAUX_MOIS = [167,142,172,148,136,160,116,148,155,169,114,130];
+
+// ── Rendu tables ──────────────────────────────────────────────────────────────
+function badgeFreq(py, seuil) {
+  const val = seuil === 2.0 ? py : py;
+  const cls = val >= 2.5 ? 'badge-hi' : val >= 1.5 ? 'badge-mid' : 'badge-lo';
+  return `<span class="${cls}">${seuil===2.0 ? (val>=5?'↑ Élevé':val>=3?'Moyen':'↓ Bas') : (val>=2?'↑ Élevé':val>=1.2?'Moyen':'↓ Bas')}</span>`;
+}
+
+function renderTable(tbodyId, data, couche, totalCol) {
+  const tbody = document.getElementById(tbodyId);
+  data.forEach(r => {
+    const total = totalCol === 2 ? r.c2 : r.c25;
+    const py    = totalCol === 2 ? r.py2 : r.py25;
+    tbody.innerHTML += `<tr>
+      <td style="font-family:var(--mono);font-weight:600">${r.t}</td>
+      <td style="color:var(--text2)">${r.label}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${r.annees} ans</td>
+      <td class="r" style="font-family:var(--mono)">${r.py2}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py25}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py3}</td>
+      <td class="r" style="font-family:var(--mono);font-weight:600;color:${couche==='mr'?'var(--green)':'var(--blue)'}">${total}</td>
+      <td class="c"><span class="seuil-sys">${r.seuilSys}σ</span></td>
+      <td class="c">${badgeFreq(py, r.seuilSys)}</td>
+    </tr>`;
+  });
+}
+
+function renderTableSeuils(tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  ACTIFS.forEach(r => {
+    tbody.innerHTML += `<tr>
+      <td style="font-family:var(--mono);font-weight:600">${r.t}</td>
+      <td><span style="font-size:10px;font-family:var(--mono);color:var(--green);border:1px solid var(--green);background:#052e0a;padding:2px 6px;border-radius:3px">ACTIF</span></td>
+      <td style="color:var(--text2)">${r.label}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py2}</td>
+      <td class="r" style="font-family:var(--mono);color:var(--text3)">${r.c2}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py25}</td>
+      <td class="r" style="font-family:var(--mono);color:var(--text3)">${r.c25}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py3}</td>
+      <td class="r" style="font-family:var(--mono);color:var(--text3)">${r.c3}</td>
+      <td class="c"><span class="seuil-sys">${r.seuilSys}σ</span></td>
+    </tr>`;
+  });
+  CONTEXTUELS.forEach(r => {
+    tbody.innerHTML += `<tr>
+      <td style="font-family:var(--mono);font-weight:600">${r.t}</td>
+      <td><span style="font-size:10px;font-family:var(--mono);color:var(--blue);border:1px solid var(--blue);background:#051a2d;padding:2px 6px;border-radius:3px">CTX</span></td>
+      <td style="color:var(--text2)">${r.label}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py2}</td>
+      <td class="r" style="font-family:var(--mono);color:var(--text3)">${r.c2}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py25}</td>
+      <td class="r" style="font-family:var(--mono);color:var(--text3)">${r.c25}</td>
+      <td class="r" style="font-family:var(--mono)">${r.py3}</td>
+      <td class="r" style="font-family:var(--mono);color:var(--text3)">${r.c3}</td>
+      <td class="c"><span class="seuil-sys">${r.seuilSys}σ</span></td>
+    </tr>`;
+  });
+}
+
+// ── Heatmap ───────────────────────────────────────────────────────────────────
+function renderHeatmap() {
+  const table = document.getElementById('heatmap-table');
+  // Header
+  let html = '<thead><tr><th class="hm-fnb">FNB</th>';
+  MOIS.forEach(m => html += `<th>${m}</th>`);
+  html += '<th>Total</th></tr></thead><tbody>';
+
+  const allVals = Object.values(HEATMAP).flat();
+  const maxVal = Math.max(...allVals);
+
+  const ORDER = ['XIU','XFN','XUT','XRE','XIN','XHC','XST','XEG','ZAG','XGD','XIT','XMA'];
+  const IS_CTX = new Set(['XEG','ZAG','XGD','XIT','XMA']);
+
+  ORDER.forEach((t, idx) => {
+    const vals = HEATMAP[t];
+    const total = vals.reduce((a,b) => a+b, 0);
+    const isSep = idx === 7; // séparateur entre actifs et contextuels
+    const roleTag = IS_CTX.has(t)
+      ? '<span class="hm-role">CTX</span>'
+      : '<span class="hm-role" style="color:var(--green);border-color:var(--green);background:#052e0a">ACT</span>';
+    html += `<tr${isSep ? ' style="border-top:2px solid var(--gold)"' : ''}>`;
+    html += `<td class="hm-fnb">${t}${roleTag}</td>`;
+    vals.forEach(v => {
+      const intensity = v / maxVal;
+      const r = Math.round(20 + intensity * 60);
+      const g = Math.round(30 + intensity * 20);
+      const b = Math.round(30 + intensity * 10);
+      const alpha = 0.15 + intensity * 0.65;
+      const bg = IS_CTX.has(t)
+        ? `rgba(96, 165, 250, ${alpha * 0.8})`
+        : `rgba(232, 201, 126, ${alpha})`;
+      const fg = intensity > 0.55 ? 'var(--bg)' : (IS_CTX.has(t) ? 'var(--blue)' : 'var(--gold)');
+      html += `<td style="background:${bg};color:${fg}">${v}</td>`;
+    });
+    html += `<td style="font-weight:600;color:var(--text2)">${total}</td>`;
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ── Charts ────────────────────────────────────────────────────────────────────
+const C = {
+  green:  '#4ade80', greenD: 'rgba(74,222,128,0.15)',
+  blue:   '#60a5fa', blueD:  'rgba(96,165,250,0.15)',
+  amber:  '#f59e0b', amberD: 'rgba(245,158,11,0.15)',
+  gold:   '#e8c97e', goldD:  'rgba(232,201,126,0.15)',
+  text2:  '#9aa0a6', border: '#2a3038', bg2: '#131619',
+};
+const gridOpts = {
+  color: C.border,
+  drawBorder: false,
+};
+const tickOpts = {
+  color: C.text2,
+  font: { family: "'DM Mono'", size: 11 },
+};
+const legendOpts = {
+  labels: { color: C.text2, font: { family: "'DM Mono'", size: 11 }, boxWidth: 12, padding: 16 },
+};
+
+// Chart MR
+new Chart(document.getElementById('chartMR'), {
+  type: 'bar',
+  data: {
+    labels: ACTIFS.map(r => r.t.replace('.TO','')),
+    datasets: [
+      { label: '≥ 2,0σ (seuil système)', data: ACTIFS.map(r => r.py2),  backgroundColor: C.green,  borderRadius: 3 },
+      { label: '≥ 2,5σ',                 data: ACTIFS.map(r => r.py25), backgroundColor: C.amber,  borderRadius: 3 },
+      { label: '≥ 3,0σ',                 data: ACTIFS.map(r => r.py3),  backgroundColor: C.text2, borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: legendOpts, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} / an` } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v + '/an' }, beginAtZero: true },
+    }
+  }
+});
+
+// Chart CTX
+new Chart(document.getElementById('chartCTX'), {
+  type: 'bar',
+  data: {
+    labels: CONTEXTUELS.map(r => r.t.replace('.TO','')),
+    datasets: [
+      { label: '≥ 2,0σ',                 data: CONTEXTUELS.map(r => r.py2),  backgroundColor: C.text2, borderRadius: 3 },
+      { label: '≥ 2,5σ (seuil système)', data: CONTEXTUELS.map(r => r.py25), backgroundColor: C.blue,  borderRadius: 3 },
+      { label: '≥ 3,0σ',                 data: CONTEXTUELS.map(r => r.py3),  backgroundColor: 'rgba(96,165,250,0.3)', borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: legendOpts, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} / an` } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v + '/an' }, beginAtZero: true },
+    }
+  }
+});
+
+// Chart Mois
+new Chart(document.getElementById('chartMois'), {
+  type: 'bar',
+  data: {
+    labels: MOIS,
+    datasets: [{
+      label: 'Baisses ≥ 2,0σ (12 FNBs)',
+      data: TOTAUX_MOIS,
+      backgroundColor: TOTAUX_MOIS.map(v => v === Math.max(...TOTAUX_MOIS) ? C.gold : v === Math.min(...TOTAUX_MOIS) ? C.blue : 'rgba(232,201,126,0.4)'),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} baisses (12 FNBs)` } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: tickOpts, beginAtZero: false, min: 90 },
+    }
+  }
+});
+
+// Chart Seuils (tous FNBs)
+new Chart(document.getElementById('chartSeuils'), {
+  type: 'bar',
+  data: {
+    labels: TOUS.map(r => r.t.replace('.TO','')),
+    datasets: [
+      { label: '≥ 2,0σ', data: TOUS.map(r => r.py2),  backgroundColor: TOUS.map(r => r.seuilSys===2.0 ? C.green : 'rgba(74,222,128,0.25)'), borderRadius: 3 },
+      { label: '≥ 2,5σ', data: TOUS.map(r => r.py25), backgroundColor: TOUS.map(r => r.seuilSys===2.5 ? C.blue  : C.amber), borderRadius: 3 },
+      { label: '≥ 3,0σ', data: TOUS.map(r => r.py3),  backgroundColor: C.text2, borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: legendOpts,
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} / an` } },
+      annotation: { annotations: { line1: { type:'line', xMin:6.5, xMax:6.5, borderColor:C.gold, borderWidth:1.5, borderDash:[4,4] } } }
+    },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v + '/an' }, beginAtZero: true },
+    }
+  }
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderTable('tbody-mr',  ACTIFS,      'mr',  2);
+renderTable('tbody-ctx', CONTEXTUELS, 'ctx', 2.5);
+renderTableSeuils('tbody-seuils');
+renderHeatmap();
+
+function showTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
 </body>
 </html>
