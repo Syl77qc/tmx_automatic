@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 85948.86,
+  "capital_disponible": 88812.61,
   "positions_ouvertes": {
     "XIU.TO": {
       "id": "XIU.TO_20260422_105630",
@@ -8,12 +8,12 @@
       "statut": "ouvert",
       "date_entree": "2026-04-22T10:56:30.762721-04:00",
       "date_horizon_max": "2026-05-12",
-      "jours_restants": 20,
+      "jours_restants": 19,
       "prix_signal": 49.88,
       "prix_entree": 49.9174,
       "prix_pre_baisse": 50.51,
       "prix_stop_loss": 46.139,
-      "prix_plus_haut_atteint": 50.0,
+      "prix_plus_haut_atteint": 50.06999969482422,
       "prix_sortie_partielle": null,
       "nb_unites_total": 167,
       "nb_unites_restant": 167,
@@ -70,11 +70,11 @@
       "prix_entree": 34.636,
       "prix_pre_baisse": 35.06,
       "prix_stop_loss": 31.8585,
-      "prix_plus_haut_atteint": 34.709999084472656,
-      "prix_sortie_partielle": null,
+      "prix_plus_haut_atteint": 34.95000076293945,
+      "prix_sortie_partielle": 34.95000076293945,
       "nb_unites_total": 165,
-      "nb_unites_restant": 165,
-      "sortie_partielle_faite": false,
+      "nb_unites_restant": 83,
+      "sortie_partielle_faite": true,
       "cout_entree": {
         "prix_execution": 34.636,
         "spread_cad": 1.43,
@@ -118,5 +118,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-04-22T17:41:49.230589-04:00"
+  "derniere_maj": "2026-04-23T11:24:20.478066-04:00"
 }

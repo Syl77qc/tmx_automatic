@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "id": "XUT.TO_20260422_105630",
+    "ticker": "XUT.TO",
+    "type_sortie": "partielle",
+    "raison_sortie": "50% du rebond récupéré (74.1%)",
+    "partielle": true,
+    "date_entree": "2026-04-22T10:56:30.762784-04:00",
+    "date_sortie": "2026-04-23T11:24:20.478037-04:00",
+    "jours_detenus": 1,
+    "prix_entree": 34.636,
+    "prix_sortie": 34.95000076293945,
+    "prix_pre_baisse": 35.06,
+    "prix_stop_loss": 31.8585,
+    "nb_unites": 82,
+    "pnl_brut_cad": 25.75,
+    "couts_totaux_cad": 6.44,
+    "pnl_net_cad": 19.31,
+    "pnl_net_pct": 0.3379,
+    "gagnant": true,
+    "mae_pct": -0.3927,
+    "z20_entree": -2.2996,
+    "z60_entree": -2.2059,
+    "vix_entree": 19.05,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": false,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:taux",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "z60:confirmé",
+      "trend:SMA50_sous",
+      "cluster:1_3",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "exit:partielle"
+    ]
+  }
+]
