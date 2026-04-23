@@ -91,31 +91,31 @@ footer{max-width:1100px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       <div class="hero-title">Résultats<br><span>Paper trading</span></div>
     </div>
     <div class="hero-meta">
-      Mis à jour : 2026-04-23 11:29<br>
+      Mis à jour : 2026-04-23 12:58<br>
       Capital virtuel : 100 000 $ CAD<br>
       Phase 1 en cours
     </div>
   </div>
 
   <div class="metrics">
-    <div class="metric ">
+    <div class="metric metric-ok">
       <div class="metric-label">Hit rate</div>
-      <div class="metric-value">—</div>
+      <div class="metric-value">100%</div>
       <div class="metric-sub">Cible : ≥ 60%</div>
     </div>
-    <div class="metric ">
+    <div class="metric metric-warn">
       <div class="metric-label">Rendement moyen</div>
-      <div class="metric-value">—</div>
+      <div class="metric-value">+0.52%</div>
       <div class="metric-sub">Cible : ≥ +1.5% / trade</div>
     </div>
-    <div class="metric ">
+    <div class="metric metric-ok">
       <div class="metric-label">Drawdown max</div>
-      <div class="metric-value">—</div>
+      <div class="metric-value">8.3%</div>
       <div class="metric-sub">Limite : &lt; 15%</div>
     </div>
     <div class="metric">
       <div class="metric-label">Trades complétés</div>
-      <div class="metric-value">0</div>
+      <div class="metric-value">1</div>
       <div class="metric-sub">Cible : ≥ 30</div>
     </div>
   </div>
@@ -124,31 +124,42 @@ footer{max-width:1100px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
     <div class="progress-title">Progression vers les critères go-live (Section 9.3 PRD)</div>
     <div class="progress-bars">
       <div class="progress-item">
-        <div class="progress-label"><span>Trades complétés</span><span>0 / 30</span></div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+        <div class="progress-label"><span>Trades complétés</span><span>1 / 30</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:3%"></div></div>
       </div>
       <div class="progress-item">
-        <div class="progress-label"><span>Hit rate</span><span>— / 60%</span></div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+        <div class="progress-label"><span>Hit rate</span><span>100% / 60%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-ok" style="width:100%"></div></div>
       </div>
       <div class="progress-item">
-        <div class="progress-label"><span>Drawdown (limite 15%)</span><span>—</span></div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill pb-neutral" style="width:0%"></div></div>
+        <div class="progress-label"><span>Drawdown (limite 15%)</span><span>8.3%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill pb-ok" style="width:55%"></div></div>
       </div>
     </div>
   </div>
 
   <div class="section-header">
     <div class="section-title-text">Historique des trades</div>
-    <div class="section-sub">0 trade(s) complété(s)</div>
+    <div class="section-sub">1 trade(s) complété(s)</div>
   </div>
 
   <div class="table-wrap">
-    <div class="empty-state">
-          <div class="big">[ ]</div>
-          <div>Aucun trade complété pour le moment.<br>
-          Les résultats apparaîtront ici dès la première position fermée.</div>
-        </div>
+    <table>
+      <thead><tr>
+        <th>FNB</th><th>Entrée</th><th>Sortie</th>
+        <th class="r">Durée</th><th class="r">Z20</th>
+        <th class="r">Rend. %</th><th class="r">P&amp;L $</th>
+        <th>Type sortie</th><th>Résultat</th>
+      </tr></thead><tbody><tr>
+          <td style="font-family:var(--mono);font-weight:500">XUT.TO</td>
+          <td>2026-04-22</td><td>2026-04-23</td>
+          <td class="r" style="font-family:var(--mono)">1j</td>
+          <td class="r"><span class="neutral">-2.30</span></td>
+          <td class="r"><span class="win">+0.52%</span></td>
+          <td class="r"><span class="win">+29.54$</span></td>
+          <td style="font-size:11px;color:var(--text3)">objectif</td>
+          <td><span class="badge-win">✓ gain</span></td>
+        </tr></tbody></table>
   </div>
 
   <div class="disclaimer">
