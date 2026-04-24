@@ -1,89 +1,100 @@
 {
-  "scan_at": "2026-04-24T15:37:38.611969-04:00",
+  "scan_at": "2026-04-24T16:25:46.486809-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XIU.TO"
+      "XIU.TO",
+      "XFN.TO",
+      "XUT.TO",
+      "XRE.TO",
+      "XIN.TO",
+      "XHC.TO",
+      "XST.TO",
+      "XEG.TO",
+      "ZAG.TO",
+      "XGD.TO",
+      "XIT.TO",
+      "XMA.TO"
     ],
-    "n_perimes": 1,
+    "n_perimes": 12,
     "aujourd_hui": "2026-04-24",
-    "marche_clos_aujourd_hui": false,
+    "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
+        "statut": "PÉRIMÉ",
+        "derniere_date": "2026-04-23",
         "perime": true
       },
       "XFN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XUT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XRE.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XIN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XHC.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XST.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XEG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "ZAG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XGD.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XIT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       },
       "XMA.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-04-23",
-        "perime": false
+        "perime": true
       }
     }
   },
-  "heures_marche": true,
+  "heures_marche": false,
   "regime_marche": {
-    "vix": 18.54,
+    "vix": 18.68,
     "regime": "neutre",
-    "description": "VIX 18.5 entre 16.0-25.0 — tailles réduites",
+    "description": "VIX 18.7 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
-    "xiu_rendement_pct": null,
-    "contexte": "indisponible",
-    "ajustement": "aucun"
+    "xiu_rendement_pct": 0.02,
+    "contexte": "XIU_stable_ou_positif",
+    "ajustement": "seuil+0.5_taille÷1.5"
   },
   "jour_bdc": {
     "est_jour_bdc": false,
@@ -102,16 +113,35 @@
   "tous_fnbs": [
     {
       "ticker": "XIU.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "actif",
+      "profil": "moyen",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.5,
+      "horizon_j": 20,
+      "bloc": "marche_large",
+      "prix_cloture": 50.0,
+      "rendement_jour_pct": 0.02,
+      "z20": -0.3508,
+      "z60": -0.0499,
+      "sma50": 48.7286,
+      "dessus_sma50": true,
       "signal": false,
-      "role": "actif"
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_dessus"
+      ]
     },
     {
       "ticker": "XFN.TO",
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "marche_large",
       "prix_cloture": 83.20999908447266,
@@ -136,7 +166,7 @@
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "taux",
       "prix_cloture": 35.09000015258789,
@@ -161,7 +191,7 @@
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "taux",
       "prix_cloture": 16.670000076293945,
@@ -186,7 +216,7 @@
       "role": "actif",
       "profil": "rapide",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 10,
       "bloc": "marche_large",
       "prix_cloture": 44.2599983215332,
@@ -211,7 +241,7 @@
       "role": "actif",
       "profil": "rapide",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 10,
       "bloc": null,
       "prix_cloture": 66.94999694824219,
@@ -236,7 +266,7 @@
       "role": "actif",
       "profil": "rapide",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 15,
       "bloc": null,
       "prix_cloture": 62.93000030517578,
