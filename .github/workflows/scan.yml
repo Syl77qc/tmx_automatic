@@ -77,34 +77,23 @@ jobs:
       - name: Generate dashboard
         run: python generate_dashboard.py
 
-      # ── 6. Commit données JSON (à chaque run) ────────────────────────────────
-      # scan_results.json, positions.json, trades_log.json : continuité paper trading mean reversion
-      # contagion_pending.json : signaux de contagion en attente d'exécution J+1 (PRD v3.0 §5bis)
-      # contagion_trades.json  : historique des trades de contagion fermés
-      - name: Commit scan data
+      # ── 6. Commit unique — données JSON + dashboard HTML ─────────────────────
+      # Un seul push par cycle pour éviter le double "pages build and deployment"
+      # qui throttlait le schedule GitHub Actions (bug corrigé — deux push → deux triggers Pages).
+      # JSON : toujours commités | HTML : seulement si changement réel (condition interne)
+      - name: Commit et push
         run: |
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
           git add scan_results.json positions.json trades_log.json \
                   contagion_pending.json contagion_trades.json
-          git diff --staged --quiet || git commit -m "Scan data $(date -u '+%Y-%m-%d %H:%M') UTC"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-
-      # ── 7. Commit dashboard HTML (seulement si changement réel) ──────────────
-      # index.html, resultats.html et contagion.html ne sont poussés QUE s'ils ont changé.
-      # Sans cette séparation, chaque push déclenche un workflow
-      # "pages build and deployment" qui fait throttler le schedule par GitHub.
-      - name: Commit dashboard (signal changes only)
-        run: |
           git add index.html resultats.html contagion.html || true
           if git diff --staged --quiet; then
-            echo "Aucun changement dans le dashboard — push ignoré."
+            echo "Aucun changement — push ignoré."
           else
-            git commit -m "Dashboard update $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git commit -m "Scan + dashboard $(date -u '+%Y-%m-%d %H:%M') UTC"
             git push
-            echo "Dashboard mis à jour et poussé."
+            echo "Push effectué."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
