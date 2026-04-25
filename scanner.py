@@ -436,6 +436,61 @@ def generer_rapport(resultats, regime_info, filtre_D, jour_bdc, cluster_info, fr
     }
 
 
+def append_historique_csv(rapport: dict, path: str = "historique_scans.csv") -> None:
+    """
+    Ajoute une ligne à historique_scans.csv à chaque scan.
+    Format : une ligne par scan, z-scores de tous les FNBs en colonnes.
+    Le fichier est créé avec en-tête si absent — append-only sinon.
+    """
+    import csv
+
+    # ── Index des FNBs par ticker pour accès rapide ───────────────────────────
+    fnb_index = {r["ticker"]: r for r in rapport.get("tous_fnbs", [])}
+
+    # ── Colonnes fixes ────────────────────────────────────────────────────────
+    row: dict = {
+        "scan_at":         rapport["scan_at"][:19].replace("T", " "),
+        "regime":          rapport["regime_marche"].get("regime", ""),
+        "vix":             rapport["regime_marche"].get("vix"),
+        "filtre_D":        rapport["filtre_D"].get("ajustement", ""),
+        "n_signaux":       rapport["n_signaux"],
+        "cluster_action":  rapport["cluster"].get("action", ""),
+        "alerte_fraicheur": int(rapport.get("alerte_fraicheur", False)),
+        "jour_bdc":        int(rapport["jour_bdc"].get("est_jour_bdc", False)),
+    }
+
+    # ── Colonnes par FNB (z20, z60, signal/choc) ──────────────────────────────
+    for ticker_full in [
+        "XIU.TO", "XFN.TO", "XUT.TO", "XRE.TO", "XIN.TO", "XHC.TO", "XST.TO",
+        "XEG.TO", "ZAG.TO", "XGD.TO", "XIT.TO", "XMA.TO",
+    ]:
+        prefix = ticker_full.replace(".TO", "")
+        fnb    = fnb_index.get(ticker_full, {})
+        row[f"{prefix}_z20"]   = round(fnb["z20"], 4)   if fnb.get("z20")   is not None else ""
+        row[f"{prefix}_z60"]   = round(fnb["z60"], 4)   if fnb.get("z60")   is not None else ""
+        # FNBs actifs : colonne "signal" (0/1) | FNBs contextuels : colonne "choc" (0/1)
+        if fnb.get("role") == "contextuel":
+            row[f"{prefix}_choc"] = int(fnb.get("choc_contagion", False))
+        else:
+            row[f"{prefix}_signal"] = int(fnb.get("signal", False))
+
+    # ── Écriture CSV (création avec en-tête si absent) ────────────────────────
+    csv_path   = Path(path)
+    fieldnames = list(row.keys())
+    ecrire_entete = not csv_path.exists() or csv_path.stat().st_size == 0
+
+    try:
+        with open(csv_path, "a", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            if ecrire_entete:
+                writer.writeheader()
+                print(f"   📋 Nouveau fichier historique créé : {csv_path.resolve()}")
+            writer.writerow(row)
+        print(f"   ✅ Historique CSV mis à jour ({csv_path.name})")
+    except Exception as e:
+        print(f"   ⚠️  Erreur écriture historique CSV : {e}")
+
+
 def afficher_console(rapport):
     now     = rapport["scan_at"][:19].replace("T", " ")
     regime  = rapport["regime_marche"]
@@ -551,6 +606,10 @@ def main():
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(rapport, f, ensure_ascii=False, indent=2, default=str)
     print(f"  📄 Rapport sauvegardé : {output_path.resolve()}")
+
+    # ── Historique CSV append-only ─────────────────────────────────────────────
+    print("\n📋 Mise à jour de l'historique CSV...")
+    append_historique_csv(rapport)
 
     # ── Notifications ──────────────────────────────────────────────────────────
     print("\n📬 Envoi des notifications...")
