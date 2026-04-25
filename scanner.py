@@ -141,7 +141,7 @@ def telecharger_historique(tickers: list[str], jours: int = JOURS_HISTORIQUE) ->
     data  = yf.download(
         tickers=tickers,
         start=debut.strftime("%Y-%m-%d"),
-        end=fin.strftime("%Y-%m-%d"),
+        end=(fin + timedelta(days=1)).strftime("%Y-%m-%d"),  # +1j : end exclusif dans yfinance — inclut les données d'aujourd'hui
         interval="1d",
         group_by="ticker",
         auto_adjust=True,
