@@ -86,7 +86,8 @@ jobs:
           git config user.name  "FNBLab Bot"
           git config user.email "bot@fnblab.github.io"
           git add scan_results.json positions.json trades_log.json \
-                  contagion_pending.json contagion_trades.json
+                  contagion_pending.json contagion_trades.json \
+                  historique_scans.csv
           git add index.html resultats.html contagion.html || true
           if git diff --staged --quiet; then
             echo "Aucun changement — push ignoré."
