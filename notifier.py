@@ -111,12 +111,14 @@ def _calculer_taille(
 # ── Section contagion pour le courriel ────────────────────────────────────────
 
 # Table de correspondance émetteur → signaux contagion (PRD v3.0 §5bis)
+# S2 : XEG chute ≥ 2,5 é.-t. → Short XFN J+1 (co-dépendance crédit-énergie, stabilité tridécennale)
+# S5 : XEG chute ≥ 3,0 é.-t. → Short XIU J+1 (Niv.3 — EN VEILLE, n=14, ne pas déployer)
 _CONTAGION_LABELS = {
-    "XRE.TO": [("S1", "XIN.TO", "Achat XIN J+1", "Niv.1 · p perm.=0,000")],
-    "XUT.TO": [("S3", "XIN.TO", "Achat XIN J+1", "Niv.1 · p perm.=0,002"),
-               ("S4", "XFN.TO", "Achat XFN J+1", "Niv.1 · p perm.<0,001")],
-    "XEG.TO": [("S2", "XFN.TO", "Achat XFN J+1", "Niv.2 · stabilité tridécennale")],
-    "XIT.TO": [("S5", "XIN.TO", "Achat XIN J+1 ⚠", "Niv.3 — EN VEILLE, non déployé")],
+    "XRE.TO": [("S1", "XIN.TO", "Achat XIN J+1",  "Niv.1 · p perm.=0,000")],
+    "XUT.TO": [("S3", "XIN.TO", "Achat XIN J+1",  "Niv.1 · p perm.=0,002"),
+               ("S4", "XFN.TO", "Achat XFN J+1",  "Niv.1 · p perm.<0,001")],
+    "XEG.TO": [("S2", "XFN.TO", "Short XFN J+1",  "Niv.2 · stabilité tridécennale"),
+               ("S5", "XIU.TO", "Short XIU J+1 ⚠", "Niv.3 — EN VEILLE, non déployé")],
 }
 
 
