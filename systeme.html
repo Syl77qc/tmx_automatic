@@ -17,9 +17,9 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh;}
 nav{position:sticky;top:0;z-index:100;background:rgba(13,15,17,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;height:52px;gap:0;}
-.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:32px;text-decoration:none;white-space:nowrap;}
+.nav-brand{font-family:var(--display);font-size:17px;font-weight:500;color:var(--accent);margin-right:20px;text-decoration:none;white-space:nowrap;}
 .nav-links{display:flex;gap:2px;overflow-x:auto;}
-.nav-links a{font-size:12px;color:var(--text2);padding:6px 12px;border-radius:6px;text-decoration:none;transition:color .15s,background .15s;white-space:nowrap;}
+.nav-links a{font-size:11px;color:var(--text2);padding:5px 8px;border-radius:6px;text-decoration:none;transition:color .15s,background .15s;white-space:nowrap;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--bg3);}
 .page{max-width:1200px;margin:0 auto;padding:40px 32px 80px;}
 .hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);}
@@ -34,7 +34,7 @@ section{margin-bottom:48px;}
 .chart-title{font-family:var(--mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
 .chart-desc{font-size:12px;color:var(--text3);margin-bottom:20px;}
 .chart-wrap{position:relative;}
-.interp{margin-top:0;padding:14px 18px;background:var(--bg3);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
+.interp{margin-top:0;padding:14px 18px;background:var(--bg3);border-radius:0 0 12px 12px;border:1px solid var(--border);border-top:none;font-size:11px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
 .interp strong{color:var(--text);}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
@@ -62,10 +62,10 @@ section{margin-bottom:48px;}
 .badge-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
 .badge-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);}
 .badge-blue{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
-.callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:12px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
+.callout{background:#e8c97e10;border:1px solid #e8c97e25;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:11px;color:var(--text2);display:flex;gap:12px;align-items:flex-start;line-height:1.75;}
 .callout .icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
 .callout strong{color:var(--text);}
-.conclusion{margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.85;}
+.conclusion{margin-top:24px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;font-size:11px;color:var(--text2);line-height:1.85;}
 .conclusion h3{font-family:var(--display);font-size:15px;font-weight:400;color:var(--text);margin-bottom:12px;}
 .conclusion p{margin-bottom:10px;}
 .conclusion p:last-child{margin-bottom:0;}
@@ -135,7 +135,7 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       <div class="chart-card" style="margin-bottom:0">
         <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 1</div>
         <div style="font-weight:600;margin-bottom:8px">Régime VIX</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
           VIX &lt; 16 : Risk-on · taille normale<br>
           VIX 16–25 : Neutre · taille ÷2<br>
           VIX &gt; 25 : Risk-off · pause
@@ -144,7 +144,7 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       <div class="chart-card" style="margin-bottom:0">
         <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 2</div>
         <div style="font-weight:600;margin-bottom:8px">Signal z-score</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
           Z20 ≤ seuil FNB pour déclencher<br>
           Z60 confirme ou ajuste la taille<br>
           Calculé sur clôtures quotidiennes
@@ -153,7 +153,7 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       <div class="chart-card" style="margin-bottom:0">
         <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 3</div>
         <div style="font-weight:600;margin-bottom:8px">Filtres A–G</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
           7 filtres de sécurité<br>
           Cluster, régime, profil, SMA50<br>
           Volume, corrélation, BdC
@@ -162,7 +162,7 @@ footer{max-width:1200px;margin:0 auto;padding:20px 32px 40px;border-top:1px soli
       <div class="chart-card" style="margin-bottom:0">
         <div style="font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px">MAILLON 4</div>
         <div style="font-weight:600;margin-bottom:8px">Exécution & sortie</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
           Sortie partielle à 50% du rebond<br>
           Trailing stop 1,5%<br>
           Horizon max selon profil FNB
