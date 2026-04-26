@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FNBLab — Présentation TMX v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg:        #0d0f11;
+  --bg2:       #131619;
+  --bg3:       #1a1e22;
+  --bg4:       #21262d;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --text:      #e8e4dd;
+  --text2:     #8a8880;
+  --text3:     #555250;
+  --green:     #4ade80;
+  --green-bg:  rgba(74,222,128,0.08);
+  --amber:     #f59e0b;
+  --amber-bg:  rgba(245,158,11,0.08);
+  --red:       #f87171;
+  --red-bg:    rgba(248,113,113,0.08);
+  --accent:    #e8c97e;
+  --mono:      'DM Mono', monospace;
+  --display:   'Fraunces', Georgia, serif;
+  --sans:      'DM Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Nav ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,17,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center;
+  height: 52px; gap: 0;
+}
+.nav-brand {
+  font-family: var(--display);
+  font-size: 17px; font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  margin-right: 32px;
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 2px; flex: 1; }
+.nav-links a {
+  font-size: 12px; font-weight: 400;
+  color: var(--text2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+.nav-links a:hover { color: var(--text); background: var(--bg3); }
+.nav-links a.active { color: var(--text); background: var(--bg3); }
+
+/* ── Layout ── */
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.hero {
+  margin-bottom: 48px;
+  text-align: center;
+}
+.hero-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -.03em;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.hero-title span { color: var(--accent); }
+.hero-sub {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── Présentation container ── */
+.pres-shell {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+/* ── Dots nav ── */
+.dot-nav {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.dot-nav button {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background .25s;
+}
+.dot-nav button.on { background: var(--text); border-color: var(--text); }
+
+.scene-label {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 32px;
+}
+
+/* ── Scene base ── */
+.scene { display: none; min-height: 420px; }
+.scene.active { display: block; }
+
+/* ── Scene 0 : Vision ── */
+.vision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  max-width: 560px;
+  margin: 0 auto 28px;
+}
+.vision-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+}
+.vision-card-title { font-size: 13px; font-weight: 500; color: var(--text); margin: 10px 0 3px; }
+.vision-card-sub { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+.vision-card-data { font-family: var(--mono); font-size: 10px; line-height: 2; text-align: left; }
+.pullquote {
+  font-size: 13px; font-style: italic;
+  color: var(--text2); line-height: 1.75;
+  border-left: 2px solid var(--border2);
+  padding-left: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Scene 1 : Z-score ── */
+.chart-wrap { position: relative; width: 100%; height: 200px; margin-bottom: 12px; }
+.chart-legend { display: flex; gap: 20px; font-family: var(--mono); font-size: 11px; color: var(--text2); margin-bottom: 16px; flex-wrap: wrap; }
+.chart-legend span { display: flex; align-items: center; gap: 6px; }
+.legend-line { width: 18px; height: 2px; display: inline-block; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.formulas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.formula-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 2;
+  color: var(--text2);
+}
+.formula-box-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+
+/* ── Scene 2 : Chaîne ── */
+.chain {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 20px;
+}
+.chain-node {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 10px;
+  opacity: .2;
+  transition: opacity .55s, border-color .55s;
+}
+.chain-node.lit { opacity: 1; border-color: var(--border2); }
+.chain-arrow { display: flex; align-items: center; color: var(--text3); font-size: 14px; flex-shrink: 0; }
+.chain-num { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: .05em; margin-bottom: 4px; }
+.chain-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+.chain-body { font-size: 11px; color: var(--text2); line-height: 1.6; }
+.chain-tag { font-family: var(--mono); font-size: 10px; }
+.chain-footer {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+  line-height: 1.7;
+}
+
+/* ── Scene 3 : 7 FNBs ── */
+.fnb-intro { font-size: 13px; color: var(--text2); line-height: 1.75; margin-bottom: 20px; }
+.funnel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.f-box {
+  border-radius: 10px;
+  padding: 10px 16px;
+  text-align: center;
+  border: 1px solid;
+}
+.f-box-n { font-family: var(--mono); font-size: 24px; font-weight: 500; }
+.f-box-label { font-size: 10px; margin-top: 1px; }
+.f-box-sub { font-size: 9px; opacity: .75; margin-top: 1px; font-family: var(--mono); }
+.f-neutral { background: var(--bg3); border-color: var(--border2); }
+.f-neutral .f-box-n { color: var(--text); }
+.f-neutral .f-box-label { color: var(--text2); }
+.f-green { background: var(--green-bg); border-color: rgba(74,222,128,.25); }
+.f-green .f-box-n, .f-green .f-box-label { color: var(--green); }
+.f-amber { background: var(--amber-bg); border-color: rgba(245,158,11,.25); }
+.f-amber .f-box-n, .f-amber .f-box-label { color: var(--amber); }
+.funnel-sep {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0;
+  font-size: 12px; color: var(--text3);
+}
+.funnel-sep small { font-family: var(--mono); font-size: 9px; color: var(--text3); text-align: center; max-width: 70px; }
+.fnb-profiles {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
+}
+.profile-card {
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.65;
+}
+.profile-card.fast { border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; }
+.profile-card.slow { border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; }
+.profile-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-family: var(--mono);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.tag-green { background: var(--green-bg); color: var(--green); }
+.tag-amber { background: var(--amber-bg); color: var(--amber); }
+.fnb-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
+}
+.fnb-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.fnb-card-header {
+  display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px;
+}
+.fnb-ticker { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); }
+.fnb-desc { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.fnb-stats { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.fnb-note {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.75;
+}
+
+/* ── Scene 4 : Contagion ── */
+.contagion-desc { font-size: 13px; color: var(--text2); line-height: 1.75; margin-bottom: 20px; }
+.contagion-svg-wrap { margin-bottom: 16px; }
+.sig-rows { display: flex; flex-direction: column; gap: 6px; }
+.sig-row {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px;
+  padding: 8px 12px;
+  background: var(--bg3);
+  border-radius: 8px;
+}
+.sig-row-level { min-width: 40px; }
+.sig-row-text { flex: 1; color: var(--text); }
+.sig-row-p { color: var(--text3); }
+.sig-row-status { }
+@keyframes dashflow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -18; } }
+@keyframes bpulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@media(prefers-reduced-motion:no-preference){
+  .flowing { animation: dashflow .85s linear infinite; }
+  .pulsing { animation: bpulse 1.7s ease-in-out infinite; }
+}
+
+/* ── Nav buttons ── */
+.scene-nav {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 32px;
+}
+.scene-nav button {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: color .15s, background .15s, border-color .15s;
+}
+.scene-nav button:hover:not(:disabled) { color: var(--text); background: var(--bg4); border-color: var(--border2); }
+.scene-nav button:disabled { opacity: .3; cursor: default; }
+.scene-ctr { font-family: var(--mono); font-size: 11px; color: var(--text3); min-width: 40px; text-align: center; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="intro.html" class="active">Présentation</a>
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="fondements.html">Fondements théoriques</a>
+    <a href="analyses.html">Analyses quantitatives</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="contagion.html">Contagion</a>
+    <a href="apropos.html">À propos</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-label">TMX v2 · Mean reversion · FNBs canadiens</div>
+    <div class="hero-title">Comment fonctionne<br><span>le système</span>?</div>
+    <div class="hero-sub">Une introduction visuelle à la logique, aux données et aux décisions qui guident TMX v2 — de la détection du signal jusqu'à l'exécution.</div>
+  </div>
+
+  <div class="pres-shell">
+
+    <div class="dot-nav" id="dot-nav"></div>
+    <div class="scene-label" id="scene-label"></div>
+
+    <!-- ─── Scène 0 : Vision ─── -->
+    <div class="scene active" id="s0">
+      <div class="vision-grid">
+        <div class="vision-card">
+          <svg width="28" height="28" viewBox="0 0 28 28" style="display:block;margin:0 auto">
+            <circle cx="14" cy="14" r="8" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+            <path d="M14 4V7M4 14H7M21 14H24M14 21V24" stroke="rgba(255,255,255,.25)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="14" x2="19" y2="9" stroke="#e8c97e" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="vision-card-title">VIX</div>
+          <div class="vision-card-sub">Station météo</div>
+          <div class="vision-card-data">
+            <div style="color:#4ade80">&lt;16 → risk-on</div>
+            <div style="color:#f59e0b">16–25 → neutre</div>
+            <div style="color:#f87171">&gt;25 → pause</div>
+          </div>
+        </div>
+        <div class="vision-card">
+          <svg width="28" height="28" viewBox="0 0 28 28" style="display:block;margin:0 auto">
+            <circle cx="11" cy="11" r="7" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+            <line x1="16" y1="16" x2="24" y2="24" stroke="rgba(255,255,255,.25)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="vision-card-title">Scanner</div>
+          <div class="vision-card-sub">Le pêcheur</div>
+          <div class="vision-card-data" style="color:var(--text2)">
+            <div>7 FNBs actifs</div>
+            <div>toutes les 5 min</div>
+            <div>seuil ≥ 2 é.-t.</div>
+          </div>
+        </div>
+        <div class="vision-card">
+          <svg width="28" height="28" viewBox="0 0 28 28" style="display:block;margin:0 auto">
+            <path d="M4 14 Q14 3 24 14" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+            <path d="M24 14 Q14 25 4 14" fill="none" stroke="#e8c97e" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <circle cx="4" cy="14" r="2" fill="#e8c97e"/>
+            <circle cx="24" cy="14" r="2" fill="#e8c97e"/>
+          </svg>
+          <div class="vision-card-title">Rebond</div>
+          <div class="vision-card-sub">L'élastique</div>
+          <div class="vision-card-data" style="color:var(--text2)">
+            <div>78–95% récup.</div>
+            <div>10–20 jours</div>
+            <div>Wilcoxon validé</div>
+          </div>
+        </div>
+      </div>
+      <div class="pullquote">
+        "En beau temps, le pêcheur sort pêcher. En tempête, il reste au quai. Le VIX est la météo — il dit s'il faut sortir, pas où aller."
+      </div>
+    </div>
+
+    <!-- ─── Scène 1 : Z-score ─── -->
+    <div class="scene" id="s1">
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px">Le z-score — détecter l'anormal</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px">XIU.TO simulé sur 60 jours. Un événement à −2.5 é.-t. au jour 47 déclenche un signal, suivi d'un rebond vers la moyenne (mean reversion).</div>
+      <div class="chart-wrap">
+        <canvas id="zc"></canvas>
+      </div>
+      <div class="chart-legend">
+        <span><span class="legend-line" style="background:#e8c97e"></span>z-score 20j</span>
+        <span><span class="legend-line" style="border-top:1.5px dashed rgba(248,113,113,.7);height:0"></span>± 2 é.-t.</span>
+        <span><span class="legend-dot" style="background:#f87171"></span>Signal J47</span>
+      </div>
+      <div class="formulas">
+        <div class="formula-box">
+          <div class="formula-box-title">Signal — z-score 20 jours</div>
+          <div>r = (P<sub>j</sub> − P<sub>j−1</sub>) / P<sub>j−1</sub></div>
+          <div>z = (r − μ<sub>20j</sub>) / σ<sub>20j</sub></div>
+          <div style="color:var(--amber)">z ≤ −2.0 → signal principal</div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-box-title">Taille — z-score 60 jours</div>
+          <div>Confirmatoire, non bloquant</div>
+          <div>Signal sur 20j ET 60j</div>
+          <div style="color:var(--amber)">→ position plus grande</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Scène 2 : Chaîne ─── -->
+    <div class="scene" id="s2">
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px">4 maillons — tous doivent dire oui</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:24px">Un maillon dit "non" → le système attend sans agir. Aucune exception.</div>
+      <div class="chain">
+        <div class="chain-node" id="ch0">
+          <div class="chain-num">MAILLON 1</div>
+          <div class="chain-title">Filtre VIX</div>
+          <div class="chain-body">"Bon moment?"<br><span class="chain-tag" style="color:var(--green)">VIX &lt;16 → ok</span></div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node" id="ch1">
+          <div class="chain-num">MAILLON 2</div>
+          <div class="chain-title">Scanner z-score</div>
+          <div class="chain-body">"FNB en solde?"<br><span class="chain-tag" style="color:var(--amber)">z ≤ −2 é.-t.</span></div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node" id="ch2">
+          <div class="chain-num">MAILLON 3</div>
+          <div class="chain-title">7 filtres sécurité</div>
+          <div class="chain-body">"Vraie aubaine?"<br><span class="chain-tag" style="color:var(--text3)">Cluster · SMA50 · Volume</span></div>
+        </div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node" id="ch3">
+          <div class="chain-num">MAILLON 4</div>
+          <div class="chain-title">Exécution</div>
+          <div class="chain-body">"Combien? Quand sortir?"<br><span class="chain-tag" style="color:var(--green)">Graduelle · Stop-loss</span></div>
+        </div>
+      </div>
+      <div class="chain-footer">
+        Max 3 positions simultanées · Paper trading en cours — avril 2026
+      </div>
+    </div>
+
+    <!-- ─── Scène 3 : 7 FNBs ─── -->
+    <div class="scene" id="s3">
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:8px">Pourquoi seulement 7 FNBs?</div>
+      <div class="fnb-intro">Le système surveille 12 fonds canadiens cotés à la Bourse de Toronto. Mais pour être activement tradé, un fonds doit passer un test statistique rigoureux sur 25 ans : ses baisses anormales doivent être suivies d'un rebond fiable et répété. Cinq fonds n'ont pas passé ce test — leurs baisses peuvent être permanentes.</div>
+
+      <div class="funnel">
+        <div class="f-box f-neutral">
+          <div class="f-box-n">12</div>
+          <div class="f-box-label">FNBs canadiens</div>
+          <div class="f-box-sub">Bourse de Toronto</div>
+        </div>
+        <div class="funnel-sep">
+          <span>→</span>
+          <small>test Wilcoxon<br>25 ans</small>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="f-box f-green">
+              <div class="f-box-n">7</div>
+              <div class="f-box-label">FNBs actifs</div>
+              <div class="f-box-sub">rebond validé</div>
+            </div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.5;max-width:115px">Le système peut <strong style="color:var(--text);font-weight:500">acheter</strong> lors d'une baisse anormale</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="f-box f-amber">
+              <div class="f-box-n">5</div>
+              <div class="f-box-label">contextuels</div>
+              <div class="f-box-sub">surveillés seulement</div>
+            </div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.5;max-width:115px">Jamais achetés. Leurs chutes peuvent <strong style="color:var(--text);font-weight:500">signaler</strong> une opportunité ailleurs</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fnb-profiles">
+        <div class="profile-card fast">
+          <div class="profile-header">
+            <span class="tag tag-green">Rapide</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">XIN · XHC · XST</span>
+          </div>
+          Retour en <strong style="color:var(--text)">10 à 15 jours</strong>. Rebond rapide et fiable.
+        </div>
+        <div class="profile-card slow">
+          <div class="profile-header">
+            <span class="tag tag-amber">Moyen</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">XIU · XFN · XUT · XRE</span>
+          </div>
+          Retour en <strong style="color:var(--text)">environ 20 jours</strong>. Le rebond prend un peu plus de temps.
+        </div>
+      </div>
+
+      <div class="fnb-grid">
+        <div class="fnb-card"><div class="fnb-card-header"><span class="fnb-ticker">XIU.TO</span><span class="tag tag-amber">Moyen</span></div><div class="fnb-desc">Grandes entreprises canadiennes (TSX 60)</div><div class="fnb-stats">Rebond en ~20j · 94 fois sur 100</div></div>
+        <div class="fnb-card"><div class="fnb-card-header"><span class="fnb-ticker">XFN.TO</span><span class="tag tag-amber">Moyen</span></div><div class="fnb-desc">Grandes banques et assureurs canadiens</div><div class="fnb-stats">Rebond en ~20j · 86 fois sur 100</div></div>
+        <div class="fnb-card"><div class="fnb-card-header"><span class="fnb-ticker">XUT.TO</span><span class="tag tag-amber">Moyen</span></div><div class="fnb-desc">Hydro, gaz, télécoms — services publics réglementés</div><div class="fnb-stats">Rebond en ~20j · 88 fois sur 100 <span style="color:var(--amber)">· marginal</span></div></div>
+        <div class="fnb-card"><div class="fnb-card-header"><span class="fnb-ticker">XRE.TO</span><span class="tag tag-amber">Moyen</span></div><div class="fnb-desc">Immobilier coté en bourse (FPI canadiens)</div><div class="fnb-stats">Rebond en ~20j · 78 fois sur 100</div></div>
+        <div class="fnb-card"><div class="fnb-card-header"><span class="fnb-ticker">XIN.TO</span><span class="tag tag-green">Rapide</span></div><div class="fnb-desc">Actions mondiales couvertes contre les fluctuations du dollar</div><div class="fnb-stats">Rebond en ~10j · 92 fois sur 100</div></div>
+        <div class="fnb-card"><div class="fnb-card-header"><span class="fnb-ticker">XHC.TO</span><span class="tag tag-green">Rapide</span></div><div class="fnb-desc">Entreprises de soins de santé canadiennes</div><div class="fnb-stats">Rebond en ~10j · 83 fois sur 100</div></div>
+        <div class="fnb-card" style="grid-column:1/-1;max-width:50%"><div class="fnb-card-header"><span class="fnb-ticker">XST.TO</span><span class="tag tag-green">Rapide</span></div><div class="fnb-desc">Produits de consommation courante (épicerie, pharmacie…)</div><div class="fnb-stats">Rebond en ~15j · 95 fois sur 100 — le plus fiable du système</div></div>
+      </div>
+
+      <div class="fnb-note">
+        <strong style="color:var(--text)">Les 5 FNBs surveillés (jamais achetés directement) :</strong> XEG (énergie), ZAG (obligations), XGD (or), XIT (technologie), XMA (matériaux). Leurs chutes peuvent <em>déclencher un signal</em> sur les 7 fonds actifs — c'est ce que la scène suivante explique.
+      </div>
+    </div>
+
+    <!-- ─── Scène 4 : Contagion ─── -->
+    <div class="scene" id="s4">
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px">Contagion inter-FNB — 2e couche indépendante</div>
+      <div class="contagion-desc">Certains fonds transmettent leurs chocs à d'autres avec un décalage d'un jour de bourse. Le phénomène a été validé par test de permutation sur 25 ans de données.</div>
+
+      <div class="contagion-svg-wrap">
+        <svg width="100%" viewBox="0 0 680 170" role="img">
+          <title>Contagion inter-FNB : XRE chute le Jour J, XIN rebondit le Jour J+1</title>
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#e8c97e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+          <g id="xrebox">
+            <rect x="40" y="42" width="215" height="86" rx="12" fill="rgba(248,113,113,.06)" stroke="#f87171" stroke-width="1.5"/>
+            <text x="147" y="79" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="500" font-family="'DM Mono',monospace" fill="#f87171">XRE.TO</text>
+            <text x="147" y="106" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#f87171" opacity=".7">chute ≥ 2.5 é.-t. — Jour J</text>
+          </g>
+          <line id="cline" x1="257" y1="85" x2="423" y2="85" stroke="#e8c97e" stroke-width="2.5" stroke-dasharray="12 6" marker-end="url(#arr)"/>
+          <text x="340" y="68" text-anchor="middle" font-size="12" font-family="'DM Mono',monospace" fill="#e8c97e">J + 1</text>
+          <rect x="425" y="42" width="215" height="86" rx="12" fill="rgba(74,222,128,.06)" stroke="#4ade80" stroke-width="1.5"/>
+          <text x="532" y="79" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="500" font-family="'DM Mono',monospace" fill="#4ade80">XIN.TO</text>
+          <text x="532" y="106" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#4ade80" opacity=".7">rebond probable — Jour J+1</text>
+          <text x="340" y="152" text-anchor="middle" font-size="11" font-family="'DM Mono',monospace" fill="rgba(255,255,255,.25)">p permutation = 0.000 · ~2.4 signaux/an · Niveau 1 — Prioritaire</text>
+        </svg>
+      </div>
+
+      <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:8px">Signaux validés — ordre de déploiement</div>
+      <div class="sig-rows">
+        <div class="sig-row"><span class="sig-row-level" style="color:var(--green)">Niv. 1</span><span class="sig-row-text">XRE ≥ 2.5 é.-t. → acheter XIN J+1</span><span class="sig-row-p">p = 0.000</span><span class="sig-row-status" style="color:var(--green)">Prioritaire</span></div>
+        <div class="sig-row"><span class="sig-row-level" style="color:var(--green)">Niv. 1</span><span class="sig-row-text">XUT ≥ 2.5 é.-t. → acheter XIN J+1</span><span class="sig-row-p">p = 0.002</span><span class="sig-row-status" style="color:var(--amber)">Surveiller</span></div>
+        <div class="sig-row"><span class="sig-row-level" style="color:var(--amber)">Niv. 2</span><span class="sig-row-text">XEG ≥ 2.5 é.-t. → shorter XFN J+1</span><span class="sig-row-p">Robuste</span><span class="sig-row-status" style="color:var(--amber)">Phase 2</span></div>
+        <div class="sig-row"><span class="sig-row-level" style="color:var(--amber)">Niv. 2</span><span class="sig-row-text">XUT ≥ 2.5 é.-t. → acheter XFN J+1</span><span class="sig-row-p">p &lt; 0.001</span><span class="sig-row-status" style="color:var(--amber)">Phase 2</span></div>
+      </div>
+    </div>
+
+    <!-- ─── Navigation ─── -->
+    <div class="scene-nav">
+      <button id="bprev" onclick="prev()">← Précédent</button>
+      <span class="scene-ctr" id="scene-ctr"></span>
+      <button id="bnext" onclick="next()">Suivant →</button>
+    </div>
+
+  </div><!-- .pres-shell -->
+
+</div><!-- .page -->
+
+<script>
+const SCENES = [
+  { id: 's0', label: '01 / 05 — Vision et philosophie' },
+  { id: 's1', label: '02 / 05 — Le z-score' },
+  { id: 's2', label: '03 / 05 — Chaîne de décision' },
+  { id: 's3', label: '04 / 05 — Les 7 FNBs actifs' },
+  { id: 's4', label: '05 / 05 — Contagion inter-FNB' },
+];
+let cur = 0;
+
+// Build dots
+const dotNav = document.getElementById('dot-nav');
+SCENES.forEach((_, i) => {
+  const b = document.createElement('button');
+  b.id = `dot${i}`;
+  b.onclick = () => goTo(i);
+  dotNav.appendChild(b);
+});
+
+function updateUI() {
+  document.getElementById('scene-label').textContent = SCENES[cur].label;
+  document.getElementById('scene-ctr').textContent = `${cur + 1} / ${SCENES.length}`;
+  document.getElementById('bprev').disabled = cur === 0;
+  document.getElementById('bnext').disabled = cur === SCENES.length - 1;
+  SCENES.forEach((_, i) => {
+    document.getElementById(`dot${i}`).className = i === cur ? 'on' : '';
+  });
+}
+
+function goTo(n) {
+  document.getElementById(SCENES[cur].id).classList.remove('active');
+  cur = n;
+  document.getElementById(SCENES[cur].id).classList.add('active');
+  updateUI();
+  onEnter(cur);
+}
+function prev() { if (cur > 0) goTo(cur - 1); }
+function next() { if (cur < SCENES.length - 1) goTo(cur + 1); }
+
+let chartDone = false;
+function onEnter(n) {
+  if (n === 1 && !chartDone) { buildChart(); chartDone = true; }
+  if (n === 2) {
+    document.querySelectorAll('.chain-node').forEach(el => el.classList.remove('lit'));
+    [0,1,2,3].forEach(i => setTimeout(() => document.getElementById(`ch${i}`).classList.add('lit'), i * 680 + 250));
+  }
+  if (n === 4) {
+    const l = document.getElementById('cline');
+    l.classList.remove('flowing'); void l.offsetWidth; l.classList.add('flowing');
+    const b = document.getElementById('xrebox');
+    b.classList.remove('pulsing'); void b.offsetWidth; b.classList.add('pulsing');
+  }
+}
+
+function buildChart() {
+  const z = [0.3,-0.5,1.1,0.2,-0.8,0.6,0.1,-0.3,0.9,-0.2,0.5,-0.1,0.7,-0.4,1.3,0.2,-0.6,0.8,-0.2,0.4,-0.7,0.3,1.0,-0.3,0.5,-0.8,0.2,0.9,-0.1,0.6,-0.4,0.7,-0.2,1.1,0.3,-0.6,0.8,-0.3,0.5,0.1,-0.9,0.4,-0.3,0.7,-1.2,0.2,-2.5,-1.8,-0.9,-0.4,0.1,0.5,0.8,0.6,0.3,-0.1,0.4,0.2,-0.2,0.5];
+  const labels = Array.from({length: 60}, (_, i) => (i+1) % 10 === 0 ? `J${i+1}` : '');
+  const signal = Array(60).fill(null); signal[46] = -2.5;
+  const ctx = document.getElementById('zc').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: z, borderColor: '#e8c97e', borderWidth: 2, pointRadius: 0, tension: .35, fill: false, order: 2 },
+      { data: Array(60).fill(2),  borderColor: 'rgba(248,113,113,.6)', borderWidth: 1, borderDash: [4,3], pointRadius: 0, fill: false, order: 3 },
+      { data: Array(60).fill(-2), borderColor: 'rgba(248,113,113,.6)', borderWidth: 1, borderDash: [4,3], pointRadius: 0, fill: false, order: 4 },
+      { data: Array(60).fill(0),  borderColor: 'rgba(255,255,255,.12)', borderWidth: 1, borderDash: [2,3], pointRadius: 0, fill: false, order: 5 },
+      { data: signal, borderColor: '#f87171', backgroundColor: '#f87171', borderWidth: 0, pointRadius: 8, showLine: false, order: 1 },
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 950 },
+      plugins: { legend: { display: false }, tooltip: { filter: i => i.datasetIndex === 0, callbacks: { label: i => `z = ${i.raw}` } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#555250', font: { size: 10 }, autoSkip: false, maxRotation: 0 } },
+        y: { min: -3.2, max: 2.8, grid: { color: 'rgba(255,255,255,.06)' }, ticks: { color: '#555250', font: { size: 10 }, stepSize: 1 } }
+      }
+    }
+  });
+}
+
+updateUI();
+</script>
+</body>
+</html>
