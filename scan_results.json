@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-05-08T16:13:32.137259-04:00",
+  "scan_at": "2026-05-08T17:15:13.714411-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,9 +73,9 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 17.12,
+    "vix": 17.19,
     "regime": "neutre",
-    "description": "VIX 17.1 entre 16.0-25.0 — tailles réduites",
+    "description": "VIX 17.2 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
