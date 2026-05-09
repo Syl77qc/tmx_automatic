@@ -7,11 +7,46 @@ Génère index.html et resultats.html
 
 import json
 import re
-from datetime import datetime
+from datetime import datetime, date
 from zoneinfo import ZoneInfo
 from pathlib import Path
 
+import yfinance as yf
+
 EASTERN = ZoneInfo("America/Toronto")
+
+
+def recuperer_prix_actuels(tickers: list[str]) -> dict[str, float]:
+    """
+    Récupère le dernier prix de clôture disponible pour une liste de tickers.
+    Retourne un dict {ticker: prix} — absent si erreur.
+    """
+    if not tickers:
+        return {}
+    try:
+        data = yf.download(
+            tickers=tickers,
+            period="2d",
+            interval="1d",
+            group_by="ticker",
+            auto_adjust=True,
+            progress=False,
+        )
+        prix = {}
+        for t in tickers:
+            try:
+                if len(tickers) == 1:
+                    closes = data["Close"].dropna()
+                else:
+                    closes = data[t]["Close"].dropna()
+                if not closes.empty:
+                    prix[t] = float(closes.iloc[-1])
+            except Exception:
+                pass
+        return prix
+    except Exception as e:
+        print(f"   ⚠️  recuperer_prix_actuels : {e}")
+        return {}
 
 SECTEURS = {
     "XIU.TO": "Marché large",  "XFN.TO": "Financières",
@@ -131,24 +166,34 @@ def generer_positions_html(positions):
           <span>[ ]</span>
           Aucune position ouverte. Le premier signal déclenchera l\'entrée en paper trading.
         </div>'''
+
+    # Récupérer les prix actuels via yfinance (un seul appel groupé)
+    tickers_ouverts = [p.get("ticker", "") for p in ouvertes if p.get("ticker")]
+    prix_actuels = recuperer_prix_actuels(tickers_ouverts)
+
     rows = ""
     for p in ouvertes:
         ticker  = p.get("ticker", "")
         prix_e  = p.get("prix_entree", 0)
-        prix_a  = p.get("prix_actuel", prix_e)
+        prix_a  = prix_actuels.get(ticker, prix_e)  # prix live, fallback sur prix_entree
         pnl     = (prix_a - prix_e) / prix_e * 100 if prix_e else 0
         date_e  = p.get("date_entree", "")[:10]
         taille  = p.get("multiplicateur", 0)
-        horizon = p.get("jours_restants", "?")
+        # Jours réels écoulés depuis l'entrée (recalculé dynamiquement)
+        try:
+            jours_ecoules = (date.today() - date.fromisoformat(date_e)).days
+        except Exception:
+            jours_ecoules = p.get("jours_restants", "?")
         pnl_cls = "var-pos" if pnl >= 0 else "var-neg"
+        prix_source = "" if ticker in prix_actuels else ' title="Prix non disponible — fallback prix entrée"'
         rows += f'''<tr>
           <td><span class="fnb-name">{ticker}</span></td>
           <td style="font-family:var(--mono)">{prix_e:.2f}</td>
-          <td style="font-family:var(--mono)">{prix_a:.2f}</td>
+          <td style="font-family:var(--mono)"{prix_source}>{prix_a:.2f}</td>
           <td><span class="{pnl_cls}">{pnl:+.2f}%</span></td>
           <td style="font-family:var(--mono)">{taille:.2f}x</td>
           <td style="font-family:var(--mono);color:var(--text3)">{date_e}</td>
-          <td style="font-family:var(--mono);color:var(--text3)">{horizon}j</td>
+          <td style="font-family:var(--mono);color:var(--text3)">{jours_ecoules}j</td>
         </tr>'''
     return f'''<table>
       <thead><tr>
