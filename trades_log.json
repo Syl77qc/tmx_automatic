@@ -76,5 +76,44 @@
       "z20:2.0-2.49",
       "exit:objectif"
     ]
+  },
+  {
+    "id": "XIU.TO_20260422_105630",
+    "ticker": "XIU.TO",
+    "type_sortie": "horizon",
+    "raison_sortie": "Horizon max atteint (2026-05-12)",
+    "partielle": false,
+    "date_entree": "2026-04-22T10:56:30.762721-04:00",
+    "date_sortie": "2026-05-12T11:57:36.467174-04:00",
+    "jours_detenus": 20,
+    "prix_entree": 49.9174,
+    "prix_sortie": 49.90999984741211,
+    "prix_pre_baisse": 50.51,
+    "prix_stop_loss": 46.139,
+    "nb_unites": 167,
+    "pnl_brut_cad": -1.24,
+    "couts_totaux_cad": 12.49,
+    "pnl_net_cad": -13.73,
+    "pnl_net_pct": -0.1647,
+    "gagnant": false,
+    "mae_pct": -1.6575,
+    "z20_entree": -2.1399,
+    "z60_entree": -1.3568,
+    "vix_entree": 19.05,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:marche_large",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "z60:faible",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "exit:horizon"
+    ]
   }
 ]

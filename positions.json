@@ -1,65 +1,7 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 91721.24,
-  "positions_ouvertes": {
-    "XIU.TO": {
-      "id": "XIU.TO_20260422_105630",
-      "ticker": "XIU.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-04-22T10:56:30.762721-04:00",
-      "date_horizon_max": "2026-05-12",
-      "jours_restants": 1,
-      "prix_signal": 49.88,
-      "prix_entree": 49.9174,
-      "prix_pre_baisse": 50.51,
-      "prix_stop_loss": 46.139,
-      "prix_plus_haut_atteint": 50.20000076293945,
-      "prix_sortie_partielle": null,
-      "nb_unites_total": 167,
-      "nb_unites_restant": 167,
-      "sortie_partielle_faite": false,
-      "cout_entree": {
-        "prix_execution": 49.9174,
-        "spread_cad": 2.08,
-        "slippage_cad": 4.16,
-        "commission_cad": 0.0,
-        "cout_total_cad": 8336.21
-      },
-      "capital_investi": 8336.21,
-      "multiplicateur": 0.25,
-      "z20_entree": -2.1399,
-      "z60_entree": -1.3568,
-      "vix_entree": 19.05,
-      "regime_entree": "neutre",
-      "sma50_entree": 48.6615,
-      "dessus_sma50_entree": true,
-      "raisons_filtres_passes": [
-        "Filtre A : 2 signaux simultanés → OK",
-        "Filtre B : Régime neutre → OK",
-        "Filtre C : z20=-2.14 ≤ -2.0 → OK",
-        "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : Bloc 'marche_large' libre → OK"
-      ],
-      "ajustements_taille": [
-        "régime_neutre÷2",
-        "z60_faible÷1.5"
-      ],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:marche_large",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus",
-        "cluster:1_3",
-        "profil:moyen",
-        "z20:2.0-2.49"
-      ],
-      "mae_pct": -1.6575379475135124,
-      "mae_prix": 49.9174
-    }
-  },
+  "capital_disponible": 100049.96,
+  "positions_ouvertes": {},
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-05-11T18:00:08.934407-04:00"
+  "derniere_maj": "2026-05-12T11:57:36.467208-04:00"
 }
