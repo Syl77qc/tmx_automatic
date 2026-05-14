@@ -115,5 +115,44 @@
       "z20:2.0-2.49",
       "exit:horizon"
     ]
+  },
+  {
+    "id": "XRE.TO_20260513_160818",
+    "ticker": "XRE.TO",
+    "type_sortie": "objectif",
+    "raison_sortie": "Prix 16.5200 ≥ objectif 16.4900",
+    "partielle": false,
+    "date_entree": "2026-05-13T16:08:18.682828-04:00",
+    "date_sortie": "2026-05-14T11:39:46.178974-04:00",
+    "jours_detenus": 0,
+    "prix_entree": 16.2722,
+    "prix_sortie": 16.520000457763672,
+    "prix_pre_baisse": 16.49,
+    "prix_stop_loss": 14.6015,
+    "nb_unites": 769,
+    "pnl_brut_cad": 190.56,
+    "couts_totaux_cad": 18.91,
+    "pnl_net_cad": 171.65,
+    "pnl_net_pct": 1.3717,
+    "gagnant": true,
+    "mae_pct": -0.075,
+    "z20_entree": -2.0817,
+    "z60_entree": -1.8459,
+    "vix_entree": 17.87,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:taux",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "z60:confirmé",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "exit:objectif"
+    ]
   }
 ]

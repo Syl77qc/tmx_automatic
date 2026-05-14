@@ -1,64 +1,7 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 87536.64,
-  "positions_ouvertes": {
-    "XRE.TO": {
-      "id": "XRE.TO_20260513_160818",
-      "ticker": "XRE.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-05-13T16:08:18.682828-04:00",
-      "date_horizon_max": "2026-06-02",
-      "jours_restants": 20,
-      "prix_signal": 16.26,
-      "prix_entree": 16.2722,
-      "prix_pre_baisse": 16.49,
-      "prix_stop_loss": 14.6015,
-      "prix_plus_haut_atteint": 16.2722,
-      "prix_sortie_partielle": null,
-      "nb_unites_total": 769,
-      "nb_unites_restant": 769,
-      "sortie_partielle_faite": false,
-      "cout_entree": {
-        "prix_execution": 16.2722,
-        "spread_cad": 3.13,
-        "slippage_cad": 6.25,
-        "commission_cad": 0.0,
-        "cout_total_cad": 12513.32
-      },
-      "capital_investi": 12513.32,
-      "multiplicateur": 0.375,
-      "z20_entree": -2.0817,
-      "z60_entree": -1.8459,
-      "vix_entree": 17.87,
-      "regime_entree": "neutre",
-      "sma50_entree": 16.0664,
-      "dessus_sma50_entree": true,
-      "raisons_filtres_passes": [
-        "Filtre A : 1 signaux simultanés → OK",
-        "Filtre B : Régime neutre → OK",
-        "Filtre C : z20=-2.08 ≤ -2.0 → OK",
-        "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : Bloc 'taux' libre → OK"
-      ],
-      "ajustements_taille": [
-        "régime_neutre÷2"
-      ],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:taux",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:confirmé",
-        "trend:SMA50_dessus",
-        "cluster:1_3",
-        "profil:moyen",
-        "z20:2.0-2.49"
-      ],
-      "mae_pct": -0.07497308979834082,
-      "mae_prix": 16.2722
-    }
-  },
+  "capital_disponible": 100230.99,
+  "positions_ouvertes": {},
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-05-13T18:03:58.587318-04:00"
+  "derniere_maj": "2026-05-14T11:39:46.179019-04:00"
 }
