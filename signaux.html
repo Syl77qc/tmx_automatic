@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNBLab — Signaux Granger</title>
+  
+<style>
+  :root {
+    --navy:   #1A1A2E;
+    --navy2:  #16213E;
+    --orange: #ED7D31;
+    --blue:   #4472C4;
+    --green:  #2ECC71;
+    --red:    #E74C3C;
+    --yellow: #F1C40F;
+    --text:   #E8E8F0;
+    --muted:  #9999BB;
+    --card:   #1E1E35;
+    --border: #2A2A45;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0D0D1A;
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .navbar {
+    background: var(--navy);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid var(--orange);
+    flex-wrap: wrap;
+  }
+  .navbar .brand {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--orange);
+    text-decoration: none;
+    padding: 14px 16px 14px 0;
+    letter-spacing: 1px;
+  }
+  .navbar .nav-links { display: flex; flex-wrap: wrap; gap: 2px; }
+  .navbar a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 16px 12px;
+    font-size: 13px;
+    transition: color .2s;
+  }
+  .navbar a:hover, .navbar a.active { color: #fff; }
+  .navbar a.active {
+    border-bottom: 3px solid var(--orange);
+    color: var(--orange);
+    font-weight: 600;
+  }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 28px 20px; }
+
+  .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  /* Stats pills */
+  .stats-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .stat-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    min-width: 150px;
+    text-align: center;
+  }
+  .stat-pill .val {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1.1;
+  }
+  .stat-pill .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Sections */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--navy2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .section-header .badge-count {
+    background: var(--orange);
+    color: #fff;
+    border-radius: 20px;
+    padding: 2px 9px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .section-body { padding: 0; overflow-x: auto; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: var(--navy);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: rgba(255,255,255,.03); }
+  tbody td { padding: 10px 14px; vertical-align: middle; }
+  tbody tr:last-child { border-bottom: none; }
+
+  .empty-row td {
+    text-align: center;
+    color: var(--muted);
+    padding: 32px;
+    font-style: italic;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    white-space: nowrap;
+  }
+  .badge-actif-fort   { background: #1a3a2a; color: var(--green); border: 1px solid #2ECC71; }
+  .badge-actif-mod    { background: #2a2a1a; color: var(--yellow); border: 1px solid var(--yellow); }
+  .badge-confirme     { background: #1a2a3a; color: #74b9ff; border: 1px solid #74b9ff; }
+  .badge-veille       { background: #1e1e35; color: var(--muted); border: 1px solid var(--border); }
+
+  /* Arrow */
+  .arrow { color: var(--orange); font-weight: 700; padding: 0 4px; }
+
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .neu { color: var(--muted); }
+
+  /* Tooltip */
+  .tip { border-bottom: 1px dashed var(--muted); cursor: help; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 28px 20px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+  }
+  .footer a { color: var(--muted); }
+
+  /* Date stamp */
+  .date-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+         box-shadow: 0 0 6px var(--green); display: inline-block; }
+
+  @media (max-width: 700px) {
+    .stats-row { gap: 8px; }
+    .stat-pill { min-width: 100px; padding: 10px 14px; }
+    .stat-pill .val { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+  
+<nav class="navbar">
+  <a class="brand" href="index.html">FNBLab</a>
+  <div class="nav-links">
+    <a href="intro.html">Présentation</a>
+    <a href="index.html">Dashboard</a>
+    <a href="systeme.html">Système</a>
+    <a href="fondements.html">Fondements théoriques</a>
+    <a href="analyses.html">Analyses quantitatives</a>
+    <a href="resultats.html">Résultats</a>
+    <a href="contagion.html">Contagion</a>
+    <a href="signaux.html" class="active">Signaux</a>
+    <a href="apropos.html">À propos</a>
+  </div>
+</nav>
+  <div class="container">
+
+    <div class="page-title">Signaux Granger — Sous-univers Phase 6</div>
+    <div class="page-sub">
+      56 signaux qualité (WR&gt;55%, Sharpe&gt;0.5) sur 14 ETFs · Lags 1–5 jours
+    </div>
+
+    <div class="date-stamp">
+      <span class="dot"></span>
+      Mise à jour : 2026-05-18 · Source : yfinance
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-pill">
+        <div class="val" style="color:#2ECC71">2</div>
+        <div class="lbl">Signaux actifs</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val" style="color:#74b9ff">1</div>
+        <div class="lbl">Confirmés (Z&lt;-1.5)</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val">4</div>
+        <div class="lbl">Signaux historisés</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val" style="color:#2ECC71">75%</div>
+        <div class="lbl">WR réalisé</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val">56</div>
+        <div class="lbl">Signaux qualité (pool)</div>
+      </div>
+    </div>
+
+    <!-- Section 1 : Signaux actifs -->
+    <div class="section">
+      <div class="section-header">
+        <h2>⚡ Signaux actifs aujourd'hui</h2>
+        <span class="badge-count">2</span>
+        <span style="color:var(--muted);font-size:12px;margin-left:auto">
+          Actif si cumul cause &lt; -1.0σ√lag · Confirmé si Z-score effet &lt; -1.5
+        </span>
+      </div>
+      <div class="section-body"><table>
+      <thead><tr>
+        <th>Statut</th><th>Cause</th><th></th><th>Effet</th><th>Lag</th>
+        <th title="Rendement cumulé cause sur lag jours">Cumul cause</th>
+        <th title="Z-score 20j de l'effet">Z-score effet</th>
+        <th>Prix / Var.</th>
+        <th>WR théo.</th><th>Sharpe</th>
+      </tr></thead>
+      <tbody><tr>
+          <td><span class="badge badge-actif-fort">⬤ FORT</span></td>
+          <td><strong>XUT</strong><br>
+              <small style="color:var(--muted)">Services publics</small></td>
+          <td class="arrow">→</td>
+          <td><strong>XIU</strong><br>
+              <small style="color:var(--muted)">S&P/TSX 60</small></td>
+          <td style="text-align:center"><strong>4j</strong></td>
+          <td><span class="neg">-1.843%</span><br>
+              <small style="color:var(--muted)">seuil <span class="neg">-1.612%</span></small></td>
+          <td><span class="neg">-1.71</span><br><small><span class="badge badge-confirme">✓ Confirmé</span></small></td>
+          <td><span class="neg">-0.97%</span><br>
+              <small style="color:var(--muted)">35.18$</small></td>
+          <td class="pos">59.9%</td>
+          <td><strong>2.56</strong></td>
+        </tr><tr>
+          <td><span class="badge badge-actif-mod">◆ MODÉRÉ</span></td>
+          <td><strong>XEG</strong><br>
+              <small style="color:var(--muted)">Énergie TSX</small></td>
+          <td class="arrow">→</td>
+          <td><strong>XQQ</strong><br>
+              <small style="color:var(--muted)">NASDAQ 100 CAD</small></td>
+          <td style="text-align:center"><strong>5j</strong></td>
+          <td><span class="neg">-2.110%</span><br>
+              <small style="color:var(--muted)">seuil <span class="neg">-1.980%</span></small></td>
+          <td><span class="neu">-1.32</span><br><small>—</small></td>
+          <td><span class="neg">-1.24%</span><br>
+              <small style="color:var(--muted)">65.42$</small></td>
+          <td class="pos">58.9%</td>
+          <td><strong>2.44</strong></td>
+        </tr></tbody></table></div>
+    </div>
+
+    <!-- Section 2 : Signaux en veille (top 20) -->
+    <div class="section">
+      <div class="section-header">
+        <h2>🔍 Signaux en veille (top 20 par Sharpe)</h2>
+        <span class="badge-count">2</span>
+      </div>
+      <div class="section-body"><table>
+      <thead><tr>
+        <th>Statut</th><th>Cause</th><th></th><th>Effet</th><th>Lag</th>
+        <th>Cumul cause</th><th>Z-score effet</th>
+        <th>WR théo.</th><th>Sharpe</th>
+      </tr></thead>
+      <tbody><tr>
+          <td><span class="badge badge-veille">VEILLE</span></td>
+          <td>ZEB</td>
+          <td class="arrow">→</td>
+          <td>XQQ</td>
+          <td style="text-align:center">1j</td>
+          <td><span class="neg">-0.420%</span><br>
+              <small style="color:var(--muted)">seuil <span class="neg">-0.810%</span></small></td>
+          <td><span class="neu">-0.88</span></td>
+          <td class="pos">58.9%</td>
+          <td>1.64</td>
+        </tr><tr>
+          <td><span class="badge badge-veille">VEILLE</span></td>
+          <td>XFN</td>
+          <td class="arrow">→</td>
+          <td>XQQ</td>
+          <td style="text-align:center">1j</td>
+          <td><span class="neg">-0.310%</span><br>
+              <small style="color:var(--muted)">seuil <span class="neg">-0.790%</span></small></td>
+          <td><span class="neu">-0.71</span></td>
+          <td class="pos">57.3%</td>
+          <td>1.68</td>
+        </tr>
+      </tbody></table></div>
+    </div>
+
+    <!-- Section 3 : Univers -->
+    <div class="section">
+      <div class="section-header">
+        <h2>📊 Univers — 14 ETFs Phase 6</h2>
+      </div>
+      <div class="section-body"><table>
+      <thead><tr>
+        <th>ETF</th><th>Prix</th><th>Var. jour</th>
+        <th title="Z-score 20 jours">Z20</th>
+        <th title="Z-score 60 jours">Z60</th>
+      </tr></thead>
+      <tbody><tr>
+          <td><strong>ENCC</strong><br>
+              <small style="color:var(--muted)">Oil & Gas Covered Call</small></td>
+          <td><strong>8.92$</strong></td>
+          <td><span class="neg">-0.89%</span></td>
+          <td><span class="neu">-0.77</span></td>
+          <td><span class="neu">-0.65</span></td>
+        </tr><tr>
+          <td><strong>U-UN</strong><br>
+              <small style="color:var(--muted)">Sprott Uranium</small></td>
+          <td><strong>26.44$</strong></td>
+          <td><span class="neg">-1.23%</span></td>
+          <td><span class="neu">-1.02</span></td>
+          <td><span class="neu">-0.94</span></td>
+        </tr><tr>
+          <td><strong>XEG</strong><br>
+              <small style="color:var(--muted)">Énergie TSX</small></td>
+          <td><strong>28.07$</strong></td>
+          <td><span class="pos">+1.96%</span></td>
+          <td><span class="neg">-2.11</span></td>
+          <td><span class="neg">-1.89</span></td>
+        </tr><tr>
+          <td><strong>XFN</strong><br>
+              <small style="color:var(--muted)">Financières TSX</small></td>
+          <td><strong>84.87$</strong></td>
+          <td><span class="neg">-0.52%</span></td>
+          <td><span class="neu">-0.74</span></td>
+          <td><span class="neu">-0.61</span></td>
+        </tr><tr>
+          <td><strong>XGD</strong><br>
+              <small style="color:var(--muted)">Or global</small></td>
+          <td><strong>53.70$</strong></td>
+          <td><span class="neg">-6.67%</span></td>
+          <td><span class="neg">-2.16</span></td>
+          <td><span class="neg">-2.21</span></td>
+        </tr><tr>
+          <td><strong>XIU</strong><br>
+              <small style="color:var(--muted)">S&P/TSX 60</small></td>
+          <td><strong>35.18$</strong></td>
+          <td><span class="neg">-0.97%</span></td>
+          <td><span class="neu">-1.31</span></td>
+          <td><span class="neu">-1.18</span></td>
+        </tr><tr>
+          <td><strong>XQQ</strong><br>
+              <small style="color:var(--muted)">NASDAQ 100 CAD</small></td>
+          <td><strong>65.73$</strong></td>
+          <td><span class="pos">+0.20%</span></td>
+          <td><span class="neu">+0.28</span></td>
+          <td><span class="neu">+0.05</span></td>
+        </tr><tr>
+          <td><strong>XRE</strong><br>
+              <small style="color:var(--muted)">REIT TSX</small></td>
+          <td><strong>16.30$</strong></td>
+          <td><span class="neg">-0.61%</span></td>
+          <td><span class="neu">-0.75</span></td>
+          <td><span class="neu">-0.81</span></td>
+        </tr><tr>
+          <td><strong>XSP</strong><br>
+              <small style="color:var(--muted)">S&P 500 CAD couvert</small></td>
+          <td><strong>39.15$</strong></td>
+          <td><span class="neg">-0.44%</span></td>
+          <td><span class="neu">-0.89</span></td>
+          <td><span class="neu">-0.72</span></td>
+        </tr><tr>
+          <td><strong>XST</strong><br>
+              <small style="color:var(--muted)">Consommation de base</small></td>
+          <td><strong>62.47$</strong></td>
+          <td><span class="neg">-0.34%</span></td>
+          <td><span class="neu">-0.33</span></td>
+          <td><span class="neu">-0.17</span></td>
+        </tr><tr>
+          <td><strong>XUT</strong><br>
+              <small style="color:var(--muted)">Services publics</small></td>
+          <td><strong>35.29$</strong></td>
+          <td><span class="neg">-0.90%</span></td>
+          <td><span class="neg">-1.84</span></td>
+          <td><span class="neu">-1.46</span></td>
+        </tr><tr>
+          <td><strong>XWD</strong><br>
+              <small style="color:var(--muted)">MSCI Monde</small></td>
+          <td><strong>47.23$</strong></td>
+          <td><span class="neg">-0.61%</span></td>
+          <td><span class="neu">-0.92</span></td>
+          <td><span class="neu">-0.88</span></td>
+        </tr><tr>
+          <td><strong>ZAG</strong><br>
+              <small style="color:var(--muted)">Obligations agrégées</small></td>
+          <td><strong>13.58$</strong></td>
+          <td><span class="neg">-0.80%</span></td>
+          <td><span class="neg">-2.16</span></td>
+          <td><span class="neg">-2.21</span></td>
+        </tr><tr>
+          <td><strong>ZEB</strong><br>
+              <small style="color:var(--muted)">Banques égal-pondéré</small></td>
+          <td><strong>97.14$</strong></td>
+          <td><span class="neg">-0.48%</span></td>
+          <td><span class="neu">-0.61</span></td>
+          <td><span class="neu">-0.54</span></td>
+        </tr></tbody></table></div>
+    </div>
+
+    <!-- Section 4 : Historique -->
+    <div class="section">
+      <div class="section-header">
+        <h2>📋 Historique des signaux (40 derniers)</h2>
+        <span class="badge-count">4</span>
+      </div>
+      <div class="section-body"><table>
+      <thead><tr>
+        <th>Date</th><th>Cause</th><th></th><th>Effet</th><th>Lag</th>
+        <th>Z-score entrée</th><th>Rendement réalisé</th><th>WR théo.</th>
+      </tr></thead>
+      <tbody><tr>
+          <td>2026-05-12</td>
+          <td><strong>XUT</strong></td>
+          <td class="arrow">→</td>
+          <td>XIU</td>
+          <td style="text-align:center">4j</td>
+          <td><span class="neg">-1.82</span></td>
+          <td><span class="pos">+0.88%</span></td>
+          <td class="pos">59.9%</td>
+        </tr><tr>
+          <td>2026-05-07</td>
+          <td><strong>XEG</strong></td>
+          <td class="arrow">→</td>
+          <td>XSP</td>
+          <td style="text-align:center">5j</td>
+          <td><span class="neg">-2.01</span></td>
+          <td><span class="pos">+0.34%</span></td>
+          <td class="pos">58.1%</td>
+        </tr><tr>
+          <td>2026-04-29</td>
+          <td><strong>ZEB</strong></td>
+          <td class="arrow">→</td>
+          <td>XQQ</td>
+          <td style="text-align:center">1j</td>
+          <td><span class="neg">-1.55</span></td>
+          <td><span class="neg">-0.21%</span></td>
+          <td class="pos">58.9%</td>
+        </tr><tr>
+          <td>2026-04-22</td>
+          <td><strong>XUT</strong></td>
+          <td class="arrow">→</td>
+          <td>ZEB</td>
+          <td style="text-align:center">4j</td>
+          <td><span class="neg">-1.68</span></td>
+          <td><span class="pos">+1.12%</span></td>
+          <td class="pos">59.6%</td>
+        </tr></tbody></table></div>
+    </div>
+
+    <!-- Section 5 : Performance -->
+    <div class="section">
+      <div class="section-header">
+        <h2>🏆 Performance réalisée par signal</h2>
+      </div>
+      <div class="section-body"><table>
+      <thead><tr>
+        <th>Signal</th><th>Déclenchements</th>
+        <th>WR réalisé</th><th>WR théorique</th><th>Moy. ret.</th>
+      </tr></thead>
+      <tbody><tr>
+          <td><strong>XUT</strong>
+              <span class="arrow">→</span>
+              <strong>XIU</strong> L4</td>
+          <td style="text-align:center">2</td>
+          <td class="pos" style="text-align:center"><strong>100.0%</strong></td>
+          <td class="pos" style="text-align:center">—</td>
+          <td style="text-align:center"><span class="pos">+0.88%</span></td>
+        </tr><tr>
+          <td><strong>XUT</strong>
+              <span class="arrow">→</span>
+              <strong>ZEB</strong> L4</td>
+          <td style="text-align:center">1</td>
+          <td class="pos" style="text-align:center"><strong>100.0%</strong></td>
+          <td class="pos" style="text-align:center">—</td>
+          <td style="text-align:center"><span class="pos">+1.12%</span></td>
+        </tr><tr>
+          <td><strong>XEG</strong>
+              <span class="arrow">→</span>
+              <strong>XSP</strong> L5</td>
+          <td style="text-align:center">1</td>
+          <td class="pos" style="text-align:center"><strong>100.0%</strong></td>
+          <td class="pos" style="text-align:center">—</td>
+          <td style="text-align:center"><span class="pos">+0.34%</span></td>
+        </tr><tr>
+          <td><strong>ZEB</strong>
+              <span class="arrow">→</span>
+              <strong>XQQ</strong> L1</td>
+          <td style="text-align:center">1</td>
+          <td class="neg" style="text-align:center"><strong>0.0%</strong></td>
+          <td class="pos" style="text-align:center">—</td>
+          <td style="text-align:center"><span class="neg">-0.21%</span></td>
+        </tr></tbody></table></div>
+    </div>
+
+    <!-- Méthodologie -->
+    <div class="section">
+      <div class="section-header"><h2>📖 Méthodologie</h2></div>
+      <div class="section-body" style="padding:20px 24px;line-height:1.8;color:var(--muted)">
+        <p><strong style="color:#fff">Source des signaux</strong> — 56 paires cause→effet
+           issues du test de causalité de Granger (lags 1–5 jours, p&lt;0.05)
+           sur 25 ans de données EOD, filtrées sur WR&gt;55%, Sharpe&gt;0.5, N≥20.</p>
+        <br>
+        <p><strong style="color:#fff">Condition d'activation</strong> — Le signal est ACTIF
+           si le rendement cumulé de la cause sur <em>lag</em> jours est inférieur à
+           −1σ×√lag (σ = écart-type journalier sur 252 jours).</p>
+        <br>
+        <p><strong style="color:#fff">Confirmation</strong> — Le signal est CONFIRMÉ
+           si le z-score 20 jours de l'effet est &lt; −1.5, indiquant une condition
+           de survente indépendante.</p>
+        <br>
+        <p><strong style="color:#fff">Limites</strong> — Les signaux Granger mesurent
+           la prédictibilité linéaire passée, non la causalité économique.
+           Ce site est un projet de recherche personnel.
+           <strong>Ce ne sont pas des conseils financiers.</strong></p>
+      </div>
+    </div>
+
+  </div>
+  <footer class="footer">
+    FNBLab TMX v2 · Signaux Granger Phase 6 · 2026-05-18 ·
+    <a href="https://github.com/Syl77qc/tmx_automatic">GitHub</a><br>
+    Ce site ne constitue pas un conseil financier.
+  </footer>
+</body>
+</html>
