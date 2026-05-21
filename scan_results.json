@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-05-21T17:47:23.225457-04:00",
+  "scan_at": "2026-05-21T18:10:11.311572-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -134,7 +134,7 @@
       "prix_cloture": 87.37999725341797,
       "rendement_jour_pct": 0.9123,
       "z20": 0.7558,
-      "z60": 0.692,
+      "z60": 0.6921,
       "sma50": 80.412,
       "dessus_sma50": true,
       "signal": false,
