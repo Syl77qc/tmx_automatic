@@ -1,7 +1,64 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 100230.99,
-  "positions_ouvertes": {},
+  "capital_disponible": 83564.3,
+  "positions_ouvertes": {
+    "XHC.TO": {
+      "id": "XHC.TO_20260526_125528",
+      "ticker": "XHC.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-05-26T12:55:28.683261-04:00",
+      "date_horizon_max": "2026-06-05",
+      "jours_restants": 10,
+      "prix_signal": 67.7,
+      "prix_entree": 67.7508,
+      "prix_pre_baisse": 68.96,
+      "prix_stop_loss": 62.1147,
+      "prix_plus_haut_atteint": 67.7508,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 246,
+      "nb_unites_restant": 246,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 67.7508,
+        "spread_cad": 4.16,
+        "slippage_cad": 8.33,
+        "commission_cad": 0.0,
+        "cout_total_cad": 16666.69
+      },
+      "capital_investi": 16666.69,
+      "multiplicateur": 0.5,
+      "z20_entree": -2.1751,
+      "z60_entree": -1.7581,
+      "vix_entree": 17.02,
+      "regime_entree": "neutre",
+      "sma50_entree": 67.006,
+      "dessus_sma50_entree": true,
+      "raisons_filtres_passes": [
+        "Filtre A : 1 signaux simultanés → OK",
+        "Filtre B : Régime neutre → OK",
+        "Filtre C : z20=-2.18 ≤ -2.0 → OK",
+        "Filtre F : Au-dessus SMA50 → OK",
+        "Filtre G : XHC.TO hors bloc → OK"
+      ],
+      "ajustements_taille": [
+        "régime_neutre÷2"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:autre",
+        "profil:rapide",
+        "z20:2.0-2.49",
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3",
+        "profil:rapide",
+        "z20:2.0-2.49"
+      ],
+      "mae_pct": -0.07498516882134328,
+      "mae_prix": 67.7508
+    }
+  },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-05-25T18:00:56.265847-04:00"
+  "derniere_maj": "2026-05-26T12:55:28.749457-04:00"
 }
