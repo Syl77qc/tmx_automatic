@@ -1,44 +1,44 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 83564.3,
+  "capital_disponible": 90153.14,
   "positions_ouvertes": {
-    "XHC.TO": {
-      "id": "XHC.TO_20260526_125528",
-      "ticker": "XHC.TO",
+    "XIU.TO": {
+      "id": "XIU.TO_20260605_121059",
+      "ticker": "XIU.TO",
       "statut": "ouvert",
-      "date_entree": "2026-05-26T12:55:28.683261-04:00",
-      "date_horizon_max": "2026-06-05",
-      "jours_restants": 1,
-      "prix_signal": 67.7,
-      "prix_entree": 67.7508,
-      "prix_pre_baisse": 68.96,
-      "prix_stop_loss": 62.1147,
-      "prix_plus_haut_atteint": 68.30000305175781,
+      "date_entree": "2026-06-05T12:10:59.547190-04:00",
+      "date_horizon_max": "2026-06-25",
+      "jours_restants": 20,
+      "prix_signal": 51.06,
+      "prix_entree": 51.0983,
+      "prix_pre_baisse": 51.85,
+      "prix_stop_loss": 47.2305,
+      "prix_plus_haut_atteint": 51.0983,
       "prix_sortie_partielle": null,
-      "nb_unites_total": 246,
-      "nb_unites_restant": 246,
+      "nb_unites_total": 204,
+      "nb_unites_restant": 204,
       "sortie_partielle_faite": false,
       "cout_entree": {
-        "prix_execution": 67.7508,
-        "spread_cad": 4.16,
-        "slippage_cad": 8.33,
+        "prix_execution": 51.0983,
+        "spread_cad": 2.6,
+        "slippage_cad": 5.21,
         "commission_cad": 0.0,
-        "cout_total_cad": 16666.69
+        "cout_total_cad": 10424.05
       },
-      "capital_investi": 16666.69,
-      "multiplicateur": 0.5,
-      "z20_entree": -2.1751,
-      "z60_entree": -1.7581,
-      "vix_entree": 17.02,
+      "capital_investi": 10424.05,
+      "multiplicateur": 0.375,
+      "z20_entree": -2.2912,
+      "z60_entree": -1.8995,
+      "vix_entree": 17.19,
       "regime_entree": "neutre",
-      "sma50_entree": 67.006,
+      "sma50_entree": 49.6808,
       "dessus_sma50_entree": true,
       "raisons_filtres_passes": [
         "Filtre A : 1 signaux simultanés → OK",
         "Filtre B : Régime neutre → OK",
-        "Filtre C : z20=-2.18 ≤ -2.0 → OK",
+        "Filtre C : z20=-2.29 ≤ -2.0 → OK",
         "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : XHC.TO hors bloc → OK"
+        "Filtre G : Bloc 'marche_large' libre → OK"
       ],
       "ajustements_taille": [
         "régime_neutre÷2"
@@ -46,19 +46,19 @@
       "tags": [
         "boc:non_BdC",
         "regime:VIX_neutre",
-        "bloc:autre",
-        "profil:rapide",
+        "bloc:marche_large",
+        "profil:moyen",
         "z20:2.0-2.49",
         "z60:confirmé",
         "trend:SMA50_dessus",
         "cluster:1_3",
-        "profil:rapide",
+        "profil:moyen",
         "z20:2.0-2.49"
       ],
-      "mae_pct": -2.613691119612469,
-      "mae_prix": 67.7508
+      "mae_pct": -0.05538404443158203,
+      "mae_prix": 51.0983
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-06-04T18:15:23.704317-04:00"
+  "derniere_maj": "2026-06-05T12:10:59.940861-04:00"
 }

@@ -154,5 +154,44 @@
       "z20:2.0-2.49",
       "exit:objectif"
     ]
+  },
+  {
+    "id": "XHC.TO_20260526_125528",
+    "ticker": "XHC.TO",
+    "type_sortie": "objectif",
+    "raison_sortie": "Prix 69.2100 ≥ objectif 68.9600",
+    "partielle": false,
+    "date_entree": "2026-05-26T12:55:28.683261-04:00",
+    "date_sortie": "2026-06-05T12:10:59.817822-04:00",
+    "jours_detenus": 9,
+    "prix_entree": 67.7508,
+    "prix_sortie": 69.20999908447266,
+    "prix_pre_baisse": 68.96,
+    "prix_stop_loss": 62.1147,
+    "nb_unites": 246,
+    "pnl_brut_cad": 358.96,
+    "couts_totaux_cad": 25.26,
+    "pnl_net_cad": 333.7,
+    "pnl_net_pct": 2.0022,
+    "gagnant": true,
+    "mae_pct": -2.6137,
+    "z20_entree": -2.1751,
+    "z60_entree": -1.7581,
+    "vix_entree": 17.02,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:autre",
+      "profil:rapide",
+      "z20:2.0-2.49",
+      "z60:confirmé",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:rapide",
+      "z20:2.0-2.49",
+      "exit:objectif"
+    ]
   }
 ]
