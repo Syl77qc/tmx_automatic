@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 90153.14,
+  "capital_disponible": 95428.7,
   "positions_ouvertes": {
     "XIU.TO": {
       "id": "XIU.TO_20260605_121059",
@@ -13,11 +13,11 @@
       "prix_entree": 51.0983,
       "prix_pre_baisse": 51.85,
       "prix_stop_loss": 47.2305,
-      "prix_plus_haut_atteint": 51.43000030517578,
-      "prix_sortie_partielle": null,
+      "prix_plus_haut_atteint": 51.7599983215332,
+      "prix_sortie_partielle": 51.7599983215332,
       "nb_unites_total": 204,
-      "nb_unites_restant": 204,
-      "sortie_partielle_faite": false,
+      "nb_unites_restant": 102,
+      "sortie_partielle_faite": true,
       "cout_entree": {
         "prix_execution": 51.0983,
         "spread_cad": 2.6,
@@ -60,5 +60,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-06-11T18:46:36.387586-04:00"
+  "derniere_maj": "2026-06-12T12:29:31.270700-04:00"
 }

@@ -193,5 +193,44 @@
       "z20:2.0-2.49",
       "exit:objectif"
     ]
+  },
+  {
+    "id": "XIU.TO_20260605_121059",
+    "ticker": "XIU.TO",
+    "type_sortie": "partielle",
+    "raison_sortie": "50% du rebond récupéré (88.0%)",
+    "partielle": true,
+    "date_entree": "2026-06-05T12:10:59.547190-04:00",
+    "date_sortie": "2026-06-12T12:29:31.270654-04:00",
+    "jours_detenus": 7,
+    "prix_entree": 51.0983,
+    "prix_sortie": 51.7599983215332,
+    "prix_pre_baisse": 51.85,
+    "prix_stop_loss": 47.2305,
+    "nb_unites": 102,
+    "pnl_brut_cad": 67.49,
+    "couts_totaux_cad": 11.77,
+    "pnl_net_cad": 55.72,
+    "pnl_net_pct": 0.5346,
+    "gagnant": true,
+    "mae_pct": -0.9752,
+    "z20_entree": -2.2912,
+    "z60_entree": -1.8995,
+    "vix_entree": 17.19,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:marche_large",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "z60:confirmé",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "exit:partielle"
+    ]
   }
 ]
