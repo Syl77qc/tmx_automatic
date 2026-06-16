@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-06-16T17:22:39.243887-04:00",
+  "scan_at": "2026-06-16T18:47:06.466913-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -304,10 +304,10 @@
       "horizon_j": null,
       "bloc": "taux",
       "prix_cloture": 13.850000381469727,
-      "rendement_jour_pct": 0.1446,
-      "z20": 0.2417,
-      "z60": 0.3168,
-      "sma50": 13.6934,
+      "rendement_jour_pct": 0.0723,
+      "z20": -0.1427,
+      "z60": 0.1254,
+      "sma50": 13.6975,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
