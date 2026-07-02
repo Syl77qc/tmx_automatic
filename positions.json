@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 88148.82,
+  "capital_disponible": 80806.64,
   "positions_ouvertes": {
     "XUT.TO": {
       "id": "XUT.TO_20260629_143359",
@@ -55,10 +55,67 @@
         "profil:moyen",
         "z20:2.0-2.49"
       ],
-      "mae_pct": -0.5885728018674448,
+      "mae_pct": -0.8318973464806286,
       "mae_prix": 36.9877
+    },
+    "XFN.TO": {
+      "id": "XFN.TO_20260702_115731",
+      "ticker": "XFN.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-07-02T11:57:31.736285-04:00",
+      "date_horizon_max": "2026-07-22",
+      "jours_restants": 20,
+      "prix_signal": 94.06,
+      "prix_entree": 94.1305,
+      "prix_pre_baisse": 94.82,
+      "prix_stop_loss": 85.7357,
+      "prix_plus_haut_atteint": 94.1305,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 78,
+      "nb_unites_restant": 78,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 94.1305,
+        "spread_cad": 1.83,
+        "slippage_cad": 3.67,
+        "commission_cad": 0.0,
+        "cout_total_cad": 7342.18
+      },
+      "capital_investi": 7342.18,
+      "multiplicateur": 0.25,
+      "z20_entree": -2.1967,
+      "z60_entree": -1.4361,
+      "vix_entree": 16.54,
+      "regime_entree": "neutre",
+      "sma50_entree": 87.7782,
+      "dessus_sma50_entree": true,
+      "raisons_filtres_passes": [
+        "Filtre A : 1 signaux simultanés → OK",
+        "Filtre B : Régime neutre → OK",
+        "Filtre C : z20=-2.20 ≤ -2.0 → OK",
+        "Filtre F : Au-dessus SMA50 → OK",
+        "Filtre G : Bloc 'marche_large' libre → OK"
+      ],
+      "ajustements_taille": [
+        "régime_neutre÷2",
+        "z60_faible÷1.5"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_dessus",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:2.0-2.49"
+      ],
+      "mae_pct": -0.07489861565193837,
+      "mae_prix": 94.1305
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-02T11:38:01.394051-04:00"
+  "derniere_maj": "2026-07-02T11:57:31.958998-04:00"
 }
