@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-07-08T16:07:56.827286-04:00",
+  "scan_at": "2026-07-08T17:20:23.554755-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,9 +73,9 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 16.74,
+    "vix": 16.9,
     "regime": "neutre",
-    "description": "VIX 16.7 entre 16.0-25.0 — tailles réduites",
+    "description": "VIX 16.9 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
@@ -123,8 +123,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -0.4016,
-        "velocite_1h_pct": 0.1346,
+        "momentum_intraday_pct": -0.4399,
+        "velocite_1h_pct": 0.0961,
         "source": "yfinance_5m"
       }
     },
@@ -154,8 +154,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -1.3597,
-        "velocite_1h_pct": -0.0212,
+        "momentum_intraday_pct": -1.2865,
+        "velocite_1h_pct": 0.053,
         "source": "yfinance_5m"
       }
     }
@@ -187,8 +187,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -0.4016,
-        "velocite_1h_pct": 0.1346,
+        "momentum_intraday_pct": -0.4399,
+        "velocite_1h_pct": 0.0961,
         "source": "yfinance_5m"
       }
     },
@@ -218,8 +218,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -1.3597,
-        "velocite_1h_pct": -0.0212,
+        "momentum_intraday_pct": -1.2865,
+        "velocite_1h_pct": 0.053,
         "source": "yfinance_5m"
       }
     },
