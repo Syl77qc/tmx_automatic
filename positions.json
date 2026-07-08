@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 88223.56,
+  "capital_disponible": 66170.05,
   "positions_ouvertes": {
     "XUT.TO": {
       "id": "XUT.TO_20260629_143359",
@@ -13,7 +13,7 @@
       "prix_entree": 36.9877,
       "prix_pre_baisse": 37.3,
       "prix_stop_loss": 34.0217,
-      "prix_plus_haut_atteint": 37.04999923706055,
+      "prix_plus_haut_atteint": 37.08000183105469,
       "prix_sortie_partielle": null,
       "nb_unites_total": 340,
       "nb_unites_restant": 340,
@@ -57,8 +57,64 @@
       ],
       "mae_pct": -1.1833684250154777,
       "mae_prix": 36.9877
+    },
+    "XIU.TO": {
+      "id": "XIU.TO_20260708_113959",
+      "ticker": "XIU.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-07-08T11:39:59.976190-04:00",
+      "date_horizon_max": "2026-07-28",
+      "jours_restants": 20,
+      "prix_signal": 51.73,
+      "prix_entree": 51.7688,
+      "prix_pre_baisse": 52.56,
+      "prix_stop_loss": 47.8502,
+      "prix_plus_haut_atteint": 51.7688,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 426,
+      "nb_unites_restant": 426,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 51.7688,
+        "spread_cad": 5.51,
+        "slippage_cad": 11.02,
+        "commission_cad": 0.0,
+        "cout_total_cad": 22053.51
+      },
+      "capital_investi": 22053.51,
+      "multiplicateur": 0.75,
+      "z20_entree": -3.4301,
+      "z60_entree": -2.3842,
+      "vix_entree": 18.36,
+      "regime_entree": "neutre",
+      "sma50_entree": 50.9231,
+      "dessus_sma50_entree": true,
+      "raisons_filtres_passes": [
+        "Filtre A : 3 signaux simultanés → OK",
+        "Filtre B : Régime neutre → OK",
+        "Filtre C : z20=-3.43 ≤ -2.0 → OK",
+        "Filtre F : Au-dessus SMA50 → OK",
+        "Filtre G : Bloc 'marche_large' libre → OK"
+      ],
+      "ajustements_taille": [
+        "régime_neutre÷2"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:≥3.0",
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:≥3.0"
+      ],
+      "mae_pct": -0.09426291375669094,
+      "mae_prix": 51.7688
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-07T18:04:05.790942-04:00"
+  "derniere_maj": "2026-07-08T11:40:00.211559-04:00"
 }
