@@ -1,64 +1,7 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 94847.75,
-  "positions_ouvertes": {
-    "XUT.TO": {
-      "id": "XUT.TO_20260629_143359",
-      "ticker": "XUT.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-06-29T14:33:59.005314-04:00",
-      "date_horizon_max": "2026-07-19",
-      "jours_restants": 3,
-      "prix_signal": 36.96,
-      "prix_entree": 36.9877,
-      "prix_pre_baisse": 37.3,
-      "prix_stop_loss": 34.0217,
-      "prix_plus_haut_atteint": 37.27000045776367,
-      "prix_sortie_partielle": 37.209999084472656,
-      "nb_unites_total": 340,
-      "nb_unites_restant": 170,
-      "sortie_partielle_faite": true,
-      "cout_entree": {
-        "prix_execution": 36.9877,
-        "spread_cad": 3.14,
-        "slippage_cad": 6.28,
-        "commission_cad": 0.0,
-        "cout_total_cad": 12575.82
-      },
-      "capital_investi": 12575.82,
-      "multiplicateur": 0.375,
-      "z20_entree": -2.498,
-      "z60_entree": -1.6837,
-      "vix_entree": 17.69,
-      "regime_entree": "neutre",
-      "sma50_entree": 35.8389,
-      "dessus_sma50_entree": true,
-      "raisons_filtres_passes": [
-        "Filtre A : 1 signaux simultanés → OK",
-        "Filtre B : Régime neutre → OK",
-        "Filtre C : z20=-2.50 ≤ -2.0 → OK",
-        "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : Bloc 'taux' libre → OK"
-      ],
-      "ajustements_taille": [
-        "régime_neutre÷2"
-      ],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:taux",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:confirmé",
-        "trend:SMA50_dessus",
-        "cluster:1_3",
-        "profil:moyen",
-        "z20:2.0-2.49"
-      ],
-      "mae_pct": -1.1833684250154777,
-      "mae_prix": 36.9877
-    }
-  },
+  "capital_disponible": 101199.28,
+  "positions_ouvertes": {},
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-16T17:54:23.822989-04:00"
+  "derniere_maj": "2026-07-17T10:55:07.591260-04:00"
 }
