@@ -1,13 +1,11 @@
 {
-  "scan_at": "2026-07-20T16:24:25.141662-04:00",
+  "scan_at": "2026-07-20T17:36:44.908874-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "XMA.TO"
-    ],
-    "n_perimes": 1,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-07-20",
     "marche_clos_aujourd_hui": true,
     "details": {
@@ -67,9 +65,9 @@
         "perime": false
       },
       "XMA.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-07-20",
+        "perime": false
       }
     }
   },
@@ -236,7 +234,7 @@
       "prix_cloture": 37.36000061035156,
       "rendement_jour_pct": -0.0535,
       "z20": -0.3403,
-      "z60": -0.3551,
+      "z60": -0.3552,
       "sma50": 36.4489,
       "dessus_sma50": true,
       "signal": false,
@@ -440,9 +438,25 @@
     },
     {
       "ticker": "XMA.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "contextuel",
+      "profil": null,
+      "seuil_min_base": null,
+      "seuil_effectif": null,
+      "horizon_j": null,
+      "bloc": "metaux",
+      "prix_cloture": 37.72999954223633,
+      "rendement_jour_pct": 0.3457,
+      "z20": 0.4514,
+      "z60": 0.2374,
+      "sma50": 42.7061,
+      "dessus_sma50": false,
       "signal": false,
-      "role": "contextuel"
+      "choc_contagion": false,
+      "tags": [
+        "role:contextuel",
+        "bloc:metaux",
+        "choc_contagion:non"
+      ]
     }
   ]
 }
