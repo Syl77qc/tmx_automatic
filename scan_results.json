@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-07-27T16:25:50.876249-04:00",
+  "scan_at": "2026-07-27T17:33:43.478995-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,7 +73,7 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 18.72,
+    "vix": 18.67,
     "regime": "neutre",
     "description": "VIX 18.7 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
