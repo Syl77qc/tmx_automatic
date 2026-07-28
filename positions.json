@@ -13,7 +13,7 @@
       "prix_entree": 95.9619,
       "prix_pre_baisse": 97.29,
       "prix_stop_loss": 87.4037,
-      "prix_plus_haut_atteint": 96.94999694824219,
+      "prix_plus_haut_atteint": 97.01000213623047,
       "prix_sortie_partielle": 96.75,
       "nb_unites_total": 131,
       "nb_unites_restant": 66,
@@ -64,12 +64,12 @@
       "statut": "ouvert",
       "date_entree": "2026-07-23T14:18:27.306809-04:00",
       "date_horizon_max": "2026-08-12",
-      "jours_restants": 16,
+      "jours_restants": 15,
       "prix_signal": 17.11,
       "prix_entree": 17.1228,
       "prix_pre_baisse": 17.37,
       "prix_stop_loss": 15.3648,
-      "prix_plus_haut_atteint": 17.31999969482422,
+      "prix_plus_haut_atteint": 17.34000015258789,
       "prix_sortie_partielle": 17.260000228881836,
       "nb_unites_total": 647,
       "nb_unites_restant": 324,
@@ -116,5 +116,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-28T13:16:04.286283-04:00"
+  "derniere_maj": "2026-07-28T14:45:56.354187-04:00"
 }
