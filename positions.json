@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 95674.54,
+  "capital_disponible": 83748.1,
   "positions_ouvertes": {
     "XRE.TO": {
       "id": "XRE.TO_20260723_141827",
@@ -57,8 +57,64 @@
       ],
       "mae_pct": -0.07475056444295952,
       "mae_prix": 17.1228
+    },
+    "XFN.TO": {
+      "id": "XFN.TO_20260729_140100",
+      "ticker": "XFN.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-07-29T14:01:00.789990-04:00",
+      "date_horizon_max": "2026-08-18",
+      "jours_restants": 20,
+      "prix_signal": 95.34,
+      "prix_entree": 95.4115,
+      "prix_pre_baisse": 97.18,
+      "prix_stop_loss": 86.9024,
+      "prix_plus_haut_atteint": 95.4115,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 125,
+      "nb_unites_restant": 125,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 95.4115,
+        "spread_cad": 2.98,
+        "slippage_cad": 5.96,
+        "commission_cad": 0.0,
+        "cout_total_cad": 11926.44
+      },
+      "capital_investi": 11926.44,
+      "multiplicateur": 0.375,
+      "z20_entree": -2.1086,
+      "z60_entree": -2.5503,
+      "vix_entree": 19.56,
+      "regime_entree": "neutre",
+      "sma50_entree": 92.3591,
+      "dessus_sma50_entree": true,
+      "raisons_filtres_passes": [
+        "Filtre A : 1 signaux simultanés → OK",
+        "Filtre B : Régime neutre → OK",
+        "Filtre C : z20=-2.11 ≤ -2.0 → OK",
+        "Filtre F : Au-dessus SMA50 → OK",
+        "Filtre G : Bloc 'marche_large' libre → OK"
+      ],
+      "ajustements_taille": [
+        "régime_neutre÷2"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:2.0-2.49"
+      ],
+      "mae_pct": -0.07494239385124303,
+      "mae_prix": 95.4115
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-29T12:56:11.029752-04:00"
+  "derniere_maj": "2026-07-29T14:01:00.956442-04:00"
 }
