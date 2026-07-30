@@ -661,5 +661,44 @@
       "z20:2.0-2.49",
       "exit:trailing_stop"
     ]
+  },
+  {
+    "id": "XST.TO_20260730_112911",
+    "ticker": "XST.TO",
+    "type_sortie": "partielle",
+    "raison_sortie": "50% du rebond récupéré (52.3%)",
+    "partielle": true,
+    "date_entree": "2026-07-30T11:29:11.892794-04:00",
+    "date_sortie": "2026-07-30T14:40:43.663512-04:00",
+    "jours_detenus": 0,
+    "prix_entree": 67.5506,
+    "prix_sortie": 68.23999786376953,
+    "prix_pre_baisse": 68.87,
+    "prix_stop_loss": 64.3612,
+    "nb_unites": 103,
+    "pnl_brut_cad": 71.01,
+    "couts_totaux_cad": 15.7,
+    "pnl_net_cad": 55.31,
+    "pnl_net_pct": 0.3975,
+    "gagnant": true,
+    "mae_pct": -0.0749,
+    "z20_entree": -2.0257,
+    "z60_entree": -1.7771,
+    "vix_entree": 19.02,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:autre",
+      "profil:rapide",
+      "z20:2.0-2.49",
+      "z60:confirmé",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:rapide",
+      "z20:2.0-2.49",
+      "exit:partielle"
+    ]
   }
 ]
