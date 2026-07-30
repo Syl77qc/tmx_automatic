@@ -622,5 +622,44 @@
       "z20:2.0-2.49",
       "exit:trailing_stop"
     ]
+  },
+  {
+    "id": "XRE.TO_20260723_141827",
+    "ticker": "XRE.TO",
+    "type_sortie": "trailing_stop",
+    "raison_sortie": "Prix 17.0400 ≤ trailing stop 17.0799 (depuis plus haut 17.3400)",
+    "partielle": false,
+    "date_entree": "2026-07-23T14:18:27.306809-04:00",
+    "date_sortie": "2026-07-30T11:29:11.960567-04:00",
+    "jours_detenus": 6,
+    "prix_entree": 17.1228,
+    "prix_sortie": 17.040000915527344,
+    "prix_pre_baisse": 17.37,
+    "prix_stop_loss": 15.3648,
+    "nb_unites": 324,
+    "pnl_brut_cad": -26.83,
+    "couts_totaux_cad": 12.45,
+    "pnl_net_cad": -39.28,
+    "pnl_net_pct": -0.3545,
+    "gagnant": false,
+    "mae_pct": -0.4836,
+    "z20_entree": -2.4732,
+    "z60_entree": -2.3519,
+    "vix_entree": 19.64,
+    "regime_entree": "neutre",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_neutre",
+      "bloc:taux",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "z60:confirmé",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:moyen",
+      "z20:2.0-2.49",
+      "exit:trailing_stop"
+    ]
   }
 ]
