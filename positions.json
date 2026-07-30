@@ -69,7 +69,7 @@
       "prix_entree": 67.5506,
       "prix_pre_baisse": 68.87,
       "prix_stop_loss": 64.3612,
-      "prix_plus_haut_atteint": 67.5506,
+      "prix_plus_haut_atteint": 67.66999816894531,
       "prix_sortie_partielle": null,
       "nb_unites_total": 206,
       "nb_unites_restant": 206,
@@ -116,5 +116,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-30T11:29:12.096965-04:00"
+  "derniere_maj": "2026-07-30T11:44:07.748793-04:00"
 }
