@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 82372.94,
+  "capital_disponible": 89473.58,
   "positions_ouvertes": {
     "XFN.TO": {
       "id": "XFN.TO_20260729_140100",
@@ -13,7 +13,7 @@
       "prix_entree": 95.4115,
       "prix_pre_baisse": 97.18,
       "prix_stop_loss": 86.9024,
-      "prix_plus_haut_atteint": 95.66000366210938,
+      "prix_plus_haut_atteint": 95.91999816894531,
       "prix_sortie_partielle": null,
       "nb_unites_total": 125,
       "nb_unites_restant": 125,
@@ -57,64 +57,8 @@
       ],
       "mae_pct": -1.2173584945211047,
       "mae_prix": 95.4115
-    },
-    "XST.TO": {
-      "id": "XST.TO_20260730_112911",
-      "ticker": "XST.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-07-30T11:29:11.892794-04:00",
-      "date_horizon_max": "2026-08-14",
-      "jours_restants": 15,
-      "prix_signal": 67.5,
-      "prix_entree": 67.5506,
-      "prix_pre_baisse": 68.87,
-      "prix_stop_loss": 64.3612,
-      "prix_plus_haut_atteint": 68.23999786376953,
-      "prix_sortie_partielle": 68.23999786376953,
-      "nb_unites_total": 206,
-      "nb_unites_restant": 103,
-      "sortie_partielle_faite": true,
-      "cout_entree": {
-        "prix_execution": 67.5506,
-        "spread_cad": 3.48,
-        "slippage_cad": 6.95,
-        "commission_cad": 0.0,
-        "cout_total_cad": 13915.43
-      },
-      "capital_investi": 13915.43,
-      "multiplicateur": 0.5,
-      "z20_entree": -2.0257,
-      "z60_entree": -1.7771,
-      "vix_entree": 19.02,
-      "regime_entree": "neutre",
-      "sma50_entree": 66.2718,
-      "dessus_sma50_entree": true,
-      "raisons_filtres_passes": [
-        "Filtre A : 1 signaux simultanés → OK",
-        "Filtre B : Régime neutre → OK",
-        "Filtre C : z20=-2.03 ≤ -2.0 → OK",
-        "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : XST.TO hors bloc → OK"
-      ],
-      "ajustements_taille": [
-        "régime_neutre÷2"
-      ],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:autre",
-        "profil:rapide",
-        "z20:2.0-2.49",
-        "z60:confirmé",
-        "trend:SMA50_dessus",
-        "cluster:1_3",
-        "profil:rapide",
-        "z20:2.0-2.49"
-      ],
-      "mae_pct": -0.07490681059828168,
-      "mae_prix": 67.5506
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-07-30T17:57:52.904312-04:00"
+  "derniere_maj": "2026-07-31T11:34:48.934636-04:00"
 }
