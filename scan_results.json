@@ -1,81 +1,94 @@
 {
-  "scan_at": "2026-08-03T15:44:32.488533-04:00",
+  "scan_at": "2026-08-03T16:46:46.321803-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": false,
+  "alerte_fraicheur": true,
   "fraicheur": {
-    "alerte": false,
-    "fnbs_perimes": [],
-    "n_perimes": 0,
+    "alerte": true,
+    "fnbs_perimes": [
+      "XIU.TO",
+      "XFN.TO",
+      "XUT.TO",
+      "XRE.TO",
+      "XIN.TO",
+      "XHC.TO",
+      "XST.TO",
+      "XEG.TO",
+      "ZAG.TO",
+      "XGD.TO",
+      "XIT.TO",
+      "XMA.TO"
+    ],
+    "n_perimes": 12,
     "aujourd_hui": "2026-08-03",
-    "marche_clos_aujourd_hui": false,
+    "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XFN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XUT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XRE.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XIN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XHC.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XST.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XEG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "ZAG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XGD.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XIT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       },
       "XMA.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-07-31",
-        "perime": false
+        "perime": true
       }
     }
   },
-  "heures_marche": true,
+  "heures_marche": false,
   "regime_marche": {
-    "vix": 15.83,
+    "vix": 15.86,
     "regime": "risk_on",
-    "description": "VIX 15.8 < 16.0 — opération normale",
+    "description": "VIX 15.9 < 16.0 — opération normale",
     "tag": "regime:VIX_risk_on"
   },
   "filtre_D": {
