@@ -1,13 +1,13 @@
 {
-  "scan_at": "2026-07-31T17:55:58.454785-04:00",
+  "scan_at": "2026-08-03T11:59:54.479820-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
     "alerte": false,
     "fnbs_perimes": [],
     "n_perimes": 0,
-    "aujourd_hui": "2026-07-31",
-    "marche_clos_aujourd_hui": true,
+    "aujourd_hui": "2026-08-03",
+    "marche_clos_aujourd_hui": false,
     "details": {
       "XIU.TO": {
         "statut": "OK",
@@ -71,11 +71,11 @@
       }
     }
   },
-  "heures_marche": false,
+  "heures_marche": true,
   "regime_marche": {
-    "vix": 15.99,
+    "vix": 15.65,
     "regime": "risk_on",
-    "description": "VIX 16.0 < 16.0 — opération normale",
+    "description": "VIX 15.6 < 16.0 — opération normale",
     "tag": "regime:VIX_risk_on"
   },
   "filtre_D": {
