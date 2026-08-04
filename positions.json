@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 89473.58,
+  "capital_disponible": 95465.1,
   "positions_ouvertes": {
     "XFN.TO": {
       "id": "XFN.TO_20260729_140100",
@@ -13,11 +13,11 @@
       "prix_entree": 95.4115,
       "prix_pre_baisse": 97.18,
       "prix_stop_loss": 86.9024,
-      "prix_plus_haut_atteint": 96.2699966430664,
-      "prix_sortie_partielle": null,
+      "prix_plus_haut_atteint": 96.70999908447266,
+      "prix_sortie_partielle": 96.70999908447266,
       "nb_unites_total": 125,
-      "nb_unites_restant": 125,
-      "sortie_partielle_faite": false,
+      "nb_unites_restant": 63,
+      "sortie_partielle_faite": true,
       "cout_entree": {
         "prix_execution": 95.4115,
         "spread_cad": 2.98,
@@ -60,5 +60,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-08-03T17:57:11.244304-04:00"
+  "derniere_maj": "2026-08-04T11:43:17.849614-04:00"
 }
