@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 95465.1,
+  "capital_disponible": 83539.78,
   "positions_ouvertes": {
     "XFN.TO": {
       "id": "XFN.TO_20260729_140100",
@@ -57,8 +57,65 @@
       ],
       "mae_pct": -1.2173584945211047,
       "mae_prix": 95.4115
+    },
+    "XUT.TO": {
+      "id": "XUT.TO_20260805_131352",
+      "ticker": "XUT.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-08-05T13:13:52.850713-04:00",
+      "date_horizon_max": "2026-08-25",
+      "jours_restants": 20,
+      "prix_signal": 36.22,
+      "prix_entree": 36.2472,
+      "prix_pre_baisse": 36.82,
+      "prix_stop_loss": 33.3405,
+      "prix_plus_haut_atteint": 36.2472,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 329,
+      "nb_unites_restant": 329,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 36.2472,
+        "spread_cad": 2.98,
+        "slippage_cad": 5.96,
+        "commission_cad": 0.0,
+        "cout_total_cad": 11925.32
+      },
+      "capital_investi": 11925.32,
+      "multiplicateur": 0.375,
+      "z20_entree": -2.5998,
+      "z60_entree": -3.0834,
+      "vix_entree": 15.96,
+      "regime_entree": "risk_on",
+      "sma50_entree": 36.7733,
+      "dessus_sma50_entree": false,
+      "raisons_filtres_passes": [
+        "Filtre A : 1 signaux simultanés → OK",
+        "Filtre B : Régime risk_on → OK",
+        "Filtre C : z20=-2.60 ≤ -2.5 → OK",
+        "Filtre F : Sous SMA50 → taille réduite (déjà appliqué)",
+        "Filtre G : Bloc 'taux' libre → OK"
+      ],
+      "ajustements_taille": [
+        "sous_SMA50÷2",
+        "filtreD_XIU_stable÷1.5"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_risk_on",
+        "bloc:taux",
+        "profil:moyen",
+        "z20:2.5-2.99",
+        "z60:confirmé",
+        "trend:SMA50_sous",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:2.5-2.99"
+      ],
+      "mae_pct": -0.07503691125624716,
+      "mae_prix": 36.2472
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-08-05T11:51:58.891963-04:00"
+  "derniere_maj": "2026-08-05T13:13:53.029678-04:00"
 }
