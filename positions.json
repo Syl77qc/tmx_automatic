@@ -8,7 +8,7 @@
       "statut": "ouvert",
       "date_entree": "2026-08-05T13:13:52.850713-04:00",
       "date_horizon_max": "2026-08-25",
-      "jours_restants": 12,
+      "jours_restants": 11,
       "prix_signal": 36.22,
       "prix_entree": 36.2472,
       "prix_pre_baisse": 36.82,
@@ -61,5 +61,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-08-14T12:22:09.940235-04:00"
+  "derniere_maj": "2026-08-14T13:15:35.518274-04:00"
 }
