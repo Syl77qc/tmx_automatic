@@ -1,11 +1,13 @@
 {
-  "scan_at": "2026-08-17T16:58:52.408308-04:00",
+  "scan_at": "2026-08-17T17:15:19.970061-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": false,
+  "alerte_fraicheur": true,
   "fraicheur": {
-    "alerte": false,
-    "fnbs_perimes": [],
-    "n_perimes": 0,
+    "alerte": true,
+    "fnbs_perimes": [
+      "XEG.TO"
+    ],
+    "n_perimes": 1,
     "aujourd_hui": "2026-08-17",
     "marche_clos_aujourd_hui": true,
     "details": {
@@ -45,9 +47,9 @@
         "perime": false
       },
       "XEG.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-08-17",
-        "perime": false
+        "statut": "ERREUR",
+        "derniere_date": null,
+        "perime": true
       },
       "ZAG.TO": {
         "statut": "OK",
@@ -158,9 +160,9 @@
       "bloc": "taux",
       "prix_cloture": 35.88999938964844,
       "rendement_jour_pct": -0.9111,
-      "z20": -0.8636,
-      "z60": -1.4112,
-      "sma50": 36.7291,
+      "z20": -0.8678,
+      "z60": -1.4039,
+      "sma50": 36.7347,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -233,9 +235,9 @@
       "bloc": null,
       "prix_cloture": 73.55999755859375,
       "rendement_jour_pct": -0.2035,
-      "z20": -0.3464,
-      "z60": -0.3269,
-      "sma50": 71.323,
+      "z20": -0.4134,
+      "z60": -0.3286,
+      "sma50": 71.1958,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -258,9 +260,9 @@
       "bloc": null,
       "prix_cloture": 65.22000122070312,
       "rendement_jour_pct": -1.629,
-      "z20": -1.7,
-      "z60": -1.4793,
-      "sma50": 67.0701,
+      "z20": -1.63,
+      "z60": -1.4862,
+      "sma50": 67.0217,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -275,25 +277,9 @@
     },
     {
       "ticker": "XEG.TO",
-      "role": "contextuel",
-      "profil": null,
-      "seuil_min_base": null,
-      "seuil_effectif": null,
-      "horizon_j": null,
-      "bloc": null,
-      "prix_cloture": 28.18000030517578,
-      "rendement_jour_pct": 2.0645,
-      "z20": 0.8842,
-      "z60": 1.1141,
-      "sma50": 25.8944,
-      "dessus_sma50": true,
+      "erreur": "Données insuffisantes (0 jours)",
       "signal": false,
-      "choc_contagion": false,
-      "tags": [
-        "role:contextuel",
-        "bloc:autre",
-        "choc_contagion:non"
-      ]
+      "role": "contextuel"
     },
     {
       "ticker": "ZAG.TO",
