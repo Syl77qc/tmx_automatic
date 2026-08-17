@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-08-17T16:10:42.414473-04:00",
+  "scan_at": "2026-08-17T16:39:42.662737-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,7 +73,7 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 15.22,
+    "vix": 15.19,
     "regime": "risk_on",
     "description": "VIX 15.2 < 16.0 — opération normale",
     "tag": "regime:VIX_risk_on"
@@ -158,9 +158,9 @@
       "bloc": "taux",
       "prix_cloture": 35.88999938964844,
       "rendement_jour_pct": -0.9111,
-      "z20": -0.8678,
-      "z60": -1.4039,
-      "sma50": 36.7347,
+      "z20": -0.8636,
+      "z60": -1.4112,
+      "sma50": 36.7291,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -258,9 +258,9 @@
       "bloc": null,
       "prix_cloture": 65.22000122070312,
       "rendement_jour_pct": -1.629,
-      "z20": -1.63,
-      "z60": -1.4862,
-      "sma50": 67.0217,
+      "z20": -1.7,
+      "z60": -1.4793,
+      "sma50": 67.0701,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
