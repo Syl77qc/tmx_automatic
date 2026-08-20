@@ -1,13 +1,11 @@
 {
-  "scan_at": "2026-08-20T14:57:30.777695-04:00",
+  "scan_at": "2026-08-20T15:24:33.127465-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "XMA.TO"
-    ],
-    "n_perimes": 1,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-08-20",
     "marche_clos_aujourd_hui": false,
     "details": {
@@ -67,21 +65,21 @@
         "perime": false
       },
       "XMA.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-08-20",
+        "perime": false
       }
     }
   },
   "heures_marche": true,
   "regime_marche": {
-    "vix": 16.07,
+    "vix": 16.09,
     "regime": "neutre",
     "description": "VIX 16.1 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -0.4065,
+    "xiu_rendement_pct": -0.388,
     "contexte": "zone_grise",
     "ajustement": "log_observation"
   },
@@ -108,11 +106,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 53.900001525878906,
-      "rendement_jour_pct": -0.4065,
-      "z20": -0.8529,
-      "z60": -0.8347,
-      "sma50": 52.706,
+      "prix_cloture": 53.90999984741211,
+      "rendement_jour_pct": -0.388,
+      "z20": -0.8223,
+      "z60": -0.8056,
+      "sma50": 52.7062,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -133,11 +131,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 91.86000061035156,
-      "rendement_jour_pct": -1.5117,
-      "z20": -1.0596,
-      "z60": -1.7194,
-      "sma50": 94.4638,
+      "prix_cloture": 91.6500015258789,
+      "rendement_jour_pct": -1.7369,
+      "z20": -1.2443,
+      "z60": -1.9542,
+      "sma50": 94.4596,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -158,11 +156,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 35.65999984741211,
-      "rendement_jour_pct": -0.2238,
-      "z20": -0.0312,
-      "z60": -0.3282,
-      "sma50": 36.6334,
+      "prix_cloture": 35.66999816894531,
+      "rendement_jour_pct": -0.1959,
+      "z20": -0.0033,
+      "z60": -0.2893,
+      "sma50": 36.6336,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -283,11 +281,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 28.649999618530273,
-      "rendement_jour_pct": 1.0582,
-      "z20": 0.2471,
-      "z60": 0.5162,
-      "sma50": 25.97,
+      "prix_cloture": 28.670000076293945,
+      "rendement_jour_pct": 1.1287,
+      "z20": 0.2794,
+      "z60": 0.5522,
+      "sma50": 25.9704,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -305,11 +303,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "taux",
-      "prix_cloture": 13.520000457763672,
-      "rendement_jour_pct": -0.5151,
-      "z20": -1.5401,
-      "z60": -1.926,
-      "sma50": 13.6843,
+      "prix_cloture": 13.529999732971191,
+      "rendement_jour_pct": -0.4415,
+      "z20": -1.3033,
+      "z60": -1.6527,
+      "sma50": 13.6845,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
@@ -327,11 +325,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 60.95000076293945,
-      "rendement_jour_pct": 1.9231,
-      "z20": 0.1127,
-      "z60": 0.5232,
-      "sma50": 49.9838,
+      "prix_cloture": 61.04999923706055,
+      "rendement_jour_pct": 2.0903,
+      "z20": 0.1643,
+      "z60": 0.5757,
+      "sma50": 49.9858,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -365,9 +363,25 @@
     },
     {
       "ticker": "XMA.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "contextuel",
+      "profil": null,
+      "seuil_min_base": null,
+      "seuil_effectif": null,
+      "horizon_j": null,
+      "bloc": "metaux",
+      "prix_cloture": 49.28499984741211,
+      "rendement_jour_pct": 1.6605,
+      "z20": 0.1389,
+      "z60": 0.5012,
+      "sma50": 42.0859,
+      "dessus_sma50": true,
       "signal": false,
-      "role": "contextuel"
+      "choc_contagion": false,
+      "tags": [
+        "role:contextuel",
+        "bloc:metaux",
+        "choc_contagion:non"
+      ]
     }
   ]
 }
