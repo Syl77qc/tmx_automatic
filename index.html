@@ -510,7 +510,7 @@ footer {
     </div>
   </div>
 
-  <div class="status-bar"><span class="status-pill sp-green">VIX 15.13 — Risk-on</span><span class="status-pill sp-gray">Aucun signal MR</span><span class="status-pill sp-gray">yfinance</span></div>
+  <div class="status-bar"><span class="status-pill sp-green">VIX 15.13 — Risk-on</span><span class="status-pill sp-amber">1 signal(s) mean reversion</span><span class="status-pill sp-gray">yfinance</span><span class="status-pill sp-red">🚨 Données périmées</span></div>
 
   <div class="metrics">
     <div class="metric">
@@ -558,19 +558,6 @@ footer {
         </tr>
       </thead>
       <tbody><tr>
-      <td><div class="fnb-name">XIU.TO</div><div class="fnb-sector">Marché large</div></td>
-      <td class="r" style="font-family:var(--mono)">54.36</td>
-      <td class="r"><span class="var-pos">+0.70%</span></td>
-      <td class="r"><span class="z-pos">+0.91</span></td>
-      <td class="r"><span class="z-pos">+0.92</span></td>
-      <td class="c"><span class="sma-ok">✓</span></td>
-      <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
-      <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
-    </tr>
-<tr>
       <td><div class="fnb-name">XFN.TO</div><div class="fnb-sector">Financières</div></td>
       <td class="r" style="font-family:var(--mono)">92.10</td>
       <td class="r"><span class="var-pos">+0.34%</span></td>
@@ -578,12 +565,12 @@ footer {
       <td class="r"><span class="z-pos">+0.26</span></td>
       <td class="c"><span class="sma-warn">✗</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
     </tr>
-<tr>
+<tr class="signal-row">
       <td><div class="fnb-name">XUT.TO</div><div class="fnb-sector">Services pub.</div></td>
       <td class="r" style="font-family:var(--mono)">34.94</td>
       <td class="r"><span class="var-neg">-2.27%</span></td>
@@ -591,10 +578,10 @@ footer {
       <td class="r"><span class="z-signal">-3.42</span></td>
       <td class="c"><span class="sma-warn">✗</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
-      <td class="r"><span class="taille-na">—</span></td>
-      <td class="c"><span class="badge b-watch">Surveiller</span></td>
+      <td class="r"><span class="taille-actif">0.38x</span></td>
+      <td class="c"><span class="badge b-signal">Signal</span></td>
     </tr>
 <tr>
       <td><div class="fnb-name">XRE.TO</div><div class="fnb-sector">FPI</div></td>
@@ -604,7 +591,7 @@ footer {
       <td class="r"><span class="z-neg">-1.36</span></td>
       <td class="c"><span class="sma-warn">✗</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
@@ -617,7 +604,7 @@ footer {
       <td class="r"><span class="z-pos">+1.00</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
@@ -630,7 +617,7 @@ footer {
       <td class="r"><span class="z-pos">+0.59</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
@@ -643,7 +630,7 @@ footer {
       <td class="r"><span class="z-neg">-0.30</span></td>
       <td class="c"><span class="sma-warn">✗</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-watch">Surveiller</span></td>
@@ -656,7 +643,7 @@ footer {
       <td class="r"><span class="z-pos">+0.16</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-ctx">Contextuel</span></td>
@@ -669,7 +656,7 @@ footer {
       <td class="r"><span class="z-neg">-0.34</span></td>
       <td class="c"><span class="sma-warn">✗</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-ctx">Contextuel</span></td>
@@ -682,7 +669,7 @@ footer {
       <td class="r"><span class="z-pos">+0.84</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-ctx">Contextuel</span></td>
@@ -695,7 +682,7 @@ footer {
       <td class="r"><span class="z-neg">-0.18</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-ctx">Contextuel</span></td>
@@ -708,7 +695,7 @@ footer {
       <td class="r"><span class="z-pos">+0.94</span></td>
       <td class="c"><span class="sma-ok">✓</span></td>
       <td class="c"><span class="badge b-sect">Risk-on</span></td>
-      <td class="c" style="font-size:11px;color:var(--text3)">XIU +</td>
+      <td class="c" style="font-size:11px;color:var(--text3)">Zone grise</td>
       <td><span style="color:var(--text3);font-family:var(--mono);font-size:11px;">—</span></td>
       <td class="r"><span class="taille-na">—</span></td>
       <td class="c"><span class="badge b-ctx">Contextuel</span></td>
@@ -747,6 +734,8 @@ footer {
         </tr></tbody>
     </table>
   </div>
+
+  
 
   
 
