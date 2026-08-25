@@ -817,5 +817,44 @@
       "z20:2.0-2.49",
       "exit:objectif"
     ]
+  },
+  {
+    "id": "XUT.TO_20260805_131352",
+    "ticker": "XUT.TO",
+    "type_sortie": "horizon",
+    "raison_sortie": "Horizon max atteint (2026-08-25)",
+    "partielle": false,
+    "date_entree": "2026-08-05T13:13:52.850713-04:00",
+    "date_sortie": "2026-08-25T10:11:07.917267-04:00",
+    "jours_detenus": 19,
+    "prix_entree": 36.2472,
+    "prix_sortie": 35.16999816894531,
+    "prix_pre_baisse": 36.82,
+    "prix_stop_loss": 33.3405,
+    "nb_unites": 329,
+    "pnl_brut_cad": -354.4,
+    "couts_totaux_cad": 17.62,
+    "pnl_net_cad": -372.02,
+    "pnl_net_pct": -3.1196,
+    "gagnant": false,
+    "mae_pct": -3.6891,
+    "z20_entree": -2.5998,
+    "z60_entree": -3.0834,
+    "vix_entree": 15.96,
+    "regime_entree": "risk_on",
+    "dessus_sma50_entree": false,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_risk_on",
+      "bloc:taux",
+      "profil:moyen",
+      "z20:2.5-2.99",
+      "z60:confirmé",
+      "trend:SMA50_sous",
+      "cluster:1_3",
+      "profil:moyen",
+      "z20:2.5-2.99",
+      "exit:horizon"
+    ]
   }
 ]
