@@ -8,12 +8,12 @@
       "statut": "ouvert",
       "date_entree": "2026-08-18T10:54:46.477927-04:00",
       "date_horizon_max": "2026-08-28",
-      "jours_restants": 4,
+      "jours_restants": 3,
       "prix_signal": 47.37,
       "prix_entree": 47.4055,
       "prix_pre_baisse": 47.83,
       "prix_stop_loss": 43.9594,
-      "prix_plus_haut_atteint": 47.459999084472656,
+      "prix_plus_haut_atteint": 47.51499938964844,
       "prix_sortie_partielle": null,
       "nb_unites_total": 420,
       "nb_unites_restant": 420,
@@ -60,5 +60,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-08-25T10:31:42.271275-04:00"
+  "derniere_maj": "2026-08-25T11:22:11.881233-04:00"
 }
