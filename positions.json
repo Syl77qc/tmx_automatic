@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 81345.34,
+  "capital_disponible": 91346.43,
   "positions_ouvertes": {
     "XIN.TO": {
       "id": "XIN.TO_20260818_105446",
@@ -13,11 +13,11 @@
       "prix_entree": 47.4055,
       "prix_pre_baisse": 47.83,
       "prix_stop_loss": 43.9594,
-      "prix_plus_haut_atteint": 47.58000183105469,
-      "prix_sortie_partielle": null,
+      "prix_plus_haut_atteint": 47.65999984741211,
+      "prix_sortie_partielle": 47.65999984741211,
       "nb_unites_total": 420,
-      "nb_unites_restant": 420,
-      "sortie_partielle_faite": false,
+      "nb_unites_restant": 210,
+      "sortie_partielle_faite": true,
       "cout_entree": {
         "prix_execution": 47.4055,
         "spread_cad": 4.97,
@@ -60,5 +60,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-08-25T17:16:30.637368-04:00"
+  "derniere_maj": "2026-08-26T10:09:11.566227-04:00"
 }
