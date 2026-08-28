@@ -1,64 +1,7 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 91346.43,
-  "positions_ouvertes": {
-    "XIN.TO": {
-      "id": "XIN.TO_20260818_105446",
-      "ticker": "XIN.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-08-18T10:54:46.477927-04:00",
-      "date_horizon_max": "2026-08-28",
-      "jours_restants": 1,
-      "prix_signal": 47.37,
-      "prix_entree": 47.4055,
-      "prix_pre_baisse": 47.83,
-      "prix_stop_loss": 43.9594,
-      "prix_plus_haut_atteint": 47.65999984741211,
-      "prix_sortie_partielle": 47.65999984741211,
-      "nb_unites_total": 420,
-      "nb_unites_restant": 210,
-      "sortie_partielle_faite": true,
-      "cout_entree": {
-        "prix_execution": 47.4055,
-        "spread_cad": 4.97,
-        "slippage_cad": 9.95,
-        "commission_cad": 0.0,
-        "cout_total_cad": 19910.32
-      },
-      "capital_investi": 19910.32,
-      "multiplicateur": 0.6667,
-      "z20_entree": -2.14,
-      "z60_entree": -1.4361,
-      "vix_entree": 15.64,
-      "regime_entree": "risk_on",
-      "sma50_entree": 46.3559,
-      "dessus_sma50_entree": true,
-      "raisons_filtres_passes": [
-        "Filtre A : 1 signaux simultanés → OK",
-        "Filtre B : Régime risk_on → OK",
-        "Filtre C : z20=-2.14 ≤ -2.0 → OK",
-        "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : Bloc 'marche_large' libre → OK"
-      ],
-      "ajustements_taille": [
-        "z60_faible÷1.5"
-      ],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_risk_on",
-        "bloc:marche_large",
-        "profil:rapide",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus",
-        "cluster:1_3",
-        "profil:rapide",
-        "z20:2.0-2.49"
-      ],
-      "mae_pct": -0.9819564676904982,
-      "mae_prix": 47.4055
-    }
-  },
+  "capital_disponible": 101278.28,
+  "positions_ouvertes": {},
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-08-27T19:15:34.477022-04:00"
+  "derniere_maj": "2026-08-28T01:00:53.903489-04:00"
 }

@@ -895,5 +895,44 @@
       "z20:2.0-2.49",
       "exit:partielle"
     ]
+  },
+  {
+    "id": "XIN.TO_20260818_105446",
+    "ticker": "XIN.TO",
+    "type_sortie": "horizon",
+    "raison_sortie": "Horizon max atteint (2026-08-28)",
+    "partielle": false,
+    "date_entree": "2026-08-18T10:54:46.477927-04:00",
+    "date_sortie": "2026-08-28T01:00:53.903441-04:00",
+    "jours_detenus": 9,
+    "prix_entree": 47.4055,
+    "prix_sortie": 47.33000183105469,
+    "prix_pre_baisse": 47.83,
+    "prix_stop_loss": 43.9594,
+    "nb_unites": 210,
+    "pnl_brut_cad": -15.85,
+    "couts_totaux_cad": 22.37,
+    "pnl_net_cad": -38.22,
+    "pnl_net_pct": -0.192,
+    "gagnant": false,
+    "mae_pct": -0.982,
+    "z20_entree": -2.14,
+    "z60_entree": -1.4361,
+    "vix_entree": 15.64,
+    "regime_entree": "risk_on",
+    "dessus_sma50_entree": true,
+    "tags": [
+      "boc:non_BdC",
+      "regime:VIX_risk_on",
+      "bloc:marche_large",
+      "profil:rapide",
+      "z20:2.0-2.49",
+      "z60:faible",
+      "trend:SMA50_dessus",
+      "cluster:1_3",
+      "profil:rapide",
+      "z20:2.0-2.49",
+      "exit:horizon"
+    ]
   }
 ]
