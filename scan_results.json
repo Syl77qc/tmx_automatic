@@ -1,13 +1,13 @@
 {
-  "scan_at": "2026-08-28T19:14:05.896778-04:00",
+  "scan_at": "2026-08-28T22:56:23.157323-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
     "alerte": false,
     "fnbs_perimes": [],
     "n_perimes": 0,
-    "aujourd_hui": "2026-08-28",
-    "marche_clos_aujourd_hui": true,
+    "aujourd_hui": "2026-08-29",
+    "marche_clos_aujourd_hui": false,
     "details": {
       "XIU.TO": {
         "statut": "OK",
