@@ -1,61 +1,7 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 61847.99,
+  "capital_disponible": 80748.02,
   "positions_ouvertes": {
-    "XIU.TO": {
-      "id": "XIU.TO_20260831_154308",
-      "ticker": "XIU.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-08-31T15:43:08.259001-04:00",
-      "date_horizon_max": "2026-09-20",
-      "jours_restants": 13,
-      "prix_signal": 53.6,
-      "prix_entree": 53.6402,
-      "prix_pre_baisse": 54.33,
-      "prix_stop_loss": 49.58,
-      "prix_plus_haut_atteint": 54.310001373291016,
-      "prix_sortie_partielle": 54.18000030517578,
-      "nb_unites_total": 708,
-      "nb_unites_restant": 354,
-      "sortie_partielle_faite": true,
-      "cout_entree": {
-        "prix_execution": 53.6402,
-        "spread_cad": 9.49,
-        "slippage_cad": 18.97,
-        "commission_cad": 0.0,
-        "cout_total_cad": 37977.26
-      },
-      "capital_investi": 37977.26,
-      "multiplicateur": 1.125,
-      "z20_entree": -2.7814,
-      "z60_entree": -2.2399,
-      "vix_entree": 14.99,
-      "regime_entree": "risk_on",
-      "sma50_entree": 52.8744,
-      "dessus_sma50_entree": true,
-      "raisons_filtres_passes": [
-        "Filtre A : 1 signaux simultanés → OK",
-        "Filtre B : Régime risk_on → OK",
-        "Filtre C : z20=-2.78 ≤ -2.0 → OK",
-        "Filtre F : Au-dessus SMA50 → OK",
-        "Filtre G : Bloc 'marche_large' libre → OK"
-      ],
-      "ajustements_taille": [],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_risk_on",
-        "bloc:marche_large",
-        "profil:moyen",
-        "z20:2.5-2.99",
-        "z60:confirmé",
-        "trend:SMA50_dessus",
-        "cluster:1_3",
-        "profil:moyen",
-        "z20:2.5-2.99"
-      ],
-      "mae_pct": -0.951150316152374,
-      "mae_prix": 53.6402
-    },
     "XHC.TO": {
       "id": "XHC.TO_20260908_131834",
       "ticker": "XHC.TO",
@@ -109,10 +55,10 @@
         "profil:rapide",
         "z20:2.5-2.99"
       ],
-      "mae_pct": -0.07495782647465928,
+      "mae_pct": -0.34752606939416525,
       "mae_prix": 73.375
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-09-08T13:36:20.365911-04:00"
+  "derniere_maj": "2026-09-08T16:12:24.806074-04:00"
 }

@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-09-08T13:36:11.224827-04:00",
+  "scan_at": "2026-09-08T16:11:58.007760-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -7,7 +7,7 @@
     "fnbs_perimes": [],
     "n_perimes": 0,
     "aujourd_hui": "2026-09-08",
-    "marche_clos_aujourd_hui": false,
+    "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
         "statut": "OK",
@@ -71,15 +71,15 @@
       }
     }
   },
-  "heures_marche": true,
+  "heures_marche": false,
   "regime_marche": {
-    "vix": 15.29,
+    "vix": 15.66,
     "regime": "risk_on",
-    "description": "VIX 15.3 < 16.0 — opération normale",
+    "description": "VIX 15.7 < 16.0 — opération normale",
     "tag": "regime:VIX_risk_on"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -1.1273,
+    "xiu_rendement_pct": -1.2567,
     "contexte": "XIU_en_baisse_systémique",
     "ajustement": "règles_normales"
   },
@@ -90,13 +90,75 @@
     "regle": null
   },
   "cluster": {
-    "n_signaux": 1,
+    "n_signaux": 3,
     "action": "normal",
     "tag": "cluster:1_3"
   },
   "n_fnbs_scannes": 12,
-  "n_signaux": 1,
+  "n_signaux": 3,
   "signaux": [
+    {
+      "ticker": "XIU.TO",
+      "role": "actif",
+      "profil": "moyen",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.0,
+      "horizon_j": 20,
+      "bloc": "marche_large",
+      "prix_cloture": 53.43000030517578,
+      "rendement_jour_pct": -1.2567,
+      "z20": -2.0399,
+      "z60": -2.2331,
+      "sma50": 53.1439,
+      "dessus_sma50": true,
+      "signal": true,
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_risk_on",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3"
+      ],
+      "intraday": {
+        "momentum_intraday_pct": -1.0189,
+        "velocite_1h_pct": -0.1122,
+        "source": "yfinance_5m"
+      }
+    },
+    {
+      "ticker": "XIN.TO",
+      "role": "actif",
+      "profil": "rapide",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.0,
+      "horizon_j": 10,
+      "bloc": "marche_large",
+      "prix_cloture": 46.93000030517578,
+      "rendement_jour_pct": -0.9289,
+      "z20": -2.0144,
+      "z60": -1.4563,
+      "sma50": 46.9068,
+      "dessus_sma50": true,
+      "signal": true,
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_risk_on",
+        "bloc:marche_large",
+        "profil:rapide",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_dessus",
+        "cluster:1_3"
+      ],
+      "intraday": {
+        "momentum_intraday_pct": -0.4454,
+        "velocite_1h_pct": -0.4454,
+        "source": "yfinance_5m"
+      }
+    },
     {
       "ticker": "XHC.TO",
       "role": "actif",
@@ -105,11 +167,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": null,
-      "prix_cloture": 73.31999969482422,
-      "rendement_jour_pct": -2.6553,
-      "z20": -2.6384,
-      "z60": -2.5311,
-      "sma50": 73.5528,
+      "prix_cloture": 73.12000274658203,
+      "rendement_jour_pct": -2.9209,
+      "z20": -2.8908,
+      "z60": -2.7687,
+      "sma50": 73.5488,
       "dessus_sma50": false,
       "signal": true,
       "tags": [
@@ -123,8 +185,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -1.5707,
-        "velocite_1h_pct": -0.61,
+        "momentum_intraday_pct": -1.7586,
+        "velocite_1h_pct": -0.0137,
         "source": "yfinance_5m"
       }
     }
@@ -138,13 +200,13 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 53.5,
-      "rendement_jour_pct": -1.1273,
-      "z20": -1.8341,
-      "z60": -2.023,
-      "sma50": 53.1453,
+      "prix_cloture": 53.43000030517578,
+      "rendement_jour_pct": -1.2567,
+      "z20": -2.0399,
+      "z60": -2.2331,
+      "sma50": 53.1439,
       "dessus_sma50": true,
-      "signal": false,
+      "signal": true,
       "tags": [
         "boc:non_BdC",
         "regime:VIX_risk_on",
@@ -152,8 +214,14 @@
         "profil:moyen",
         "z20:2.0-2.49",
         "z60:confirmé",
-        "trend:SMA50_dessus"
-      ]
+        "trend:SMA50_dessus",
+        "cluster:1_3"
+      ],
+      "intraday": {
+        "momentum_intraday_pct": -1.0189,
+        "velocite_1h_pct": -0.1122,
+        "source": "yfinance_5m"
+      }
     },
     {
       "ticker": "XFN.TO",
@@ -163,11 +231,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 93.20999908447266,
-      "rendement_jour_pct": -1.3233,
-      "z20": -1.1463,
-      "z60": -1.4544,
-      "sma50": 94.9736,
+      "prix_cloture": 93.02999877929688,
+      "rendement_jour_pct": -1.5139,
+      "z20": -1.3215,
+      "z60": -1.6488,
+      "sma50": 94.97,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -176,7 +244,7 @@
         "bloc:marche_large",
         "profil:moyen",
         "z20:2.0-2.49",
-        "z60:faible",
+        "z60:confirmé",
         "trend:SMA50_sous"
       ]
     },
@@ -188,11 +256,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 34.970001220703125,
-      "rendement_jour_pct": 1.0694,
-      "z20": 1.3566,
-      "z60": 1.5712,
-      "sma50": 36.2173,
+      "prix_cloture": 34.869998931884766,
+      "rendement_jour_pct": 0.7803,
+      "z20": 1.0367,
+      "z60": 1.174,
+      "sma50": 36.2153,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -213,11 +281,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 15.930000305175781,
-      "rendement_jour_pct": -0.5618,
-      "z20": -0.5465,
-      "z60": -0.6803,
-      "sma50": 16.7592,
+      "prix_cloture": 15.859999656677246,
+      "rendement_jour_pct": -0.9988,
+      "z20": -1.2123,
+      "z60": -1.2854,
+      "sma50": 16.7578,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -238,13 +306,13 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": "marche_large",
-      "prix_cloture": 47.06999969482422,
-      "rendement_jour_pct": -0.6333,
-      "z20": -1.3485,
-      "z60": -1.043,
-      "sma50": 46.9096,
+      "prix_cloture": 46.93000030517578,
+      "rendement_jour_pct": -0.9289,
+      "z20": -2.0144,
+      "z60": -1.4563,
+      "sma50": 46.9068,
       "dessus_sma50": true,
-      "signal": false,
+      "signal": true,
       "tags": [
         "boc:non_BdC",
         "regime:VIX_risk_on",
@@ -252,8 +320,14 @@
         "profil:rapide",
         "z20:2.0-2.49",
         "z60:faible",
-        "trend:SMA50_dessus"
-      ]
+        "trend:SMA50_dessus",
+        "cluster:1_3"
+      ],
+      "intraday": {
+        "momentum_intraday_pct": -0.4454,
+        "velocite_1h_pct": -0.4454,
+        "source": "yfinance_5m"
+      }
     },
     {
       "ticker": "XHC.TO",
@@ -263,11 +337,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": null,
-      "prix_cloture": 73.31999969482422,
-      "rendement_jour_pct": -2.6553,
-      "z20": -2.6384,
-      "z60": -2.5311,
-      "sma50": 73.5528,
+      "prix_cloture": 73.12000274658203,
+      "rendement_jour_pct": -2.9209,
+      "z20": -2.8908,
+      "z60": -2.7687,
+      "sma50": 73.5488,
       "dessus_sma50": false,
       "signal": true,
       "tags": [
@@ -281,8 +355,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -1.5707,
-        "velocite_1h_pct": -0.61,
+        "momentum_intraday_pct": -1.7586,
+        "velocite_1h_pct": -0.0137,
         "source": "yfinance_5m"
       }
     },
@@ -294,11 +368,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 15,
       "bloc": null,
-      "prix_cloture": 63.650001525878906,
-      "rendement_jour_pct": -1.3178,
-      "z20": -1.6275,
-      "z60": -1.197,
-      "sma50": 66.4156,
+      "prix_cloture": 63.849998474121094,
+      "rendement_jour_pct": -1.0078,
+      "z20": -1.1813,
+      "z60": -0.9047,
+      "sma50": 66.4196,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -319,11 +393,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 28.709999084472656,
-      "rendement_jour_pct": 0.6309,
-      "z20": 0.1074,
-      "z60": 0.2875,
-      "sma50": 26.852,
+      "prix_cloture": 28.780000686645508,
+      "rendement_jour_pct": 0.8763,
+      "z20": 0.2714,
+      "z60": 0.4316,
+      "sma50": 26.8534,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -363,11 +437,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 60.7599983215332,
-      "rendement_jour_pct": -0.7027,
-      "z20": -0.4256,
-      "z60": -0.4026,
-      "sma50": 52.6996,
+      "prix_cloture": 60.36000061035156,
+      "rendement_jour_pct": -1.3564,
+      "z20": -0.6494,
+      "z60": -0.6174,
+      "sma50": 52.6916,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -385,11 +459,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 74.2300033569336,
-      "rendement_jour_pct": -2.5853,
-      "z20": -1.2476,
-      "z60": -1.2659,
-      "sma50": 75.2134,
+      "prix_cloture": 73.83000183105469,
+      "rendement_jour_pct": -3.1102,
+      "z20": -1.5236,
+      "z60": -1.5142,
+      "sma50": 75.2054,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
@@ -407,11 +481,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 49.7400016784668,
-      "rendement_jour_pct": 0.3632,
-      "z20": -0.0186,
-      "z60": -0.0212,
-      "sma50": 43.885,
+      "prix_cloture": 49.5099983215332,
+      "rendement_jour_pct": -0.1009,
+      "z20": -0.2002,
+      "z60": -0.1916,
+      "sma50": 43.8804,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
