@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 80748.02,
+  "capital_disponible": 60589.8,
   "positions_ouvertes": {
     "XHC.TO": {
       "id": "XHC.TO_20260908_131834",
@@ -57,8 +57,62 @@
       ],
       "mae_pct": -0.34752606939416525,
       "mae_prix": 73.375
+    },
+    "XIU.TO": {
+      "id": "XIU.TO_20260908_183809",
+      "ticker": "XIU.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-09-08T18:38:09.779304-04:00",
+      "date_horizon_max": "2026-09-28",
+      "jours_restants": 20,
+      "prix_signal": 53.43,
+      "prix_entree": 53.4701,
+      "prix_pre_baisse": 54.11,
+      "prix_stop_loss": 49.4228,
+      "prix_plus_haut_atteint": 53.4701,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 377,
+      "nb_unites_restant": 377,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 53.4701,
+        "spread_cad": 5.04,
+        "slippage_cad": 10.07,
+        "commission_cad": 0.0,
+        "cout_total_cad": 20158.22
+      },
+      "capital_investi": 20158.22,
+      "multiplicateur": 0.75,
+      "z20_entree": -2.0399,
+      "z60_entree": -2.2331,
+      "vix_entree": 15.72,
+      "regime_entree": "risk_on",
+      "sma50_entree": 53.1439,
+      "dessus_sma50_entree": true,
+      "raisons_filtres_passes": [
+        "Filtre A : 3 signaux simultanés → OK",
+        "Filtre B : Régime risk_on → OK",
+        "Filtre C : z20=-2.04 ≤ -2.0 → OK",
+        "Filtre F : Au-dessus SMA50 → OK",
+        "Filtre G : Bloc 'marche_large' libre → OK"
+      ],
+      "ajustements_taille": [],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_risk_on",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:2.0-2.49"
+      ],
+      "mae_pct": -0.07499461348346259,
+      "mae_prix": 53.4701
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-09-08T16:12:24.806074-04:00"
+  "derniere_maj": "2026-09-08T18:38:09.995816-04:00"
 }

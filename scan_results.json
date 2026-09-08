@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-09-08T16:11:58.007760-04:00",
+  "scan_at": "2026-09-08T18:37:47.923864-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,7 +73,7 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 15.66,
+    "vix": 15.72,
     "regime": "risk_on",
     "description": "VIX 15.7 < 16.0 — opération normale",
     "tag": "regime:VIX_risk_on"
@@ -154,8 +154,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -0.4454,
-        "velocite_1h_pct": -0.4454,
+        "momentum_intraday_pct": -0.4666,
+        "velocite_1h_pct": -0.4244,
         "source": "yfinance_5m"
       }
     },
@@ -185,8 +185,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -1.7586,
-        "velocite_1h_pct": -0.0137,
+        "momentum_intraday_pct": -1.8392,
+        "velocite_1h_pct": -0.0956,
         "source": "yfinance_5m"
       }
     }
@@ -324,8 +324,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -0.4454,
-        "velocite_1h_pct": -0.4454,
+        "momentum_intraday_pct": -0.4666,
+        "velocite_1h_pct": -0.4244,
         "source": "yfinance_5m"
       }
     },
@@ -355,8 +355,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -1.7586,
-        "velocite_1h_pct": -0.0137,
+        "momentum_intraday_pct": -1.8392,
+        "velocite_1h_pct": -0.0956,
         "source": "yfinance_5m"
       }
     },
