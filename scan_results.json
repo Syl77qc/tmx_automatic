@@ -1,13 +1,11 @@
 {
-  "scan_at": "2026-09-14T18:08:26.322834-04:00",
+  "scan_at": "2026-09-14T19:33:34.750060-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "ZAG.TO"
-    ],
-    "n_perimes": 1,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-09-14",
     "marche_clos_aujourd_hui": true,
     "details": {
@@ -52,9 +50,9 @@
         "perime": false
       },
       "ZAG.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-14",
+        "perime": false
       },
       "XGD.TO": {
         "statut": "OK",
@@ -299,9 +297,25 @@
     },
     {
       "ticker": "ZAG.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "contextuel",
+      "profil": null,
+      "seuil_min_base": null,
+      "seuil_effectif": null,
+      "horizon_j": null,
+      "bloc": "taux",
+      "prix_cloture": 13.34000015258789,
+      "rendement_jour_pct": -0.0749,
+      "z20": 0.0527,
+      "z60": -0.1001,
+      "sma50": 13.567,
+      "dessus_sma50": false,
       "signal": false,
-      "role": "contextuel"
+      "choc_contagion": false,
+      "tags": [
+        "role:contextuel",
+        "bloc:taux",
+        "choc_contagion:non"
+      ]
     },
     {
       "ticker": "XGD.TO",
