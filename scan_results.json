@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-09-23T13:53:20.502853-04:00",
+  "scan_at": "2026-09-23T14:00:02.679193-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,13 +73,13 @@
   },
   "heures_marche": true,
   "regime_marche": {
-    "vix": 15.34,
+    "vix": 15.1,
     "regime": "risk_on",
-    "description": "VIX 15.3 < 16.0 — opération normale",
+    "description": "VIX 15.1 < 16.0 — opération normale",
     "tag": "regime:VIX_risk_on"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -0.4119,
+    "xiu_rendement_pct": -0.3932,
     "contexte": "zone_grise",
     "ajustement": "log_observation"
   },
@@ -105,11 +105,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 93.13999938964844,
-      "rendement_jour_pct": -1.9992,
-      "z20": -2.3875,
-      "z60": -2.0223,
-      "sma50": 94.6665,
+      "prix_cloture": 93.11000061035156,
+      "rendement_jour_pct": -2.0307,
+      "z20": -2.4223,
+      "z60": -2.0536,
+      "sma50": 94.6659,
       "dessus_sma50": false,
       "signal": true,
       "tags": [
@@ -123,8 +123,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -0.7671,
-        "velocite_1h_pct": -0.118,
+        "momentum_intraday_pct": -0.7991,
+        "velocite_1h_pct": -0.1608,
         "source": "yfinance_5m"
       }
     }
@@ -138,11 +138,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 53.189998626708984,
-      "rendement_jour_pct": -0.4119,
-      "z20": -0.4784,
-      "z60": -0.7496,
-      "sma50": 53.365,
+      "prix_cloture": 53.20000076293945,
+      "rendement_jour_pct": -0.3932,
+      "z20": -0.453,
+      "z60": -0.7201,
+      "sma50": 53.3652,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -163,11 +163,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 93.13999938964844,
-      "rendement_jour_pct": -1.9992,
-      "z20": -2.3875,
-      "z60": -2.0223,
-      "sma50": 94.6665,
+      "prix_cloture": 93.11000061035156,
+      "rendement_jour_pct": -2.0307,
+      "z20": -2.4223,
+      "z60": -2.0536,
+      "sma50": 94.6659,
       "dessus_sma50": false,
       "signal": true,
       "tags": [
@@ -181,8 +181,8 @@
         "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -0.7671,
-        "velocite_1h_pct": -0.118,
+        "momentum_intraday_pct": -0.7991,
+        "velocite_1h_pct": -0.1608,
         "source": "yfinance_5m"
       }
     },
@@ -219,11 +219,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 15.635000228881836,
-      "rendement_jour_pct": 0.482,
-      "z20": 0.9713,
-      "z60": 0.8379,
-      "sma50": 16.4395,
+      "prix_cloture": 15.640000343322754,
+      "rendement_jour_pct": 0.5141,
+      "z20": 1.0147,
+      "z60": 0.8817,
+      "sma50": 16.4396,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -363,11 +363,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 59.2599983215332,
-      "rendement_jour_pct": 0.0675,
-      "z20": 0.1687,
-      "z60": -0.1255,
-      "sma50": 54.932,
+      "prix_cloture": 59.36000061035156,
+      "rendement_jour_pct": 0.2364,
+      "z20": 0.2466,
+      "z60": -0.0643,
+      "sma50": 54.934,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -385,11 +385,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 78.2699966430664,
-      "rendement_jour_pct": 2.7435,
-      "z20": 1.3198,
-      "z60": 1.2103,
-      "sma50": 75.4064,
+      "prix_cloture": 78.02999877929688,
+      "rendement_jour_pct": 2.4285,
+      "z20": 1.1671,
+      "z60": 1.0655,
+      "sma50": 75.4016,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
