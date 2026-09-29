@@ -1,100 +1,87 @@
 {
-  "scan_at": "2026-09-28T20:43:18.416218-04:00",
+  "scan_at": "2026-09-29T14:45:24.600782-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "XIU.TO",
-      "XFN.TO",
-      "XUT.TO",
-      "XRE.TO",
-      "XIN.TO",
-      "XHC.TO",
-      "XST.TO",
-      "XEG.TO",
-      "ZAG.TO",
-      "XGD.TO",
-      "XIT.TO",
-      "XMA.TO"
-    ],
-    "n_perimes": 12,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-09-29",
-    "marche_clos_aujourd_hui": true,
+    "marche_clos_aujourd_hui": false,
     "details": {
       "XIU.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XFN.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XUT.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XRE.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XIN.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XHC.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XST.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XEG.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "ZAG.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XGD.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XIT.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       },
       "XMA.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-09-28",
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-09-29",
+        "perime": false
       }
     }
   },
-  "heures_marche": false,
+  "heures_marche": true,
   "regime_marche": {
-    "vix": 16.07,
+    "vix": 16.15,
     "regime": "neutre",
     "description": "VIX 16.1 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -0.6029,
-    "contexte": "XIU_en_baisse_systémique",
-    "ajustement": "règles_normales"
+    "xiu_rendement_pct": -0.2085,
+    "contexte": "zone_grise",
+    "ajustement": "log_observation"
   },
   "jour_bdc": {
     "est_jour_bdc": false,
@@ -119,11 +106,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 52.7599983215332,
-      "rendement_jour_pct": -0.6029,
-      "z20": -0.6102,
-      "z60": -0.9768,
-      "sma50": 53.4041,
+      "prix_cloture": 52.650001525878906,
+      "rendement_jour_pct": -0.2085,
+      "z20": -0.1129,
+      "z60": -0.3637,
+      "sma50": 53.4061,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -144,11 +131,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 92.81999969482422,
-      "rendement_jour_pct": -0.6103,
-      "z20": -0.6547,
-      "z60": -0.5733,
-      "sma50": 94.2154,
+      "prix_cloture": 92.1500015258789,
+      "rendement_jour_pct": -0.7218,
+      "z20": -0.7244,
+      "z60": -0.6778,
+      "sma50": 94.1221,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -169,11 +156,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 33.709999084472656,
-      "rendement_jour_pct": 0.4769,
-      "z20": 0.7757,
-      "z60": 0.752,
-      "sma50": 35.3331,
+      "prix_cloture": 33.7599983215332,
+      "rendement_jour_pct": 0.1483,
+      "z20": 0.3311,
+      "z60": 0.3376,
+      "sma50": 35.2665,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -194,11 +181,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 15.579999923706055,
-      "rendement_jour_pct": 0.322,
-      "z20": 0.6653,
-      "z60": 0.6262,
-      "sma50": 16.2462,
+      "prix_cloture": 15.5600004196167,
+      "rendement_jour_pct": -0.1284,
+      "z20": 0.0475,
+      "z60": 0.0513,
+      "sma50": 16.2127,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -219,11 +206,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": "marche_large",
-      "prix_cloture": 46.79999923706055,
-      "rendement_jour_pct": -0.2983,
-      "z20": -0.3578,
-      "z60": -0.4708,
-      "sma50": 46.9628,
+      "prix_cloture": 46.529998779296875,
+      "rendement_jour_pct": -0.5769,
+      "z20": -0.7064,
+      "z60": -0.8758,
+      "sma50": 46.9724,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -244,11 +231,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": null,
-      "prix_cloture": 75.06999969482422,
-      "rendement_jour_pct": 0.1067,
-      "z20": 0.1431,
-      "z60": 0.0125,
-      "sma50": 74.0338,
+      "prix_cloture": 74.3499984741211,
+      "rendement_jour_pct": -0.9591,
+      "z20": -1.0287,
+      "z60": -0.9613,
+      "sma50": 74.0844,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -269,11 +256,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 15,
       "bloc": null,
-      "prix_cloture": 63.91999816894531,
-      "rendement_jour_pct": 0.141,
-      "z20": 0.1319,
-      "z60": 0.227,
-      "sma50": 65.3458,
+      "prix_cloture": 63.36000061035156,
+      "rendement_jour_pct": -0.8761,
+      "z20": -0.8996,
+      "z60": -0.8636,
+      "sma50": 65.2504,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -294,12 +281,12 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 28.18000030517578,
-      "rendement_jour_pct": 0.3919,
-      "z20": 0.2433,
-      "z60": 0.0555,
-      "sma50": 27.7963,
-      "dessus_sma50": true,
+      "prix_cloture": 27.790000915527344,
+      "rendement_jour_pct": -1.384,
+      "z20": -0.917,
+      "z60": -0.9833,
+      "sma50": 27.8325,
+      "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
       "tags": [
@@ -316,11 +303,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "taux",
-      "prix_cloture": 13.390000343322754,
-      "rendement_jour_pct": -0.2978,
-      "z20": -0.7257,
-      "z60": -0.8103,
-      "sma50": 13.5181,
+      "prix_cloture": 13.3100004196167,
+      "rendement_jour_pct": -0.5975,
+      "z20": -1.5205,
+      "z60": -1.7608,
+      "sma50": 13.5121,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
@@ -338,11 +325,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 55.650001525878906,
-      "rendement_jour_pct": -5.1474,
-      "z20": -2.0119,
-      "z60": -1.9428,
-      "sma50": 55.9534,
+      "prix_cloture": 56.15999984741211,
+      "rendement_jour_pct": 0.9164,
+      "z20": 0.5611,
+      "z60": 0.2342,
+      "sma50": 56.1954,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
@@ -360,11 +347,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 78.7699966430664,
-      "rendement_jour_pct": -0.0381,
-      "z20": -0.0196,
-      "z60": -0.0897,
-      "sma50": 75.89,
+      "prix_cloture": 80.18000030517578,
+      "rendement_jour_pct": 1.79,
+      "z20": 0.8272,
+      "z60": 0.7411,
+      "sma50": 76.0778,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -382,12 +369,12 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 46.119998931884766,
-      "rendement_jour_pct": -3.696,
-      "z20": -1.4604,
-      "z60": -1.5608,
-      "sma50": 46.0653,
-      "dessus_sma50": true,
+      "prix_cloture": 46.189998626708984,
+      "rendement_jour_pct": 0.1518,
+      "z20": 0.2346,
+      "z60": -0.021,
+      "sma50": 46.238,
+      "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
       "tags": [
