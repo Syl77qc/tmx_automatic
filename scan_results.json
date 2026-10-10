@@ -1,13 +1,13 @@
 {
-  "scan_at": "2026-10-09T19:09:20.759200-04:00",
+  "scan_at": "2026-10-09T20:22:33.081470-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
     "alerte": false,
     "fnbs_perimes": [],
     "n_perimes": 0,
-    "aujourd_hui": "2026-10-09",
-    "marche_clos_aujourd_hui": true,
+    "aujourd_hui": "2026-10-10",
+    "marche_clos_aujourd_hui": false,
     "details": {
       "XIU.TO": {
         "statut": "OK",
@@ -159,9 +159,9 @@
       "prix_cloture": 34.59000015258789,
       "rendement_jour_pct": 0.4647,
       "z20": 0.5155,
-      "z60": null,
-      "sma50": null,
-      "dessus_sma50": null,
+      "z60": 0.6917,
+      "sma50": 34.7756,
+      "dessus_sma50": false,
       "signal": false,
       "tags": [
         "boc:non_BdC",
@@ -169,7 +169,8 @@
         "bloc:taux",
         "profil:moyen",
         "z20:2.0-2.49",
-        "z60:N/A"
+        "z60:faible",
+        "trend:SMA50_sous"
       ]
     },
     {
