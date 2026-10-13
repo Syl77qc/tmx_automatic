@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-10-12T17:53:18.875461-04:00",
+  "scan_at": "2026-10-12T22:18:12.978862-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
@@ -19,7 +19,7 @@
       "XMA.TO"
     ],
     "n_perimes": 12,
-    "aujourd_hui": "2026-10-12",
+    "aujourd_hui": "2026-10-13",
     "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
