@@ -1,20 +1,18 @@
 {
-  "scan_at": "2026-10-14T17:37:18.584196-04:00",
+  "scan_at": "2026-10-14T19:31:30.021767-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "XIU.TO"
-    ],
-    "n_perimes": 1,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-10-14",
     "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-10-14",
+        "perime": false
       },
       "XFN.TO": {
         "statut": "OK",
@@ -81,9 +79,9 @@
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
-    "xiu_rendement_pct": null,
-    "contexte": "indisponible",
-    "ajustement": "aucun"
+    "xiu_rendement_pct": -0.8557,
+    "contexte": "XIU_en_baisse_systémique",
+    "ajustement": "règles_normales"
   },
   "jour_bdc": {
     "est_jour_bdc": false,
@@ -102,9 +100,28 @@
   "tous_fnbs": [
     {
       "ticker": "XIU.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "actif",
+      "profil": "moyen",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.0,
+      "horizon_j": 20,
+      "bloc": "marche_large",
+      "prix_cloture": 53.29999923706055,
+      "rendement_jour_pct": -0.8557,
+      "z20": -1.1444,
+      "z60": -1.2052,
+      "sma50": 53.4503,
+      "dessus_sma50": false,
       "signal": false,
-      "role": "actif"
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_sous"
+      ]
     },
     {
       "ticker": "XFN.TO",
