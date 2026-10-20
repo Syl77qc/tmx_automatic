@@ -1,13 +1,11 @@
 {
-  "scan_at": "2026-10-20T17:32:44.122865-04:00",
+  "scan_at": "2026-10-20T19:31:03.307438-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "ZAG.TO"
-    ],
-    "n_perimes": 1,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-10-20",
     "marche_clos_aujourd_hui": true,
     "details": {
@@ -52,9 +50,9 @@
         "perime": false
       },
       "ZAG.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-10-20",
+        "perime": false
       },
       "XGD.TO": {
         "statut": "OK",
@@ -161,9 +159,9 @@
       "prix_cloture": 34.720001220703125,
       "rendement_jour_pct": 0.231,
       "z20": 0.2623,
-      "z60": 0.4224,
-      "sma50": 34.5843,
-      "dessus_sma50": true,
+      "z60": null,
+      "sma50": null,
+      "dessus_sma50": null,
       "signal": false,
       "tags": [
         "boc:non_BdC",
@@ -171,8 +169,7 @@
         "bloc:taux",
         "profil:moyen",
         "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus"
+        "z60:N/A"
       ]
     },
     {
@@ -299,9 +296,25 @@
     },
     {
       "ticker": "ZAG.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "contextuel",
+      "profil": null,
+      "seuil_min_base": null,
+      "seuil_effectif": null,
+      "horizon_j": null,
+      "bloc": "taux",
+      "prix_cloture": 13.420000076293945,
+      "rendement_jour_pct": 0.374,
+      "z20": 1.0612,
+      "z60": 1.22,
+      "sma50": 13.4249,
+      "dessus_sma50": false,
       "signal": false,
-      "role": "contextuel"
+      "choc_contagion": false,
+      "tags": [
+        "role:contextuel",
+        "bloc:taux",
+        "choc_contagion:non"
+      ]
     },
     {
       "ticker": "XGD.TO",
