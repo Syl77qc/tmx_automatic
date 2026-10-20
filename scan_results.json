@@ -1,11 +1,11 @@
 {
-  "scan_at": "2026-10-20T14:02:41.917591-04:00",
+  "scan_at": "2026-10-20T14:08:05.457987-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XIN.TO"
+      "XUT.TO"
     ],
     "n_perimes": 1,
     "aujourd_hui": "2026-10-20",
@@ -22,9 +22,9 @@
         "perime": false
       },
       "XUT.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-10-20",
-        "perime": false
+        "statut": "ERREUR",
+        "derniere_date": null,
+        "perime": true
       },
       "XRE.TO": {
         "statut": "OK",
@@ -32,9 +32,9 @@
         "perime": false
       },
       "XIN.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-10-20",
+        "perime": false
       },
       "XHC.TO": {
         "statut": "OK",
@@ -75,13 +75,13 @@
   },
   "heures_marche": true,
   "regime_marche": {
-    "vix": 17.36,
+    "vix": 17.34,
     "regime": "neutre",
-    "description": "VIX 17.4 entre 16.0-25.0 — tailles réduites",
+    "description": "VIX 17.3 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
-    "xiu_rendement_pct": 0.8367,
+    "xiu_rendement_pct": 0.8553,
     "contexte": "XIU_stable_ou_positif",
     "ajustement": "seuil+0.5_taille÷1.5"
   },
@@ -108,11 +108,11 @@
       "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 54.22999954223633,
-      "rendement_jour_pct": 0.8367,
-      "z20": 0.858,
-      "z60": 1.0499,
-      "sma50": 53.4893,
+      "prix_cloture": 54.2400016784668,
+      "rendement_jour_pct": 0.8553,
+      "z20": 0.8789,
+      "z60": 1.0744,
+      "sma50": 53.4895,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -152,27 +152,9 @@
     },
     {
       "ticker": "XUT.TO",
-      "role": "actif",
-      "profil": "moyen",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.5,
-      "horizon_j": 20,
-      "bloc": "taux",
-      "prix_cloture": 34.84000015258789,
-      "rendement_jour_pct": 0.5774,
-      "z20": 0.7996,
-      "z60": null,
-      "sma50": null,
-      "dessus_sma50": null,
+      "erreur": "Données insuffisantes (0 jours)",
       "signal": false,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:taux",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:N/A"
-      ]
+      "role": "actif"
     },
     {
       "ticker": "XRE.TO",
@@ -182,11 +164,11 @@
       "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 15.710000038146973,
-      "rendement_jour_pct": 1.2895,
-      "z20": 1.8612,
-      "z60": 2.0219,
-      "sma50": 15.7984,
+      "prix_cloture": 15.725000381469727,
+      "rendement_jour_pct": 1.3862,
+      "z20": 2.0056,
+      "z60": 2.1561,
+      "sma50": 15.7987,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -201,9 +183,28 @@
     },
     {
       "ticker": "XIN.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "actif",
+      "profil": "rapide",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.5,
+      "horizon_j": 10,
+      "bloc": "marche_large",
+      "prix_cloture": 46.36000061035156,
+      "rendement_jour_pct": 0.5858,
+      "z20": 0.9602,
+      "z60": 0.945,
+      "sma50": 46.8646,
+      "dessus_sma50": false,
       "signal": false,
-      "role": "actif"
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:rapide",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_sous"
+      ]
     },
     {
       "ticker": "XHC.TO",
@@ -263,11 +264,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 31.15999984741211,
-      "rendement_jour_pct": -0.7643,
-      "z20": -0.7808,
-      "z60": -0.6193,
-      "sma50": 28.6347,
+      "prix_cloture": 31.21500015258789,
+      "rendement_jour_pct": -0.5892,
+      "z20": -0.6671,
+      "z60": -0.5141,
+      "sma50": 28.6358,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
