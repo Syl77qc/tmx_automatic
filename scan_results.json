@@ -1,11 +1,11 @@
 {
-  "scan_at": "2026-10-21T17:44:40.101820-04:00",
+  "scan_at": "2026-10-21T19:46:41.611614-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XRE.TO"
+      "XUT.TO"
     ],
     "n_perimes": 1,
     "aujourd_hui": "2026-10-21",
@@ -22,14 +22,14 @@
         "perime": false
       },
       "XUT.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-10-21",
-        "perime": false
-      },
-      "XRE.TO": {
         "statut": "ERREUR",
         "derniere_date": null,
         "perime": true
+      },
+      "XRE.TO": {
+        "statut": "OK",
+        "derniere_date": "2026-10-21",
+        "perime": false
       },
       "XIN.TO": {
         "statut": "OK",
@@ -152,18 +152,24 @@
     },
     {
       "ticker": "XUT.TO",
+      "erreur": "Données insuffisantes (0 jours)",
+      "signal": false,
+      "role": "actif"
+    },
+    {
+      "ticker": "XRE.TO",
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
       "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 34.939998626708984,
-      "rendement_jour_pct": 0.6336,
-      "z20": 0.8476,
-      "z60": null,
-      "sma50": null,
-      "dessus_sma50": null,
+      "prix_cloture": 15.630000114440918,
+      "rendement_jour_pct": -0.8249,
+      "z20": -1.2291,
+      "z60": -0.952,
+      "sma50": 15.7842,
+      "dessus_sma50": false,
       "signal": false,
       "tags": [
         "boc:non_BdC",
@@ -171,14 +177,9 @@
         "bloc:taux",
         "profil:moyen",
         "z20:2.0-2.49",
-        "z60:N/A"
+        "z60:faible",
+        "trend:SMA50_sous"
       ]
-    },
-    {
-      "ticker": "XRE.TO",
-      "erreur": "Données insuffisantes (0 jours)",
-      "signal": false,
-      "role": "actif"
     },
     {
       "ticker": "XIN.TO",
