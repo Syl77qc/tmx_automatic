@@ -1,65 +1,7 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 94513.69,
-  "positions_ouvertes": {
-    "XUT.TO": {
-      "id": "XUT.TO_20261019_152340",
-      "ticker": "XUT.TO",
-      "statut": "ouvert",
-      "date_entree": "2026-10-19T15:23:40.822754-04:00",
-      "date_horizon_max": "2026-11-08",
-      "jours_restants": 19,
-      "prix_signal": 34.56,
-      "prix_entree": 34.5859,
-      "prix_pre_baisse": 35.13,
-      "prix_stop_loss": 31.8125,
-      "prix_plus_haut_atteint": 35.119998931884766,
-      "prix_sortie_partielle": 34.900001525878906,
-      "nb_unites_total": 364,
-      "nb_unites_restant": 182,
-      "sortie_partielle_faite": true,
-      "cout_entree": {
-        "prix_execution": 34.5859,
-        "spread_cad": 3.14,
-        "slippage_cad": 6.29,
-        "commission_cad": 0.0,
-        "cout_total_cad": 12589.28
-      },
-      "capital_investi": 12589.28,
-      "multiplicateur": 0.375,
-      "z20_entree": -3.1902,
-      "z60_entree": -1.8255,
-      "vix_entree": 18.27,
-      "regime_entree": "neutre",
-      "sma50_entree": 34.6009,
-      "dessus_sma50_entree": false,
-      "raisons_filtres_passes": [
-        "Filtre A : 1 signaux simultanés → OK",
-        "Filtre B : Régime neutre → OK",
-        "Filtre C : z20=-3.19 ≤ -2.0 → OK",
-        "Filtre F : Sous SMA50 → taille réduite (déjà appliqué)",
-        "Filtre G : Bloc 'taux' libre → OK"
-      ],
-      "ajustements_taille": [
-        "régime_neutre÷2",
-        "sous_SMA50÷2"
-      ],
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:taux",
-        "profil:moyen",
-        "z20:≥3.0",
-        "z60:confirmé",
-        "trend:SMA50_sous",
-        "cluster:1_3",
-        "profil:moyen",
-        "z20:≥3.0"
-      ],
-      "mae_pct": -0.07488203779281927,
-      "mae_prix": 34.5859
-    }
-  },
+  "capital_disponible": 100906.19,
+  "positions_ouvertes": {},
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-10-21T14:08:43.993467-04:00"
+  "derniere_maj": "2026-10-21T14:16:55.819241-04:00"
 }
