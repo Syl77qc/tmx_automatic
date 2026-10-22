@@ -1,11 +1,11 @@
 {
-  "scan_at": "2026-10-22T17:30:25.202088-04:00",
+  "scan_at": "2026-10-22T19:45:06.831366-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XUT.TO"
+      "XMA.TO"
     ],
     "n_perimes": 1,
     "aujourd_hui": "2026-10-22",
@@ -22,9 +22,9 @@
         "perime": false
       },
       "XUT.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-10-22",
+        "perime": false
       },
       "XRE.TO": {
         "statut": "OK",
@@ -67,9 +67,9 @@
         "perime": false
       },
       "XMA.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-10-22",
-        "perime": false
+        "statut": "ERREUR",
+        "derniere_date": null,
+        "perime": true
       }
     }
   },
@@ -152,9 +152,27 @@
     },
     {
       "ticker": "XUT.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "actif",
+      "profil": "moyen",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.0,
+      "horizon_j": 20,
+      "bloc": "taux",
+      "prix_cloture": 35.34000015258789,
+      "rendement_jour_pct": 1.1448,
+      "z20": 1.6171,
+      "z60": null,
+      "sma50": null,
+      "dessus_sma50": null,
       "signal": false,
-      "role": "actif"
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:taux",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:N/A"
+      ]
     },
     {
       "ticker": "XRE.TO",
@@ -346,25 +364,9 @@
     },
     {
       "ticker": "XMA.TO",
-      "role": "contextuel",
-      "profil": null,
-      "seuil_min_base": null,
-      "seuil_effectif": null,
-      "horizon_j": null,
-      "bloc": "metaux",
-      "prix_cloture": 41.650001525878906,
-      "rendement_jour_pct": -5.6411,
-      "z20": -2.4857,
-      "z60": -2.3554,
-      "sma50": 47.3444,
-      "dessus_sma50": false,
+      "erreur": "Données insuffisantes (0 jours)",
       "signal": false,
-      "choc_contagion": false,
-      "tags": [
-        "role:contextuel",
-        "bloc:metaux",
-        "choc_contagion:non"
-      ]
+      "role": "contextuel"
     }
   ]
 }
