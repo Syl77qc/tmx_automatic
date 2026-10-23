@@ -13,7 +13,7 @@
       "prix_entree": 15.6517,
       "prix_pre_baisse": 15.93,
       "prix_stop_loss": 14.0447,
-      "prix_plus_haut_atteint": 15.6517,
+      "prix_plus_haut_atteint": 15.699999809265137,
       "prix_sortie_partielle": null,
       "nb_unites_total": 403,
       "nb_unites_restant": 403,
@@ -112,10 +112,10 @@
         "profil:rapide",
         "z20:2.0-2.49"
       ],
-      "mae_pct": -0.07497095005865781,
+      "mae_pct": -0.26681823258479204,
       "mae_prix": 67.7608
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-10-23T13:59:08.417253-04:00"
+  "derniere_maj": "2026-10-23T16:55:27.968478-04:00"
 }
