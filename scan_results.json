@@ -1,20 +1,20 @@
 {
-  "scan_at": "2026-10-23T16:55:25.021098-04:00",
+  "scan_at": "2026-10-23T19:35:28.790923-04:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XST.TO"
+      "XIU.TO"
     ],
     "n_perimes": 1,
     "aujourd_hui": "2026-10-23",
     "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-10-23",
-        "perime": false
+        "statut": "ERREUR",
+        "derniere_date": null,
+        "perime": true
       },
       "XFN.TO": {
         "statut": "OK",
@@ -42,9 +42,9 @@
         "perime": false
       },
       "XST.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-10-23",
+        "perime": false
       },
       "XEG.TO": {
         "statut": "OK",
@@ -81,9 +81,9 @@
     "tag": "regime:VIX_neutre"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -0.4984,
-    "contexte": "zone_grise",
-    "ajustement": "log_observation"
+    "xiu_rendement_pct": null,
+    "contexte": "indisponible",
+    "ajustement": "aucun"
   },
   "jour_bdc": {
     "est_jour_bdc": false,
@@ -92,38 +92,51 @@
     "regle": null
   },
   "cluster": {
-    "n_signaux": 0,
+    "n_signaux": 1,
     "action": "normal",
     "tag": "cluster:1_3"
   },
   "n_fnbs_scannes": 12,
-  "n_signaux": 0,
-  "signaux": [],
-  "tous_fnbs": [
+  "n_signaux": 1,
+  "signaux": [
     {
-      "ticker": "XIU.TO",
+      "ticker": "XST.TO",
       "role": "actif",
-      "profil": "moyen",
+      "profil": "rapide",
       "seuil_min_base": 2.0,
       "seuil_effectif": 2.0,
-      "horizon_j": 20,
-      "bloc": "marche_large",
-      "prix_cloture": 53.900001525878906,
-      "rendement_jour_pct": -0.4984,
-      "z20": -0.7529,
-      "z60": -0.7188,
-      "sma50": 53.4927,
+      "horizon_j": 15,
+      "bloc": null,
+      "prix_cloture": 67.58000183105469,
+      "rendement_jour_pct": -2.1572,
+      "z20": -2.346,
+      "z60": -2.1269,
+      "sma50": 64.5162,
       "dessus_sma50": true,
-      "signal": false,
+      "signal": true,
       "tags": [
         "boc:non_BdC",
         "regime:VIX_neutre",
-        "bloc:marche_large",
-        "profil:moyen",
+        "bloc:autre",
+        "profil:rapide",
         "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus"
-      ]
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3"
+      ],
+      "intraday": {
+        "momentum_intraday_pct": -1.9727,
+        "velocite_1h_pct": -0.1625,
+        "source": "yfinance_5m"
+      }
+    }
+  ],
+  "tous_fnbs": [
+    {
+      "ticker": "XIU.TO",
+      "erreur": "Données insuffisantes (0 jours)",
+      "signal": false,
+      "role": "actif"
     },
     {
       "ticker": "XFN.TO",
@@ -252,9 +265,34 @@
     },
     {
       "ticker": "XST.TO",
-      "erreur": "Données insuffisantes (0 jours)",
-      "signal": false,
-      "role": "actif"
+      "role": "actif",
+      "profil": "rapide",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.0,
+      "horizon_j": 15,
+      "bloc": null,
+      "prix_cloture": 67.58000183105469,
+      "rendement_jour_pct": -2.1572,
+      "z20": -2.346,
+      "z60": -2.1269,
+      "sma50": 64.5162,
+      "dessus_sma50": true,
+      "signal": true,
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:autre",
+        "profil:rapide",
+        "z20:2.0-2.49",
+        "z60:confirmé",
+        "trend:SMA50_dessus",
+        "cluster:1_3"
+      ],
+      "intraday": {
+        "momentum_intraday_pct": -1.9727,
+        "velocite_1h_pct": -0.1625,
+        "source": "yfinance_5m"
+      }
     },
     {
       "ticker": "XEG.TO",
