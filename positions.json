@@ -1,7 +1,65 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 100906.19,
-  "positions_ouvertes": {},
+  "capital_disponible": 94598.54,
+  "positions_ouvertes": {
+    "XRE.TO": {
+      "id": "XRE.TO_20261023_135457",
+      "ticker": "XRE.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-10-23T13:54:57.264962-04:00",
+      "date_horizon_max": "2026-11-12",
+      "jours_restants": 20,
+      "prix_signal": 15.64,
+      "prix_entree": 15.6517,
+      "prix_pre_baisse": 15.93,
+      "prix_stop_loss": 14.0447,
+      "prix_plus_haut_atteint": 15.6517,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 403,
+      "nb_unites_restant": 403,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 15.6517,
+        "spread_cad": 1.58,
+        "slippage_cad": 3.15,
+        "commission_cad": 0.0,
+        "cout_total_cad": 6307.65
+      },
+      "capital_investi": 6307.65,
+      "multiplicateur": 0.1875,
+      "z20_entree": -2.2598,
+      "z60_entree": -2.1789,
+      "vix_entree": 20.14,
+      "regime_entree": "neutre",
+      "sma50_entree": 15.7599,
+      "dessus_sma50_entree": false,
+      "raisons_filtres_passes": [
+        "Filtre A : 1 signaux simultanés → OK",
+        "Filtre B : Régime neutre → OK",
+        "Filtre C : z20=-2.26 ≤ -2.0 → OK",
+        "Filtre F : Sous SMA50 → taille réduite (déjà appliqué)",
+        "Filtre G : Bloc 'taux' libre → OK"
+      ],
+      "ajustements_taille": [
+        "régime_neutre÷2",
+        "sous_SMA50÷2"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:taux",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:confirmé",
+        "trend:SMA50_sous",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:2.0-2.49"
+      ],
+      "mae_pct": -0.07475006981507465,
+      "mae_prix": 15.6517
+    }
+  },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-10-22T19:45:09.648139-04:00"
+  "derniere_maj": "2026-10-23T13:54:57.335630-04:00"
 }
