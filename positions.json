@@ -8,7 +8,7 @@
       "statut": "ouvert",
       "date_entree": "2026-10-23T13:54:57.264962-04:00",
       "date_horizon_max": "2026-11-12",
-      "jours_restants": 20,
+      "jours_restants": 17,
       "prix_signal": 15.64,
       "prix_entree": 15.6517,
       "prix_pre_baisse": 15.93,
@@ -65,7 +65,7 @@
       "statut": "ouvert",
       "date_entree": "2026-10-23T13:59:08.140310-04:00",
       "date_horizon_max": "2026-11-07",
-      "jours_restants": 15,
+      "jours_restants": 12,
       "prix_signal": 67.71,
       "prix_entree": 67.7608,
       "prix_pre_baisse": 69.07,
@@ -112,10 +112,10 @@
         "profil:rapide",
         "z20:2.0-2.49"
       ],
-      "mae_pct": -0.26681823258479204,
+      "mae_pct": -0.45867677441502425,
       "mae_prix": 67.7608
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-10-23T19:38:05.175129-04:00"
+  "derniere_maj": "2026-10-26T15:27:16.960987-04:00"
 }
