@@ -8,7 +8,7 @@
       "statut": "ouvert",
       "date_entree": "2026-10-23T13:54:57.264962-04:00",
       "date_horizon_max": "2026-11-12",
-      "jours_restants": 15,
+      "jours_restants": 14,
       "prix_signal": 15.64,
       "prix_entree": 15.6517,
       "prix_pre_baisse": 15.93,
@@ -56,7 +56,7 @@
         "profil:moyen",
         "z20:2.0-2.49"
       ],
-      "mae_pct": -1.2567329829599678,
+      "mae_pct": -1.8956436538118662,
       "mae_prix": 15.6517
     },
     "XST.TO": {
@@ -65,7 +65,7 @@
       "statut": "ouvert",
       "date_entree": "2026-10-23T13:59:08.140310-04:00",
       "date_horizon_max": "2026-11-07",
-      "jours_restants": 10,
+      "jours_restants": 9,
       "prix_signal": 67.71,
       "prix_entree": 67.7608,
       "prix_pre_baisse": 69.07,
@@ -117,5 +117,5 @@
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-10-28T20:30:28.281187-04:00"
+  "derniere_maj": "2026-10-29T15:04:15.689070-04:00"
 }
