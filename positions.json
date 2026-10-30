@@ -1,6 +1,6 @@
 {
   "capital_initial": 100000.0,
-  "capital_disponible": 78878.04,
+  "capital_disponible": 71504.69,
   "positions_ouvertes": {
     "XRE.TO": {
       "id": "XRE.TO_20261023_135457",
@@ -8,7 +8,7 @@
       "statut": "ouvert",
       "date_entree": "2026-10-23T13:54:57.264962-04:00",
       "date_horizon_max": "2026-11-12",
-      "jours_restants": 14,
+      "jours_restants": 13,
       "prix_signal": 15.64,
       "prix_entree": 15.6517,
       "prix_pre_baisse": 15.93,
@@ -65,7 +65,7 @@
       "statut": "ouvert",
       "date_entree": "2026-10-23T13:59:08.140310-04:00",
       "date_horizon_max": "2026-11-07",
-      "jours_restants": 9,
+      "jours_restants": 8,
       "prix_signal": 67.71,
       "prix_entree": 67.7608,
       "prix_pre_baisse": 69.07,
@@ -114,8 +114,65 @@
       ],
       "mae_pct": -2.008238500904796,
       "mae_prix": 67.7608
+    },
+    "XIU.TO": {
+      "id": "XIU.TO_20261030_144203",
+      "ticker": "XIU.TO",
+      "statut": "ouvert",
+      "date_entree": "2026-10-30T14:42:03.568654-04:00",
+      "date_horizon_max": "2026-11-19",
+      "jours_restants": 20,
+      "prix_signal": 53.39,
+      "prix_entree": 53.43,
+      "prix_pre_baisse": 54.54,
+      "prix_stop_loss": 49.3857,
+      "prix_plus_haut_atteint": 53.43,
+      "prix_sortie_partielle": null,
+      "nb_unites_total": 138,
+      "nb_unites_restant": 138,
+      "sortie_partielle_faite": false,
+      "cout_entree": {
+        "prix_execution": 53.43,
+        "spread_cad": 1.84,
+        "slippage_cad": 3.68,
+        "commission_cad": 0.0,
+        "cout_total_cad": 7373.35
+      },
+      "capital_investi": 7373.35,
+      "multiplicateur": 0.2812,
+      "z20_entree": -2.9366,
+      "z60_entree": -3.0325,
+      "vix_entree": 22.75,
+      "regime_entree": "neutre",
+      "sma50_entree": 53.4832,
+      "dessus_sma50_entree": false,
+      "raisons_filtres_passes": [
+        "Filtre A : 3 signaux simultanés → OK",
+        "Filtre B : Régime neutre → OK",
+        "Filtre C : z20=-2.94 ≤ -2.0 → OK",
+        "Filtre F : Sous SMA50 → taille réduite (déjà appliqué)",
+        "Filtre G : Bloc 'marche_large' libre → OK"
+      ],
+      "ajustements_taille": [
+        "régime_neutre÷2",
+        "sous_SMA50÷2"
+      ],
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:marche_large",
+        "profil:moyen",
+        "z20:2.5-2.99",
+        "z60:confirmé",
+        "trend:SMA50_sous",
+        "cluster:1_3",
+        "profil:moyen",
+        "z20:2.5-2.99"
+      ],
+      "mae_pct": -0.09357838645847902,
+      "mae_prix": 53.43
     }
   },
   "cree_le": "2026-04-11T08:42:27.436731-04:00",
-  "derniere_maj": "2026-10-29T20:29:08.378311-04:00"
+  "derniere_maj": "2026-10-30T14:42:03.851243-04:00"
 }
