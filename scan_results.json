@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-11-03T19:37:47.619686-05:00",
+  "scan_at": "2026-11-03T19:57:36.538020-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
@@ -63,8 +63,8 @@
         "perime": true
       },
       "ZAG.TO": {
-        "statut": "PÉRIMÉ",
-        "derniere_date": "2026-11-03",
+        "statut": "ERREUR",
+        "derniere_date": null,
         "perime": true
       },
       "XGD.TO": {
@@ -310,25 +310,9 @@
     },
     {
       "ticker": "ZAG.TO",
-      "role": "contextuel",
-      "profil": null,
-      "seuil_min_base": null,
-      "seuil_effectif": null,
-      "horizon_j": null,
-      "bloc": "taux",
-      "prix_cloture": 13.5,
-      "rendement_jour_pct": -0.2217,
-      "z20": -0.918,
-      "z60": -0.6871,
-      "sma50": 13.3883,
-      "dessus_sma50": true,
+      "erreur": "Données insuffisantes (0 jours)",
       "signal": false,
-      "choc_contagion": false,
-      "tags": [
-        "role:contextuel",
-        "bloc:taux",
-        "choc_contagion:non"
-      ]
+      "role": "contextuel"
     },
     {
       "ticker": "XGD.TO",
