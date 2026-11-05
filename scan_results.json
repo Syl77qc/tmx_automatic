@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-11-05T15:45:05.706585-05:00",
+  "scan_at": "2026-11-05T15:50:42.104107-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,13 +73,13 @@
   },
   "heures_marche": true,
   "regime_marche": {
-    "vix": 26.24,
+    "vix": 26.22,
     "regime": "risk_off",
     "description": "VIX 26.2 > 25.0 — pause ou signaux extrêmes seulement",
     "tag": "regime:VIX_risk_off"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -1.9536,
+    "xiu_rendement_pct": -1.8989,
     "contexte": "XIU_en_baisse_systémique",
     "ajustement": "règles_normales"
   },
@@ -90,44 +90,13 @@
     "regle": null
   },
   "cluster": {
-    "n_signaux": 4,
-    "action": "reduire_taille_50pct_et_seuil_2.5",
-    "tag": "cluster:4_6"
+    "n_signaux": 3,
+    "action": "normal",
+    "tag": "cluster:1_3"
   },
   "n_fnbs_scannes": 12,
-  "n_signaux": 4,
+  "n_signaux": 3,
   "signaux": [
-    {
-      "ticker": "XIU.TO",
-      "role": "actif",
-      "profil": "moyen",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
-      "horizon_j": 20,
-      "bloc": "marche_large",
-      "prix_cloture": 53.70000076293945,
-      "rendement_jour_pct": -1.9536,
-      "z20": -2.0424,
-      "z60": -2.4653,
-      "sma50": 53.4798,
-      "dessus_sma50": true,
-      "signal": true,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_risk_off",
-        "bloc:marche_large",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:confirmé",
-        "trend:SMA50_dessus",
-        "cluster:4_6"
-      ],
-      "intraday": {
-        "momentum_intraday_pct": -2.1141,
-        "velocite_1h_pct": -0.2044,
-        "source": "yfinance_5m"
-      }
-    },
     {
       "ticker": "XFN.TO",
       "role": "actif",
@@ -136,11 +105,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 95.20999908447266,
-      "rendement_jour_pct": -2.9855,
-      "z20": -2.7071,
-      "z60": -2.8125,
-      "sma50": 92.9209,
+      "prix_cloture": 95.12000274658203,
+      "rendement_jour_pct": -3.0772,
+      "z20": -2.7812,
+      "z60": -2.8975,
+      "sma50": 92.9191,
       "dessus_sma50": true,
       "signal": true,
       "tags": [
@@ -151,11 +120,11 @@
         "z20:2.5-2.99",
         "z60:confirmé",
         "trend:SMA50_dessus",
-        "cluster:4_6"
+        "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -3.2019,
-        "velocite_1h_pct": -0.2618,
+        "momentum_intraday_pct": -3.3137,
+        "velocite_1h_pct": -0.3562,
         "source": "yfinance_5m"
       }
     },
@@ -167,11 +136,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": "marche_large",
-      "prix_cloture": 45.90999984741211,
-      "rendement_jour_pct": -2.6092,
-      "z20": -3.4909,
-      "z60": -3.9234,
-      "sma50": 46.5708,
+      "prix_cloture": 45.86000061035156,
+      "rendement_jour_pct": -2.7153,
+      "z20": -3.6298,
+      "z60": -4.0839,
+      "sma50": 46.5698,
       "dessus_sma50": false,
       "signal": true,
       "tags": [
@@ -182,11 +151,11 @@
         "z20:≥3.0",
         "z60:confirmé",
         "trend:SMA50_sous",
-        "cluster:4_6"
+        "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -2.3607,
-        "velocite_1h_pct": -0.239,
+        "momentum_intraday_pct": -2.467,
+        "velocite_1h_pct": -0.4774,
         "source": "yfinance_5m"
       }
     },
@@ -213,7 +182,7 @@
         "z20:2.0-2.49",
         "z60:confirmé",
         "trend:SMA50_dessus",
-        "cluster:4_6"
+        "cluster:1_3"
       ],
       "intraday": {
         "momentum_intraday_pct": -3.0292,
@@ -231,13 +200,13 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 53.70000076293945,
-      "rendement_jour_pct": -1.9536,
-      "z20": -2.0424,
-      "z60": -2.4653,
-      "sma50": 53.4798,
+      "prix_cloture": 53.72999954223633,
+      "rendement_jour_pct": -1.8989,
+      "z20": -1.9896,
+      "z60": -2.3971,
+      "sma50": 53.4804,
       "dessus_sma50": true,
-      "signal": true,
+      "signal": false,
       "tags": [
         "boc:non_BdC",
         "regime:VIX_risk_off",
@@ -245,14 +214,8 @@
         "profil:moyen",
         "z20:2.0-2.49",
         "z60:confirmé",
-        "trend:SMA50_dessus",
-        "cluster:4_6"
-      ],
-      "intraday": {
-        "momentum_intraday_pct": -2.1141,
-        "velocite_1h_pct": -0.2044,
-        "source": "yfinance_5m"
-      }
+        "trend:SMA50_dessus"
+      ]
     },
     {
       "ticker": "XFN.TO",
@@ -262,11 +225,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 95.20999908447266,
-      "rendement_jour_pct": -2.9855,
-      "z20": -2.7071,
-      "z60": -2.8125,
-      "sma50": 92.9209,
+      "prix_cloture": 95.12000274658203,
+      "rendement_jour_pct": -3.0772,
+      "z20": -2.7812,
+      "z60": -2.8975,
+      "sma50": 92.9191,
       "dessus_sma50": true,
       "signal": true,
       "tags": [
@@ -277,11 +240,11 @@
         "z20:2.5-2.99",
         "z60:confirmé",
         "trend:SMA50_dessus",
-        "cluster:4_6"
+        "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -3.2019,
-        "velocite_1h_pct": -0.2618,
+        "momentum_intraday_pct": -3.3137,
+        "velocite_1h_pct": -0.3562,
         "source": "yfinance_5m"
       }
     },
@@ -293,11 +256,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 36.47999954223633,
-      "rendement_jour_pct": -0.2461,
-      "z20": -0.7732,
-      "z60": -0.4002,
-      "sma50": 34.5302,
+      "prix_cloture": 36.4900016784668,
+      "rendement_jour_pct": -0.2188,
+      "z20": -0.7337,
+      "z60": -0.3665,
+      "sma50": 34.5304,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -318,11 +281,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "taux",
-      "prix_cloture": 15.854999542236328,
-      "rendement_jour_pct": -0.0315,
-      "z20": -0.2071,
-      "z60": 0.0175,
-      "sma50": 15.5736,
+      "prix_cloture": 15.84000015258789,
+      "rendement_jour_pct": -0.1261,
+      "z20": -0.2995,
+      "z60": -0.1,
+      "sma50": 15.5733,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -343,11 +306,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 10,
       "bloc": "marche_large",
-      "prix_cloture": 45.90999984741211,
-      "rendement_jour_pct": -2.6092,
-      "z20": -3.4909,
-      "z60": -3.9234,
-      "sma50": 46.5708,
+      "prix_cloture": 45.86000061035156,
+      "rendement_jour_pct": -2.7153,
+      "z20": -3.6298,
+      "z60": -4.0839,
+      "sma50": 46.5698,
       "dessus_sma50": false,
       "signal": true,
       "tags": [
@@ -358,11 +321,11 @@
         "z20:≥3.0",
         "z60:confirmé",
         "trend:SMA50_sous",
-        "cluster:4_6"
+        "cluster:1_3"
       ],
       "intraday": {
-        "momentum_intraday_pct": -2.3607,
-        "velocite_1h_pct": -0.239,
+        "momentum_intraday_pct": -2.467,
+        "velocite_1h_pct": -0.4774,
         "source": "yfinance_5m"
       }
     },
@@ -389,7 +352,7 @@
         "z20:2.0-2.49",
         "z60:confirmé",
         "trend:SMA50_dessus",
-        "cluster:4_6"
+        "cluster:1_3"
       ],
       "intraday": {
         "momentum_intraday_pct": -3.0292,
@@ -405,11 +368,11 @@
       "seuil_effectif": 2.0,
       "horizon_j": 15,
       "bloc": null,
-      "prix_cloture": 68.69000244140625,
-      "rendement_jour_pct": -1.0516,
-      "z20": -1.2224,
-      "z60": -1.0587,
-      "sma50": 64.9857,
+      "prix_cloture": 68.69999694824219,
+      "rendement_jour_pct": -1.0372,
+      "z20": -1.2113,
+      "z60": -1.0451,
+      "sma50": 64.9859,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -430,11 +393,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 27.68000030517578,
-      "rendement_jour_pct": -1.6347,
-      "z20": -0.6564,
-      "z60": -0.9705,
-      "sma50": 29.2711,
+      "prix_cloture": 27.59000015258789,
+      "rendement_jour_pct": -1.9545,
+      "z20": -0.7872,
+      "z60": -1.1498,
+      "sma50": 29.2693,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
@@ -452,11 +415,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "taux",
-      "prix_cloture": 13.59000015258789,
-      "rendement_jour_pct": 0.2212,
-      "z20": 0.4098,
-      "z60": 0.6281,
-      "sma50": 13.3915,
+      "prix_cloture": 13.595000267028809,
+      "rendement_jour_pct": 0.2581,
+      "z20": 0.5152,
+      "z60": 0.741,
+      "sma50": 13.3916,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
@@ -474,11 +437,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": "metaux",
-      "prix_cloture": 53.88999938964844,
-      "rendement_jour_pct": 1.833,
-      "z20": 0.589,
-      "z60": 0.6509,
-      "sma50": 56.4412,
+      "prix_cloture": 54.06999969482422,
+      "rendement_jour_pct": 2.1731,
+      "z20": 0.6873,
+      "z60": 0.7689,
+      "sma50": 56.4448,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
