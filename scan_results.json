@@ -1,75 +1,86 @@
 {
-  "scan_at": "2026-11-09T18:11:12.100425-05:00",
+  "scan_at": "2026-11-09T22:01:42.969306-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XUT.TO"
+      "XIU.TO",
+      "XFN.TO",
+      "XUT.TO",
+      "XRE.TO",
+      "XIN.TO",
+      "XHC.TO",
+      "XST.TO",
+      "XEG.TO",
+      "ZAG.TO",
+      "XGD.TO",
+      "XIT.TO",
+      "XMA.TO"
     ],
-    "n_perimes": 1,
-    "aujourd_hui": "2026-11-09",
+    "n_perimes": 12,
+    "aujourd_hui": "2026-11-10",
     "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XFN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XUT.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
+        "statut": "PÉRIMÉ",
+        "derniere_date": "2026-11-09",
         "perime": true
       },
       "XRE.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XIN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XHC.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XST.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XEG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "ZAG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XGD.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XIT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       },
       "XMA.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-09",
-        "perime": false
+        "perime": true
       }
     }
   },
@@ -152,9 +163,28 @@
     },
     {
       "ticker": "XUT.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "actif",
+      "profil": "moyen",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.5,
+      "horizon_j": 20,
+      "bloc": "taux",
+      "prix_cloture": 36.7400016784668,
+      "rendement_jour_pct": 0.1636,
+      "z20": -0.2545,
+      "z60": 0.1447,
+      "sma50": 34.6034,
+      "dessus_sma50": true,
       "signal": false,
-      "role": "actif"
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:taux",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_dessus"
+      ]
     },
     {
       "ticker": "XRE.TO",
