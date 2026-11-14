@@ -1,11 +1,13 @@
 {
-  "scan_at": "2026-11-13T20:00:51.276700-05:00",
+  "scan_at": "2026-11-13T20:06:46.264718-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": false,
+  "alerte_fraicheur": true,
   "fraicheur": {
-    "alerte": false,
-    "fnbs_perimes": [],
-    "n_perimes": 0,
+    "alerte": true,
+    "fnbs_perimes": [
+      "XST.TO"
+    ],
+    "n_perimes": 1,
     "aujourd_hui": "2026-11-14",
     "marche_clos_aujourd_hui": false,
     "details": {
@@ -40,9 +42,9 @@
         "perime": false
       },
       "XST.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-11-13",
-        "perime": false
+        "statut": "ERREUR",
+        "derniere_date": null,
+        "perime": true
       },
       "XEG.TO": {
         "statut": "OK",
@@ -250,28 +252,9 @@
     },
     {
       "ticker": "XST.TO",
-      "role": "actif",
-      "profil": "rapide",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.5,
-      "horizon_j": 15,
-      "bloc": null,
-      "prix_cloture": 69.63999938964844,
-      "rendement_jour_pct": 0.8107,
-      "z20": 0.5828,
-      "z60": 0.6726,
-      "sma50": 65.5957,
-      "dessus_sma50": true,
+      "erreur": "Données insuffisantes (0 jours)",
       "signal": false,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_neutre",
-        "bloc:autre",
-        "profil:rapide",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus"
-      ]
+      "role": "actif"
     },
     {
       "ticker": "XEG.TO",
