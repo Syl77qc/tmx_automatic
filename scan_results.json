@@ -1,13 +1,11 @@
 {
-  "scan_at": "2026-11-18T16:29:23.742770-05:00",
+  "scan_at": "2026-11-18T16:38:28.688616-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "XUT.TO"
-    ],
-    "n_perimes": 1,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-11-18",
     "marche_clos_aujourd_hui": true,
     "details": {
@@ -22,9 +20,9 @@
         "perime": false
       },
       "XUT.TO": {
-        "statut": "ERREUR",
-        "derniere_date": null,
-        "perime": true
+        "statut": "OK",
+        "derniere_date": "2026-11-18",
+        "perime": false
       },
       "XRE.TO": {
         "statut": "OK",
@@ -75,7 +73,7 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 24.57,
+    "vix": 24.56,
     "regime": "neutre",
     "description": "VIX 24.6 entre 16.0-25.0 — tailles réduites",
     "tag": "regime:VIX_neutre"
@@ -152,9 +150,28 @@
     },
     {
       "ticker": "XUT.TO",
-      "erreur": "Données insuffisantes (0 jours)",
+      "role": "actif",
+      "profil": "moyen",
+      "seuil_min_base": 2.0,
+      "seuil_effectif": 2.0,
+      "horizon_j": 20,
+      "bloc": "taux",
+      "prix_cloture": 37.5099983215332,
+      "rendement_jour_pct": 0.3478,
+      "z20": -0.0705,
+      "z60": 0.3066,
+      "sma50": 34.9849,
+      "dessus_sma50": true,
       "signal": false,
-      "role": "actif"
+      "tags": [
+        "boc:non_BdC",
+        "regime:VIX_neutre",
+        "bloc:taux",
+        "profil:moyen",
+        "z20:2.0-2.49",
+        "z60:faible",
+        "trend:SMA50_dessus"
+      ]
     },
     {
       "ticker": "XRE.TO",
