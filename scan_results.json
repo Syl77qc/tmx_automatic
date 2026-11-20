@@ -1,5 +1,5 @@
 {
-  "scan_at": "2026-11-20T16:22:44.560156-05:00",
+  "scan_at": "2026-11-20T16:34:29.873262-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
@@ -73,9 +73,9 @@
   },
   "heures_marche": false,
   "regime_marche": {
-    "vix": 37.14,
+    "vix": 35.89,
     "regime": "risk_off",
-    "description": "VIX 37.1 > 25.0 — pause ou signaux extrêmes seulement",
+    "description": "VIX 35.9 > 25.0 — pause ou signaux extrêmes seulement",
     "tag": "regime:VIX_risk_off"
   },
   "filtre_D": {
