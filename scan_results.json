@@ -1,75 +1,86 @@
 {
-  "scan_at": "2026-11-19T16:52:32.745774-05:00",
+  "scan_at": "2026-11-19T20:56:21.621196-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XFN.TO"
+      "XIU.TO",
+      "XFN.TO",
+      "XUT.TO",
+      "XRE.TO",
+      "XIN.TO",
+      "XHC.TO",
+      "XST.TO",
+      "XEG.TO",
+      "ZAG.TO",
+      "XGD.TO",
+      "XIT.TO",
+      "XMA.TO"
     ],
-    "n_perimes": 1,
-    "aujourd_hui": "2026-11-19",
+    "n_perimes": 12,
+    "aujourd_hui": "2026-11-20",
     "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-11-19",
-        "perime": false
-      },
-      "XFN.TO": {
         "statut": "ERREUR",
         "derniere_date": null,
         "perime": true
       },
-      "XUT.TO": {
-        "statut": "OK",
+      "XFN.TO": {
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
+      },
+      "XUT.TO": {
+        "statut": "PÉRIMÉ",
+        "derniere_date": "2026-11-19",
+        "perime": true
       },
       "XRE.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XIN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XHC.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XST.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XEG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "ZAG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XGD.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XIT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       },
       "XMA.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-19",
-        "perime": false
+        "perime": true
       }
     }
   },
@@ -81,9 +92,9 @@
     "tag": "regime:VIX_risk_off"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -1.4934,
-    "contexte": "XIU_en_baisse_systémique",
-    "ajustement": "règles_normales"
+    "xiu_rendement_pct": null,
+    "contexte": "indisponible",
+    "ajustement": "aucun"
   },
   "jour_bdc": {
     "est_jour_bdc": false,
@@ -102,17 +113,23 @@
   "tous_fnbs": [
     {
       "ticker": "XIU.TO",
+      "erreur": "Données insuffisantes (0 jours)",
+      "signal": false,
+      "role": "actif"
+    },
+    {
+      "ticker": "XFN.TO",
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
       "seuil_effectif": 2.0,
       "horizon_j": 20,
       "bloc": "marche_large",
-      "prix_cloture": 51.45000076293945,
-      "rendement_jour_pct": -1.4934,
-      "z20": -1.1212,
-      "z60": -1.5358,
-      "sma50": 53.4764,
+      "prix_cloture": 91.11000061035156,
+      "rendement_jour_pct": -1.0642,
+      "z20": -0.6769,
+      "z60": -0.9354,
+      "sma50": 93.3306,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -121,15 +138,9 @@
         "bloc:marche_large",
         "profil:moyen",
         "z20:2.0-2.49",
-        "z60:confirmé",
+        "z60:faible",
         "trend:SMA50_sous"
       ]
-    },
-    {
-      "ticker": "XFN.TO",
-      "erreur": "Données insuffisantes (0 jours)",
-      "signal": false,
-      "role": "actif"
     },
     {
       "ticker": "XUT.TO",
@@ -289,7 +300,7 @@
       "prix_cloture": 13.460000038146973,
       "rendement_jour_pct": -0.2963,
       "z20": -0.9519,
-      "z60": -0.9092,
+      "z60": -0.9093,
       "sma50": 13.4096,
       "dessus_sma50": true,
       "signal": false,
