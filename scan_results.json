@@ -1,86 +1,73 @@
 {
-  "scan_at": "2026-11-23T20:17:07.819566-05:00",
+  "scan_at": "2026-11-24T00:02:54.598354-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": true,
+  "alerte_fraicheur": false,
   "fraicheur": {
-    "alerte": true,
-    "fnbs_perimes": [
-      "XIU.TO",
-      "XFN.TO",
-      "XUT.TO",
-      "XRE.TO",
-      "XIN.TO",
-      "XHC.TO",
-      "XST.TO",
-      "XEG.TO",
-      "ZAG.TO",
-      "XGD.TO",
-      "XIT.TO",
-      "XMA.TO"
-    ],
-    "n_perimes": 12,
+    "alerte": false,
+    "fnbs_perimes": [],
+    "n_perimes": 0,
     "aujourd_hui": "2026-11-24",
-    "marche_clos_aujourd_hui": true,
+    "marche_clos_aujourd_hui": false,
     "details": {
       "XIU.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XFN.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XUT.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XRE.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XIN.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XHC.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XST.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XEG.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "ZAG.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XGD.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XIT.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       },
       "XMA.TO": {
-        "statut": "PÉRIMÉ",
+        "statut": "OK",
         "derniere_date": "2026-11-23",
-        "perime": true
+        "perime": false
       }
     }
   },
@@ -294,11 +281,11 @@
       "seuil_effectif": null,
       "horizon_j": null,
       "bloc": null,
-      "prix_cloture": 26.145000457763672,
-      "rendement_jour_pct": -1.4883,
-      "z20": -0.3005,
-      "z60": -0.7627,
-      "sma50": 29.028,
+      "prix_cloture": 26.149999618530273,
+      "rendement_jour_pct": -1.4695,
+      "z20": -0.2921,
+      "z60": -0.7526,
+      "sma50": 29.0281,
       "dessus_sma50": false,
       "signal": false,
       "choc_contagion": false,
