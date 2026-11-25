@@ -1,11 +1,13 @@
 {
-  "scan_at": "2026-11-25T17:38:32.781928-05:00",
+  "scan_at": "2026-11-25T17:50:19.997084-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
-  "alerte_fraicheur": false,
+  "alerte_fraicheur": true,
   "fraicheur": {
-    "alerte": false,
-    "fnbs_perimes": [],
-    "n_perimes": 0,
+    "alerte": true,
+    "fnbs_perimes": [
+      "XIN.TO"
+    ],
+    "n_perimes": 1,
     "aujourd_hui": "2026-11-25",
     "marche_clos_aujourd_hui": true,
     "details": {
@@ -30,9 +32,9 @@
         "perime": false
       },
       "XIN.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-11-25",
-        "perime": false
+        "statut": "ERREUR",
+        "derniere_date": null,
+        "perime": true
       },
       "XHC.TO": {
         "statut": "OK",
@@ -238,28 +240,9 @@
     },
     {
       "ticker": "XIN.TO",
-      "role": "actif",
-      "profil": "rapide",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
-      "horizon_j": 10,
-      "bloc": "marche_large",
-      "prix_cloture": 45.16999816894531,
-      "rendement_jour_pct": 0.1996,
-      "z20": 0.2189,
-      "z60": 0.2722,
-      "sma50": 46.3138,
-      "dessus_sma50": false,
+      "erreur": "Données insuffisantes (0 jours)",
       "signal": false,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_risk_off",
-        "bloc:marche_large",
-        "profil:rapide",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_sous"
-      ]
+      "role": "actif"
     },
     {
       "ticker": "XHC.TO",
