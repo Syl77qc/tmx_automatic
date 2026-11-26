@@ -1,75 +1,86 @@
 {
-  "scan_at": "2026-11-25T17:50:19.997084-05:00",
+  "scan_at": "2026-11-25T22:16:47.278739-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": true,
   "fraicheur": {
     "alerte": true,
     "fnbs_perimes": [
-      "XIN.TO"
+      "XIU.TO",
+      "XFN.TO",
+      "XUT.TO",
+      "XRE.TO",
+      "XIN.TO",
+      "XHC.TO",
+      "XST.TO",
+      "XEG.TO",
+      "ZAG.TO",
+      "XGD.TO",
+      "XIT.TO",
+      "XMA.TO"
     ],
-    "n_perimes": 1,
-    "aujourd_hui": "2026-11-25",
+    "n_perimes": 12,
+    "aujourd_hui": "2026-11-26",
     "marche_clos_aujourd_hui": true,
     "details": {
       "XIU.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XFN.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XUT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XRE.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XIN.TO": {
+        "statut": "PÉRIMÉ",
+        "derniere_date": "2026-11-25",
+        "perime": true
+      },
+      "XHC.TO": {
         "statut": "ERREUR",
         "derniere_date": null,
         "perime": true
       },
-      "XHC.TO": {
-        "statut": "OK",
-        "derniere_date": "2026-11-25",
-        "perime": false
-      },
       "XST.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XEG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "ZAG.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XGD.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XIT.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       },
       "XMA.TO": {
-        "statut": "OK",
+        "statut": "PÉRIMÉ",
         "derniere_date": "2026-11-25",
-        "perime": false
+        "perime": true
       }
     }
   },
@@ -81,9 +92,9 @@
     "tag": "regime:VIX_risk_off"
   },
   "filtre_D": {
-    "xiu_rendement_pct": -0.2722,
-    "contexte": "zone_grise",
-    "ajustement": "log_observation"
+    "xiu_rendement_pct": 0.3129,
+    "contexte": "XIU_stable_ou_positif",
+    "ajustement": "seuil+0.5_taille÷1.5"
   },
   "jour_bdc": {
     "est_jour_bdc": false,
@@ -92,59 +103,27 @@
     "regle": null
   },
   "cluster": {
-    "n_signaux": 1,
+    "n_signaux": 0,
     "action": "normal",
     "tag": "cluster:1_3"
   },
   "n_fnbs_scannes": 12,
-  "n_signaux": 1,
-  "signaux": [
-    {
-      "ticker": "XUT.TO",
-      "role": "actif",
-      "profil": "moyen",
-      "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
-      "horizon_j": 20,
-      "bloc": "taux",
-      "prix_cloture": 37.810001373291016,
-      "rendement_jour_pct": -0.709,
-      "z20": -2.1434,
-      "z60": -1.2363,
-      "sma50": 35.3824,
-      "dessus_sma50": true,
-      "signal": true,
-      "tags": [
-        "boc:non_BdC",
-        "regime:VIX_risk_off",
-        "bloc:taux",
-        "profil:moyen",
-        "z20:2.0-2.49",
-        "z60:faible",
-        "trend:SMA50_dessus",
-        "cluster:1_3"
-      ],
-      "intraday": {
-        "momentum_intraday_pct": -0.3164,
-        "velocite_1h_pct": -0.0264,
-        "source": "yfinance_5m"
-      }
-    }
-  ],
+  "n_signaux": 0,
+  "signaux": [],
   "tous_fnbs": [
     {
       "ticker": "XIU.TO",
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "marche_large",
       "prix_cloture": 51.29999923706055,
-      "rendement_jour_pct": -0.2722,
-      "z20": -0.0061,
-      "z60": -0.1872,
-      "sma50": 53.3412,
+      "rendement_jour_pct": 0.3129,
+      "z20": 0.4115,
+      "z60": 0.3744,
+      "sma50": 53.0361,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -162,14 +141,14 @@
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "marche_large",
       "prix_cloture": 90.62000274658203,
-      "rendement_jour_pct": -0.4395,
-      "z20": -0.1546,
-      "z60": -0.335,
-      "sma50": 93.1726,
+      "rendement_jour_pct": -0.2729,
+      "z20": -0.0524,
+      "z60": -0.1992,
+      "sma50": 93.02,
       "dessus_sma50": false,
       "signal": false,
       "tags": [
@@ -187,16 +166,16 @@
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "taux",
       "prix_cloture": 37.810001373291016,
-      "rendement_jour_pct": -0.709,
-      "z20": -2.1434,
-      "z60": -1.2363,
-      "sma50": 35.3824,
+      "rendement_jour_pct": -0.4293,
+      "z20": -1.5933,
+      "z60": -0.8397,
+      "sma50": 35.2851,
       "dessus_sma50": true,
-      "signal": true,
+      "signal": false,
       "tags": [
         "boc:non_BdC",
         "regime:VIX_risk_off",
@@ -204,28 +183,22 @@
         "profil:moyen",
         "z20:2.0-2.49",
         "z60:faible",
-        "trend:SMA50_dessus",
-        "cluster:1_3"
-      ],
-      "intraday": {
-        "momentum_intraday_pct": -0.3164,
-        "velocite_1h_pct": -0.0264,
-        "source": "yfinance_5m"
-      }
+        "trend:SMA50_dessus"
+      ]
     },
     {
       "ticker": "XRE.TO",
       "role": "actif",
       "profil": "moyen",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 20,
       "bloc": "taux",
       "prix_cloture": 16.040000915527344,
-      "rendement_jour_pct": 0.25,
-      "z20": 0.1215,
-      "z60": 0.2913,
-      "sma50": 15.5554,
+      "rendement_jour_pct": 0.6147,
+      "z20": 0.5041,
+      "z60": 0.7134,
+      "sma50": 15.5002,
       "dessus_sma50": true,
       "signal": false,
       "tags": [
@@ -240,41 +213,41 @@
     },
     {
       "ticker": "XIN.TO",
-      "erreur": "Données insuffisantes (0 jours)",
-      "signal": false,
-      "role": "actif"
-    },
-    {
-      "ticker": "XHC.TO",
       "role": "actif",
       "profil": "rapide",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 10,
-      "bloc": null,
-      "prix_cloture": 81.41000366210938,
-      "rendement_jour_pct": -0.0368,
-      "z20": -0.149,
-      "z60": -0.1488,
-      "sma50": 77.8158,
-      "dessus_sma50": true,
+      "bloc": "marche_large",
+      "prix_cloture": 45.16999816894531,
+      "rendement_jour_pct": 0.1996,
+      "z20": 0.2189,
+      "z60": 0.2722,
+      "sma50": 46.3138,
+      "dessus_sma50": false,
       "signal": false,
       "tags": [
         "boc:non_BdC",
         "regime:VIX_risk_off",
-        "bloc:autre",
+        "bloc:marche_large",
         "profil:rapide",
         "z20:2.0-2.49",
         "z60:faible",
-        "trend:SMA50_dessus"
+        "trend:SMA50_sous"
       ]
+    },
+    {
+      "ticker": "XHC.TO",
+      "erreur": "Données insuffisantes (0 jours)",
+      "signal": false,
+      "role": "actif"
     },
     {
       "ticker": "XST.TO",
       "role": "actif",
       "profil": "rapide",
       "seuil_min_base": 2.0,
-      "seuil_effectif": 2.0,
+      "seuil_effectif": 2.5,
       "horizon_j": 15,
       "bloc": null,
       "prix_cloture": 70.94999694824219,
