@@ -1,13 +1,13 @@
 {
-  "scan_at": "2026-11-27T17:23:30.257551-05:00",
+  "scan_at": "2026-11-27T21:59:31.554735-05:00",
   "source_donnees": "yfinance (source unique permanente — PRD v3.0)",
   "alerte_fraicheur": false,
   "fraicheur": {
     "alerte": false,
     "fnbs_perimes": [],
     "n_perimes": 0,
-    "aujourd_hui": "2026-11-27",
-    "marche_clos_aujourd_hui": true,
+    "aujourd_hui": "2026-11-28",
+    "marche_clos_aujourd_hui": false,
     "details": {
       "XIU.TO": {
         "statut": "OK",
@@ -304,10 +304,10 @@
       "horizon_j": null,
       "bloc": "taux",
       "prix_cloture": 13.510000228881836,
-      "rendement_jour_pct": -0.6618,
-      "z20": -2.2727,
-      "z60": -2.0294,
-      "sma50": 13.4408,
+      "rendement_jour_pct": -0.3834,
+      "z20": -1.3913,
+      "z60": -1.2007,
+      "sma50": 13.404,
       "dessus_sma50": true,
       "signal": false,
       "choc_contagion": false,
